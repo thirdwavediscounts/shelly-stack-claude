@@ -7,8 +7,8 @@ In this page you install the plugin, pick which models pstack uses, and run your
 In a Claude Code session, run:
 
 ```text
-/plugin marketplace add thirdwavediscounts/claude-pstack
-/plugin install pstack@claude-pstack
+/plugin marketplace add thirdwavediscounts/shelly-pstack
+/plugin install pstack@shelly-pstack
 ```
 
 Claude Code confirms the plugin is installed.

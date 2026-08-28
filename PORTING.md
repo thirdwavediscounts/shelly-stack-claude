@@ -1,6 +1,6 @@
 # Porting notes
 
-claude-pstack is a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (cursor/plugins @ 397c8660, MIT, Lauren Tan) to a Claude Code plugin. Commit `ef5d652` in this repo is the verbatim upstream import; `git diff ef5d652` is the whole port.
+shelly-pstack is a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (cursor/plugins @ 397c8660, MIT, Lauren Tan) to a Claude Code plugin. Commit `ef5d652` in this repo is the verbatim upstream import; `git diff ef5d652` is the whole port.
 
 The goal was fidelity. Poteto's voice, skills, playbooks, principles, and file layout are unchanged. Only what Cursor-specific was translated.
 
@@ -9,7 +9,7 @@ The goal was fidelity. Poteto's voice, skills, playbooks, principles, and file l
 | Cursor | Claude Code |
 |---|---|
 | `.cursor-plugin/plugin.json` | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` (single-plugin repo) |
-| `/add-plugin pstack` | `/plugin marketplace add thirdwavediscounts/claude-pstack`, `/plugin install pstack@claude-pstack` |
+| `/add-plugin pstack` | `/plugin marketplace add thirdwavediscounts/shelly-pstack`, `/plugin install pstack@shelly-pstack` |
 | `Task` tool, `subagent_type: "poteto-agent"` / `"Comment Sicko"` / `generalPurpose` | `Agent` tool, `pstack:poteto-agent` / `pstack:comment-sicko` / `general-purpose` |
 | `run_in_background: true`, `readonly:` | dropped; Agent subagents run in the background, access is restricted by tool list |
 | `AskQuestion`, `allow_multiple` | `AskUserQuestion`, `multiSelect` |

@@ -69,7 +69,7 @@ i want you to merge this entry into the target repository's `.claude/settings.js
 ```json
 {
 	"enabledPlugins": {
-		"pstack@claude-pstack": true
+		"pstack@shelly-pstack": true
 	}
 }
 ```

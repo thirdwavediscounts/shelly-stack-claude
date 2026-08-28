@@ -8,12 +8,12 @@ the files in this directory are dormant setup and routine sources. they do not a
 
 1. point Claude Code at [`FOR_AGENTS.md`](./FOR_AGENTS.md) and name the target repository.
 2. let setup merge this whole directory into the target at `.claude/automations/benny/`. it must preserve destination-only files and review conflicts instead of overwriting local edits.
-3. let setup add the marketplace with `/plugin marketplace add thirdwavediscounts/claude-pstack`, then enable pstack in the target repository's `.claude/settings.json` for shared dependencies:
+3. let setup add the marketplace with `/plugin marketplace add thirdwavediscounts/shelly-pstack`, then enable pstack in the target repository's `.claude/settings.json` for shared dependencies:
 
 ```json
 {
 	"enabledPlugins": {
-		"pstack@claude-pstack": true
+		"pstack@shelly-pstack": true
 	}
 }
 ```

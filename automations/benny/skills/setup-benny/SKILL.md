@@ -31,19 +31,19 @@ Merge the entire source pack into the destination:
 
 If this file is already being read from the target destination, treat the copy as complete and run the same verification before continuing.
 
-Add the marketplace with `/plugin marketplace add thirdwavediscounts/claude-pstack`, then add pstack to the target repository's `.claude/settings.json`. If the file or `.claude` directory does not exist, create it.
+Add the marketplace with `/plugin marketplace add thirdwavediscounts/shelly-pstack`, then add pstack to the target repository's `.claude/settings.json`. If the file or `.claude` directory does not exist, create it.
 
 Merge this entry into the existing JSON or JSONC:
 
 ```json
 {
 	"enabledPlugins": {
-		"pstack@claude-pstack": true
+		"pstack@shelly-pstack": true
 	}
 }
 ```
 
-Preserve every unrelated top-level setting and every other plugin entry. If `enabledPlugins` already lists `pstack@claude-pstack`, change only its value. Preserve comments and valid JSONC syntax when the file uses JSONC. Validate the file after editing it.
+Preserve every unrelated top-level setting and every other plugin entry. If `enabledPlugins` already lists `pstack@shelly-pstack`, change only its value. Preserve comments and valid JSONC syntax when the file uses JSONC. Validate the file after editing it.
 
 Reload the target project or start a fresh agent rooted there. Verify that these shared pstack skills resolve from project scope:
 

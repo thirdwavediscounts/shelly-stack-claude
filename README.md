@@ -17,8 +17,8 @@ fork it. improve it. make it yours. PRs are welcome!
 ## install
 
 ```bash
-/plugin marketplace add thirdwavediscounts/claude-pstack
-/plugin install pstack@claude-pstack
+/plugin marketplace add thirdwavediscounts/shelly-pstack
+/plugin install pstack@shelly-pstack
 ```
 
 ## get started
