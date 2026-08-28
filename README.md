@@ -28,7 +28,7 @@ two steps:
 1. run [`/setup-pstack`](./skills/setup-pstack/SKILL.md) and choose which models you want.
 2. use [`/poteto-mode`](./skills/poteto-mode/SKILL.md) whenever you're doing anything that requires rigor.
 
-new here? the [pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
+new here? type `/pstack-guide <what you're trying to do>` and it hands you the skills for that stage. the [pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
 that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code goes to opus, fast mechanical code goes to sonnet, and prose and judgment go to fable. the default panel is fable / opus / sonnet. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) changes any of it.
 
@@ -113,6 +113,7 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 | skill | use it when |
 |---|---|
 | [`/poteto-mode`](./skills/poteto-mode/SKILL.md) | default entry point for any non-trivial task. |
+| [`/pstack-guide`](./skills/pstack-guide/SKILL.md) | you don't know pstack yet. names the skills for the stage you're at (understand, design, build, verify, ship, overnight) with a prompt for your task, then runs the first one. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
