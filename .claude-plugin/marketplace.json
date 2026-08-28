@@ -1,0 +1,16 @@
+{
+	"name": "claude-pstack",
+	"owner": {
+		"name": "Lauren Tan (upstream), Third Wave Discounts (Claude Code port)"
+	},
+	"metadata": {
+		"description": "Claude Code port of poteto's pstack: poteto-mode, its playbooks, the principle skills, and the review panels."
+	},
+	"plugins": [
+		{
+			"name": "pstack",
+			"source": "./",
+			"description": "if you want to go fast, go deep first. rigorous agent workflows you can parallelize with confidence."
+		}
+	]
+}

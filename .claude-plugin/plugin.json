@@ -1,13 +1,12 @@
 {
 	"name": "pstack",
-	"displayName": "pstack",
+	"description": "if you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Claude Code port of poteto's pstack.",
 	"version": "0.14.5",
-	"description": "if you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence.",
 	"author": {
 		"name": "Lauren Tan"
 	},
-	"homepage": "https://github.com/cursor/plugins/tree/main/pstack",
-	"repository": "https://github.com/cursor/plugins",
+	"homepage": "https://github.com/thirdwavediscounts/claude-pstack",
+	"repository": "https://github.com/thirdwavediscounts/claude-pstack",
 	"license": "MIT",
 	"keywords": [
 		"pstack",
@@ -17,14 +16,5 @@
 		"agent-style",
 		"subagents",
 		"unslop"
-	],
-	"category": "developer-tools",
-	"tags": [
-		"workflow",
-		"principles",
-		"review",
-		"planning"
-	],
-	"skills": "./skills/",
-	"agents": "./agents/"
+	]
 }
