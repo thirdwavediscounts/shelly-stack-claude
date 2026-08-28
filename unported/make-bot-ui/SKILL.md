@@ -1,3 +1,5 @@
+> **Unported.** This skill targets Cursor's Grok Bot stack (webhook routines, `SendToUser` secret-request cards, `[routine]` wakes), which has no Claude Code analog. Kept verbatim from upstream for reference; not registered as a skill. See PORTING.md.
+
 ---
 name: Make Bot UI
 description: >-

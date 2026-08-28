@@ -1,6 +1,6 @@
 ---
 name: reproduce-and-fix-issues
-description: Reproduce triaged Slack bugs through a configured app-control adapter, verify existing fixes, and open a bounded draft pull request only after before-and-after proof. Use only from the configured Benny repro automation.
+description: Reproduce triaged Slack bugs through a configured app-control adapter, verify existing fixes, and open a bounded draft pull request only after before-and-after proof. Use only from the configured Benny repro routine.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Wait for a trusted triage marker in the source thread. Reproduce the exact symptom through the target app's real UI. Verify an existing fix when one exists. Attempt a bounded fix only after a confirmed repro.
 
-Load the external Benny configuration supplied by the automation. If the config, required actions, control adapter, or completed feature map is missing, fail closed.
+Load the external Benny configuration supplied by the routine. If the config, required actions, control adapter, or completed feature map is missing, fail closed.
 
 ## Hard safety rules
 
@@ -119,9 +119,9 @@ Use the configured plain Unicode status strings. Keep status text short:
 - Draft pull request opened
 - Fix did not land
 
-Prefer configured Cursor Slack actions. Use `BENNY_SLACK_BOT_TOKEN` only when the user configured it for a narrow missing capability such as editing this one status message. Never expose the token to a worker.
+Prefer the Slack MCP server's configured actions. Use `BENNY_SLACK_BOT_TOKEN` only when the user configured it for a narrow missing capability such as editing this one status message. Never expose the token to a worker.
 
-If no operations channel is configured, keep detailed status in the automation run output. Do not substitute a source-channel root message.
+If no operations channel is configured, keep detailed status in the routine run output. Do not substitute a source-channel root message.
 
 ## 5. Load and check the control adapter
 

@@ -1,6 +1,6 @@
 ---
 name: triage-issue-reports
-description: Triage Slack issue reports with one thread-only verdict, evidence review, cause-aware routing, tracker dedupe, and fail-closed ticket creation. Use only from the configured Benny triage automation.
+description: Triage Slack issue reports with one thread-only verdict, evidence review, cause-aware routing, tracker dedupe, and fail-closed ticket creation. Use only from the configured Benny triage routine.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Classify one Slack report and post one useful verdict in its source thread. Create a tracker issue only for a clear, new bug. Do not reproduce or fix it here.
 
-Load the external Benny configuration supplied by the automation. If the config is missing, malformed, or incomplete, stop without posting or writing to the tracker.
+Load the external Benny configuration supplied by the routine. If the config is missing, malformed, or incomplete, stop without posting or writing to the tracker.
 
 ## Hard safety rules
 
@@ -221,11 +221,11 @@ Marker contract:
 [benny:other]
 ```
 
-Use only the configured marker strings. The repro automation trusts the marker only when it comes from the configured triage identity in this source thread.
+Use only the configured marker strings. The repro routine trusts the marker only when it comes from the configured triage identity in this source thread.
 
 After posting, read the same source thread and verify the verdict appears under `SOURCE_THREAD_TS`. If it does not, never retry at the root.
 
-If this run created a tracker issue and the verdict did not land, use the adapter's compensation action. Verify that the issue is canceled, closed, or deleted. If compensation cannot be verified, report the failure only in the automation run output.
+If this run created a tracker issue and the verdict did not land, use the adapter's compensation action. Verify that the issue is canceled, closed, or deleted. If compensation cannot be verified, report the failure only in the routine run output.
 
 ## 10. Watch one follow-up window
 
@@ -235,6 +235,6 @@ Watch the source thread for the configured follow-up window, then stop.
 - Apply a concrete correction to the tracker issue when safe.
 - Do not emit a second marker in the same run.
 - Stay out of human coordination and side chatter.
-- Stop early if someone asks the automation to stop.
+- Stop early if someone asks the routine to stop.
 
 Do not extend the window more than once. A new report should start a new run.

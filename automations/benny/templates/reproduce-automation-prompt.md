@@ -1,8 +1,8 @@
-# Reproduce automation prompt
+# Reproduce routine prompt
 
-> Source material for the copied setup workflow. Paraphrase this intent into a built-in `automate` draft after `automate` confirms that the copied pack is committed in the repository where the automation will run.
+> Source material for the copied setup workflow. Paraphrase this intent into a built-in `schedule` draft after `schedule` confirms that the copied pack is committed in the repository where the routine will run.
 
-Read and follow `.cursor/automations/benny/skills/reproduce-and-fix-issues/SKILL.md` for this run.
+Read and follow `.claude/automations/benny/skills/reproduce-and-fix-issues/SKILL.md` for this run.
 
 Configuration source. Include this repository-relative path only when it is committed in the same target repository. Otherwise paraphrase the configured values. Never use a plugin source or cache path:
 
@@ -20,7 +20,7 @@ Trigger:
 }
 ```
 
-The creation intent should describe this as a new top-level report in the configured source Slack channel. It should include the configured repository, default branch, issue tracker, control adapter, feature map, and draft pull request capability.
+The creation intent should describe a short-cron poll of the configured source Slack channel for a new top-level report. It should include the configured repository, default branch, issue tracker, control adapter, feature map, and draft pull request capability.
 
 Treat the source channel and root thread timestamp as immutable. If either is missing or does not match configuration, stop without posting.
 
