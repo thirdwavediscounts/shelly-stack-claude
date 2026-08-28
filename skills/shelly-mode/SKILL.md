@@ -1,10 +1,10 @@
 ---
-name: poteto-mode
-description: poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.
+name: shelly-mode
+description: poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /shelly-mode, or requests to work in this style.
 disable-model-invocation: true
 ---
 
-# Poteto mode
+# Shelly mode
 
 ## Non-negotiables
 
@@ -32,7 +32,7 @@ Remaining triggers:
 
 ## Sticky mode
 
-Entering the mode is sticky. On entry, run `mkdir -p ~/.claude/poteto-mode && touch ~/.claude/poteto-mode/$(basename "$PWD")` to mark this workspace. The plugin's UserPromptSubmit hook then reminds you each turn: new task, playbook match or rigor needed, apply /poteto-mode; casual turn or the user opts out, don't. When the user opts out, delete that marker file.
+Entering the mode is sticky. On entry, run `mkdir -p ~/.claude/shelly-mode && touch ~/.claude/shelly-mode/$(basename "$PWD")` to mark this workspace. The plugin's UserPromptSubmit hook then reminds you each turn: new task, playbook match or rigor needed, apply /shelly-mode; casual turn or the user opts out, don't. When the user opts out, delete that marker file.
 
 ## Principles
 
@@ -86,9 +86,9 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
-**Use `subagent_type: "pstack:poteto-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/poteto-mode` and `pstack:poteto-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review; respect what the skill prescribes, don't override to `pstack:poteto-agent`.
+**Use `subagent_type: "shelly-stack:shelly-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/shelly-mode` and `shelly-stack:shelly-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review; respect what the skill prescribes, don't override to `shelly-stack:shelly-agent`.
 
-**Defaults for every `Agent` call.** Spawn, don't wait inline, read-write tool access (a read-only list of Read/Grep/Glob/Bash strips MCP), file pointers not inlined context, explicit model per role (configurable via `/setup-pstack`; defaults `sonnet` for code, `fable` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`fable`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`opus`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model (`sonnet`). Per-role lines in the `/setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit` runs that role on the parent chat model (omit Agent `model`).
+**Defaults for every `Agent` call.** Spawn, don't wait inline, read-write tool access (a read-only list of Read/Grep/Glob/Bash strips MCP), file pointers not inlined context, explicit model per role (configurable via `/setup-shelly-stack`; defaults `sonnet` for code, `fable` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`fable`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`opus`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model (`sonnet`). Per-role lines in the `/setup-shelly-stack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit` runs that role on the parent chat model (omit Agent `model`).
 
 You own every subagent's work. Review the diff and write your own summary, don't pass through what it said. Interrupt-chained resumes silently drop directives, so fire a fresh subagent with consolidated scope rather than trusting a "done" summary. A second opinion is the same prompt against a different model. Agreement is high-signal.
 

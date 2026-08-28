@@ -1,16 +1,16 @@
 {
-	"name": "pstack",
-	"description": "if you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Claude Code port of poteto's pstack.",
+	"name": "shelly-stack",
+	"description": "if you want to go fast, go deep first. shelly-stack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Claude Code port of poteto's shelly-stack.",
 	"version": "0.14.5",
 	"author": {
 		"name": "Lauren Tan"
 	},
-	"homepage": "https://github.com/thirdwavediscounts/shelly-pstack",
-	"repository": "https://github.com/thirdwavediscounts/shelly-pstack",
+	"homepage": "https://github.com/thirdwavediscounts/shelly-stack",
+	"repository": "https://github.com/thirdwavediscounts/shelly-stack",
 	"license": "MIT",
 	"keywords": [
-		"pstack",
-		"poteto-mode",
+		"shelly-stack",
+		"shelly-mode",
 		"workflow",
 		"principles",
 		"agent-style",

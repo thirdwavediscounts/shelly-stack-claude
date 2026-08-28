@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Set up Benny
 
-Benny ships as a dormant routine pack inside pstack. The plugin manifest exposes only pstack's normal skill root; this file and the two operational files are not slash skills.
+Benny ships as a dormant routine pack inside shelly-stack. The plugin manifest exposes only shelly-stack's normal skill root; this file and the two operational files are not slash skills.
 
 The human enters setup by pointing Claude Code at the pack's `FOR_AGENTS.md`. The bootstrap flow copies the whole pack into the target repository, then reads this file directly at `.claude/automations/benny/skills/setup-benny/SKILL.md`.
 
@@ -14,7 +14,7 @@ Benny needs external configuration and two live Claude Code routines.
 
 Do not create or update a routine until the user explicitly asks. Never put a secret value in plugin files, prompts, or committed configuration.
 
-## 1. Copy the pack and enable shared pstack skills
+## 1. Copy the pack and enable shared shelly-stack skills
 
 Do this before asking for Benny configuration and before invoking the built-in `/schedule` skill.
 
@@ -31,21 +31,21 @@ Merge the entire source pack into the destination:
 
 If this file is already being read from the target destination, treat the copy as complete and run the same verification before continuing.
 
-Add the marketplace with `/plugin marketplace add thirdwavediscounts/shelly-pstack`, then add pstack to the target repository's `.claude/settings.json`. If the file or `.claude` directory does not exist, create it.
+Add the marketplace with `/plugin marketplace add thirdwavediscounts/shelly-stack`, then add shelly-stack to the target repository's `.claude/settings.json`. If the file or `.claude` directory does not exist, create it.
 
 Merge this entry into the existing JSON or JSONC:
 
 ```json
 {
 	"enabledPlugins": {
-		"pstack@shelly-pstack": true
+		"shelly-stack@shelly-stack": true
 	}
 }
 ```
 
-Preserve every unrelated top-level setting and every other plugin entry. If `enabledPlugins` already lists `pstack@shelly-pstack`, change only its value. Preserve comments and valid JSONC syntax when the file uses JSONC. Validate the file after editing it.
+Preserve every unrelated top-level setting and every other plugin entry. If `enabledPlugins` already lists `shelly-stack@shelly-stack`, change only its value. Preserve comments and valid JSONC syntax when the file uses JSONC. Validate the file after editing it.
 
-Reload the target project or start a fresh agent rooted there. Verify that these shared pstack skills resolve from project scope:
+Reload the target project or start a fresh agent rooted there. Verify that these shared shelly-stack skills resolve from project scope:
 
 - `how`
 - `why`
@@ -58,7 +58,7 @@ Reload the target project or start a fresh agent rooted there. Verify that these
 - `principle-fix-root-causes`
 - `principle-prove-it-works`
 
-Do not count a skill loaded from the current session or a user-scoped plugin. The check must show that a fresh agent in the target repository receives pstack through project settings.
+Do not count a skill loaded from the current session or a user-scoped plugin. The check must show that a fresh agent in the target repository receives shelly-stack through project settings.
 
 If project-scoped plugin installation is unavailable or any shared dependency does not resolve, stop and explain the failure.
 
@@ -113,7 +113,7 @@ Use only the Agent tool's `model` values or another supported model list. Do not
 
 The source channel, triage identity, repository, tracker adapter, control skill, and feature map must be explicit. Fail setup if any required value stays ambiguous.
 
-Use pstack's `unslop` skill on the final routine names, descriptions, and prompt shims before saving them.
+Use shelly-stack's `unslop` skill on the final routine names, descriptions, and prompt shims before saving them.
 
 ## 4. Check integration capabilities
 

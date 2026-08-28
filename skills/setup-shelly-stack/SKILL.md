@@ -1,11 +1,11 @@
 ---
-name: setup-pstack
-description: Configure which models pstack uses per role. Detects your available models and writes a user-level rule that overrides the skill defaults. Use for /setup-pstack, "configure pstack models", or changing pstack's model choices.
+name: setup-shelly-stack
+description: Configure which models shelly-stack uses per role. Detects your available models and writes a user-level rule that overrides the skill defaults. Use for /setup-shelly-stack, "configure shelly-stack models", or changing shelly-stack's model choices.
 ---
 
-# Setup pstack
+# Setup shelly-stack
 
-Write `~/.claude/rules/pstack-models.md`, a user-level rule loaded every session that sets pstack's model per role. The skills read it and fall back to their inline defaults when a line is absent, so this is an override layer, not a requirement.
+Write `~/.claude/rules/shelly-stack-models.md`, a user-level rule loaded every session that sets shelly-stack's model per role. The skills read it and fall back to their inline defaults when a line is absent, so this is an override layer, not a requirement.
 
 ## Steps
 
@@ -15,7 +15,7 @@ Enumerate the values you can pass as an `Agent` subagent's `model` in this sessi
 
 ### 2. Load current state
 
-The default role-to-model mapping is the rule shape shown in step 5 below. If `~/.claude/rules/pstack-models.md` already exists, read it and treat its values as the current choices. Otherwise start from those defaults.
+The default role-to-model mapping is the rule shape shown in step 5 below. If `~/.claude/rules/shelly-stack-models.md` already exists, read it and treat its values as the current choices. Otherwise start from those defaults.
 
 ### 3. Map and confirm
 
@@ -27,10 +27,10 @@ Every real value written must be in the detected set; `inherit` always passes. I
 
 ### 5. Write the rule
 
-Write `~/.claude/rules/pstack-models.md` with no frontmatter and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:
+Write `~/.claude/rules/shelly-stack-models.md` with no frontmatter and one line per role, using the same labels shelly-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:
 
 ```
-# pstack model configuration. One line per role. Delete a line to fall back to the skill default.
+# shelly-stack model configuration. One line per role. Delete a line to fall back to the skill default.
 # `inherit` as a value: the role runs on the parent chat model (omit Agent `model`). Alias entries in a panel list still count toward its fan-out.
 feature, refactoring: sonnet
 bug-fix: opus
@@ -58,4 +58,4 @@ Tell the user the rule was written and that it applies to new sessions. Re-runni
 
 ### 7. Offer a verification skill (optional)
 
-Check whether the project has a way to drive the real app for proof (a `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /create-verification-skill." On yes, invoke `/create-verification-skill` (resolves wherever pstack is installed — workspace, user, or plugin). On no, move on without pushing.
+Check whether the project has a way to drive the real app for proof (a `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /create-verification-skill." On yes, invoke `/create-verification-skill` (resolves wherever shelly-stack is installed — workspace, user, or plugin). On no, move on without pushing.

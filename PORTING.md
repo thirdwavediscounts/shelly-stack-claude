@@ -1,6 +1,6 @@
 # Porting notes
 
-shelly-pstack is a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (cursor/plugins @ 397c8660, MIT, Lauren Tan) to a Claude Code plugin. Commit `ef5d652` in this repo is the verbatim upstream import; `git diff ef5d652` is the whole port.
+shelly-stack is a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (cursor/plugins @ 397c8660, MIT, Lauren Tan) to a Claude Code plugin. Commit `ef5d652` in this repo is the verbatim upstream import; `git diff ef5d652` is the whole port.
 
 The goal was fidelity. Poteto's voice, skills, playbooks, principles, and file layout are unchanged. Only what Cursor-specific was translated.
 
@@ -9,12 +9,12 @@ The goal was fidelity. Poteto's voice, skills, playbooks, principles, and file l
 | Cursor | Claude Code |
 |---|---|
 | `.cursor-plugin/plugin.json` | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` (single-plugin repo) |
-| `/add-plugin pstack` | `/plugin marketplace add thirdwavediscounts/shelly-pstack`, `/plugin install pstack@shelly-pstack` |
-| `Task` tool, `subagent_type: "poteto-agent"` / `"Comment Sicko"` / `generalPurpose` | `Agent` tool, `pstack:poteto-agent` / `pstack:comment-sicko` / `general-purpose` |
+| `/add-plugin shelly-stack` | `/plugin marketplace add thirdwavediscounts/shelly-stack`, `/plugin install shelly-stack@shelly-stack` |
+| `Task` tool, `subagent_type: "shelly-agent"` / `"Comment Sicko"` / `generalPurpose` | `Agent` tool, `shelly-stack:shelly-agent` / `shelly-stack:comment-sicko` / `general-purpose` |
 | `run_in_background: true`, `readonly:` | dropped; Agent subagents run in the background, access is restricted by tool list |
 | `AskQuestion`, `allow_multiple` | `AskUserQuestion`, `multiSelect` |
-| Skill frontmatter `mode: true` + `reminder:` (sticky mode) | marker file `~/.claude/poteto-mode/<project>` + `hooks/poteto-mode-reminder.sh` on `UserPromptSubmit` |
-| `~/.cursor/rules/pstack-models.mdc` (`alwaysApply`) | `~/.claude/rules/pstack-models.md` (user-level rule, loaded every session) |
+| Skill frontmatter `mode: true` + `reminder:` (sticky mode) | marker file `~/.claude/shelly-mode/<project>` + `hooks/shelly-mode-reminder.sh` on `UserPromptSubmit` |
+| `~/.cursor/rules/shelly-stack-models.mdc` (`alwaysApply`) | `~/.claude/rules/shelly-stack-models.md` (user-level rule, loaded every session) |
 | `.cursor/skills/`, `~/.cursor/skills/`, `.cursor/settings.json` | `.claude/skills/`, `~/.claude/skills/`, `.claude/settings.json` |
 | Transcripts `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl` | `~/.claude/projects/<slug>/<uuid>.jsonl` (`<slug>` keeps the leading dash) |
 | Cursor built-in `create-skill` | bundled `skills/create-skill` |

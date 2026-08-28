@@ -60,7 +60,7 @@ Group the combined signals into sections. Common ones (use only what applies):
 - **Process**: git worktrees, commits, PRs, review/merge tooling.
 - **Skills**: skill-authoring habits, fix-the-skill-first, proposing new skills.
 
-The **poteto-mode** skill shows the shape. Read it for granularity. Don't copy its content; the user's rules are not the same as poteto-mode's.
+The **shelly-mode** skill shows the shape. Read it for granularity. Don't copy its content; the user's rules are not the same as shelly-mode's.
 
 ### 4. Draft the skill
 
@@ -104,6 +104,6 @@ Run a description-optimization loop only if the skill's trigger accuracy turns o
 
 ## Reference files
 
-- The **poteto-mode** skill: example of the output shape.
+- The **shelly-mode** skill: example of the output shape.
 - The **unslop** skill: prose discipline for every line.
 - The **create-skill** skill: skill authoring process and writing guidelines.
