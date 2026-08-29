@@ -1,7 +1,7 @@
 {
-  "name": "shelly-stack-codex",
+  "name": "shelly-stack",
   "interface": {
-    "displayName": "Shelly Stack for Codex"
+    "displayName": "Shelly Stack"
   },
   "plugins": [
     {

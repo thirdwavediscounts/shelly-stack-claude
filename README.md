@@ -1,6 +1,6 @@
 # shelly-stack
 
-this repository ships Claude Code and Codex builds of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto). the Claude Code build stays at the repository root. the native Codex build is generated under `plugins/shelly-stack`. see PORTING.md.
+this repository is one shelly-stack plugin for Claude Code and Codex, ported from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`. see PORTING.md.
 
 i'm [poteto](https://x.com/poteto). i'm not a president or ceo, but i've worked with millions of lines of code at Meta, Netflix, and Cursor. i'm also on the react core team where i help build and maintain react compiler.
 
@@ -29,13 +29,20 @@ From this repository, add the native marketplace and install the Codex build:
 
 ```bash
 codex plugin marketplace add /absolute/path/to/shelly-stack
-codex plugin add shelly-stack@shelly-stack-codex
+codex plugin add shelly-stack@shelly-stack
 ```
 
 The Codex package is built from the shared skills with:
 
 ```bash
 ./scripts/build_codex_plugin.py
+```
+
+both clients install the same `shelly-stack@shelly-stack` identity and release version. do not edit `plugins/shelly-stack` by hand. edit the shared source or `codex/` adapter, rebuild, then run:
+
+```bash
+./scripts/build_codex_plugin.py --check
+./scripts/validate_dual_runtime.py
 ```
 
 ## get started

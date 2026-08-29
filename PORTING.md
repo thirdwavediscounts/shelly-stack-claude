@@ -1,6 +1,6 @@
 # Porting notes
 
-shelly-stack is a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (cursor/plugins @ 397c8660, MIT, Lauren Tan) to Claude Code and Codex. Commit `ef5d652` in this repo is the verbatim upstream import. The root plugin is the Claude Code source. `scripts/build_codex_plugin.py` produces the native Codex package at `plugins/shelly-stack`.
+shelly-stack is a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (cursor/plugins @ 397c8660, MIT, Lauren Tan) to Claude Code and Codex. Commit `ef5d652` in this repo is the verbatim upstream import. It is one maintained plugin with one skill, guide, and agent source. Claude Code consumes that source at the repository root. `scripts/build_codex_plugin.py` adds the Codex runtime adapter and produces the native projection at `plugins/shelly-stack`.
 
 The goal is fidelity. Poteto's voice, skills, playbooks, and principles stay shared. Each runtime gets a small adapter for its tools, model names, paths, invocation policy, and unsupported features.
 
@@ -41,6 +41,8 @@ The goal is fidelity. Poteto's voice, skills, playbooks, and principles stay sha
 | Claude routines and cloud-agent fields | excluded or translated to native local subagents and Codex heartbeat automations |
 
 The Codex build copies the shared `skills`, `docs`, and subagent prompts, overlays Codex-specific skills such as setup, inserts a runtime adapter link into every skill, and translates explicit-only invocation metadata. The generated directory is committed so Codex can install it directly from the repository marketplace.
+
+Both marketplaces expose the identity `shelly-stack@shelly-stack`. The Claude manifest owns the shared release version, and the Codex builder writes that same version into the generated manifest. CI runs the builder in check mode and rejects any stale generated package or client-specific configuration leak.
 
 ## Not ported
 
