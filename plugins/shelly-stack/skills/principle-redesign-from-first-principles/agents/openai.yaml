@@ -1,0 +1,6 @@
+interface:
+  display_name: Principle Redesign From First Principles
+  short_description: Use the Principle Redesign From First Principles workflow in
+    Cod
+policy:
+  allow_implicit_invocation: false

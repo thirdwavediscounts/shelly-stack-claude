@@ -1,0 +1,5 @@
+interface:
+  display_name: Show Me Your Work
+  short_description: Use the Show Me Your Work workflow in Codex
+policy:
+  allow_implicit_invocation: false

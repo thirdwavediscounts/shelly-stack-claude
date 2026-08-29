@@ -1,0 +1,5 @@
+interface:
+  display_name: TDD
+  short_description: Use the TDD workflow in Codex
+policy:
+  allow_implicit_invocation: false

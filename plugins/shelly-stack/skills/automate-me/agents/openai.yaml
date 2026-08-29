@@ -1,0 +1,5 @@
+interface:
+  display_name: Automate Me
+  short_description: Use the Automate Me workflow in Codex
+policy:
+  allow_implicit_invocation: false

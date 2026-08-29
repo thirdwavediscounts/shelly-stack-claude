@@ -1,0 +1,5 @@
+interface:
+  display_name: Maintain Verification Skill
+  short_description: Use the Maintain Verification Skill workflow in Codex
+policy:
+  allow_implicit_invocation: false

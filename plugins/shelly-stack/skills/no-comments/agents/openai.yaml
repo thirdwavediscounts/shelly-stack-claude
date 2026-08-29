@@ -1,0 +1,5 @@
+interface:
+  display_name: No Comments
+  short_description: Use the No Comments workflow in Codex
+policy:
+  allow_implicit_invocation: false

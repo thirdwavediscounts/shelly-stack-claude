@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Outcome Oriented Execution
+  short_description: Use the Principle Outcome Oriented Execution workflow in Codex
+policy:
+  allow_implicit_invocation: false

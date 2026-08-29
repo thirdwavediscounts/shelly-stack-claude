@@ -1,0 +1,5 @@
+interface:
+  display_name: Interrogate
+  short_description: Use the Interrogate workflow in Codex
+policy:
+  allow_implicit_invocation: false

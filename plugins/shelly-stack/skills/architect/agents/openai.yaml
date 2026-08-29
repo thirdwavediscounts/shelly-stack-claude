@@ -1,0 +1,5 @@
+interface:
+  display_name: Architect
+  short_description: Use the Architect workflow in Codex
+policy:
+  allow_implicit_invocation: false

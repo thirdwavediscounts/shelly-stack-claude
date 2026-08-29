@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Exhaust The Design Space
+  short_description: Use the Principle Exhaust The Design Space workflow in Codex
+policy:
+  allow_implicit_invocation: false

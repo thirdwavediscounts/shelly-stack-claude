@@ -1,36 +1,53 @@
 # shelly-stack
 
-this is the Claude Code port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto); everything Cursor-specific was translated, see PORTING.md.
+this repository ships Claude Code and Codex builds of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto). the Claude Code build stays at the repository root. the native Codex build is generated under `plugins/shelly-stack`. see PORTING.md.
 
 i'm [poteto](https://x.com/poteto). i'm not a president or ceo, but i've worked with millions of lines of code at Meta, Netflix, and Cursor. i'm also on the react core team where i help build and maintain react compiler.
 
 there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
 
-**shelly-stack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. this turns claude code into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. shelly-stack helps you write less, but higher quality code.
+**shelly-stack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. this turns your coding agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. shelly-stack helps you write less, but higher quality code.
 
 **shelly-stack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `shelly-mode` and trust that they'll apply rigorous engineering principles to their work.
 
-**claude code gives you the best of all worlds.** every frontier model has its strengths and weaknesses. use any model with shelly-stack. the panels run across anthropic's tiers, and can seat a codex reviewer too if you have the `openai-codex` plugin installed. in fact, many of my skills use multi-model workflows to take advantage of each model's unique strengths.
+**multi-model work gives you the best of all worlds.** every frontier model has strengths and weaknesses. use any model available in your client. the setup skill writes separate Claude Code and Codex configuration files so one client never breaks the other.
 
 fork it. improve it. make it yours. PRs are welcome! 
 
 ## install
+
+### Claude Code
 
 ```bash
 /plugin marketplace add thirdwavediscounts/shelly-stack
 /plugin install shelly-stack@shelly-stack
 ```
 
+### Codex
+
+From this repository, add the native marketplace and install the Codex build:
+
+```bash
+codex plugin marketplace add /absolute/path/to/shelly-stack
+codex plugin add shelly-stack@shelly-stack-codex
+```
+
+The Codex package is built from the shared skills with:
+
+```bash
+./scripts/build_codex_plugin.py
+```
+
 ## get started
 
 two steps:
 
-1. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) and choose which models you want.
-2. use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) whenever you're doing anything that requires rigor.
+1. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) in Claude Code or `$shelly-stack:setup-shelly-stack` in Codex, then choose your models.
+2. use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) in Claude Code or `$shelly-stack:shelly-mode` in Codex whenever the task requires rigor.
 
 new here? type `/shelly-guide <what you're trying to do>` and it hands you the skills for that stage. the [shelly-stack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code goes to opus, fast mechanical code goes to sonnet, and prose and judgment go to fable. the default panel is fable / opus / sonnet. [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) changes any of it.
+that's it. the other skills are situational; the mode skill uses them as needed. Claude Code keeps its Anthropic defaults. Codex chooses from the models exposed by its native subagent tool. Each setup writes only its own configuration file.
 
 ## usage
 
@@ -91,9 +108,9 @@ when invoked it:
 
 the full rules and playbooks live in [`skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
 
-[`/shelly-mode`](./skills/shelly-mode/SKILL.md) is also a sticky mode: once entered it stays on across turns, applying itself when a playbook matches or the task needs rigor and staying out of the way otherwise. opt out any time by saying so.
+In Claude Code, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) is sticky across turns through its bundled hook. Codex does not run Claude hooks, so `$shelly-stack:shelly-mode` applies to the turn where you invoke it.
 
-[`/shelly-mode`](./skills/shelly-mode/SKILL.md) works extremely well with claude code's `/loop` command. you can make claude code work for many hours without sacrificing rigor.
+For long work, Claude Code can use `/loop`. Codex uses native subagent waits during the current turn or a heartbeat automation when you explicitly ask for recurring future checks.
 
 ## skills
 
@@ -188,11 +205,11 @@ automate-me:       /automate-me
 
 ## the `shelly-agent` and Comment Sicko subagents
 
-shelly-stack also ships a subagent that runs my style end to end. spawn it from a parent agent via [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md). it reads `shelly-mode` in full, including its inline principles index, before doing any work. substituting `general-purpose` skips that read and drifts.
+shelly-stack also ships a subagent prompt that runs my style end to end. Claude Code exposes it as [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md). Codex uses a native subagent whose prompt requires reading `$shelly-stack:shelly-mode` in full before work starts.
 
 [`/shelly-mode`](./skills/shelly-mode/SKILL.md) and [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md) route through the same wrapper.
 
-shelly-stack also ships [Comment Sicko](./agents/comment-sicko.md), a read-only comment reviewer available as `subagent_type: "shelly-stack:comment-sicko"`. usually invoke it through [`/no-comments`](./skills/no-comments/SKILL.md), not directly.
+shelly-stack also ships [Comment Sicko](./agents/comment-sicko.md). Claude Code exposes the custom subagent directly. Codex spawns a native read-only reviewer with the same bundled prompt. usually invoke it through [`/no-comments`](./skills/no-comments/SKILL.md), not directly.
 
 ## principles
 
@@ -237,7 +254,7 @@ a few things `shelly-mode` references but doesn't bundle:
 
 ## why are there no planning skills?
 
-claude code already has a great plan mode (shift+tab) which works great with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default. 
+Claude Code and Codex both have plan support that works with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default.
 
 ## make it yours
 
@@ -245,11 +262,11 @@ claude code already has a great plan mode (shift+tab) which works great with she
 
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through shelly-stack underneath. you keep shelly-stack as the base and end up with your own routing skill alongside `shelly-mode`.
 
-models are configurable too. type [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md). it detects the models you have access to and writes a small always-applied rule mapping each role (code, judgment, the review panels) to a model. every skill reads it and falls back to sensible defaults when the rule is absent, so you override only what you want.
+models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) in Claude Code or `$shelly-stack:setup-shelly-stack` in Codex. Claude writes `~/.claude/rules/shelly-stack-models.md`. Codex writes `~/.codex/shelly-stack-models.md`. neither setup reads or overwrites the other client's file.
 
 ## automations
 
-shelly-stack also ships a dormant [benny automation pack](./automations/benny/). benny triages slack issue reports, then reproduces and fixes confirmed bugs with real ui evidence. its files are not registered as slash skills.
+shelly-stack also ships a dormant, Claude-only [benny automation pack](./automations/benny/). benny triages slack issue reports, then reproduces and fixes confirmed bugs with real ui evidence. the Codex build excludes this pack.
 
 to set it up, point claude code at [`FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md). setup copies the pack into the target repository at `.claude/automations/benny/`, enables shelly-stack there for shared skills, and keeps user configuration outside the copied pack.
 

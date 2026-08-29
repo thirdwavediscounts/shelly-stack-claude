@@ -1,0 +1,20 @@
+{
+  "name": "shelly-stack-codex",
+  "interface": {
+    "displayName": "Shelly Stack for Codex"
+  },
+  "plugins": [
+    {
+      "name": "shelly-stack",
+      "source": {
+        "source": "local",
+        "path": "./plugins/shelly-stack"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
