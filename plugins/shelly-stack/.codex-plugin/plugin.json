@@ -1,0 +1,37 @@
+{
+  "name": "shelly-stack",
+  "version": "0.15.0",
+  "description": "Rigorous engineering workflows, review panels, and reusable principles adapted for native Codex subagents.",
+  "author": {
+    "name": "Lauren Tan and Third Wave Discounts"
+  },
+  "homepage": "https://github.com/thirdwavediscounts/shelly-stack",
+  "repository": "https://github.com/thirdwavediscounts/shelly-stack",
+  "license": "MIT",
+  "keywords": [
+    "shelly-stack",
+    "shelly-mode",
+    "workflow",
+    "principles",
+    "subagents",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Shelly Stack",
+    "shortDescription": "Rigorous engineering workflows for Codex",
+    "longDescription": "Shelly Stack brings structured implementation, review, architecture, verification, and multi-agent workflows to Codex.",
+    "developerName": "Lauren Tan and Third Wave Discounts",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/thirdwavediscounts/shelly-stack",
+    "defaultPrompt": [
+      "Use Shelly Stack to choose the right workflow for this task.",
+      "Use Shelly Stack to review this change adversarially.",
+      "Use Shelly Stack to design this before implementation."
+    ]
+  }
+}

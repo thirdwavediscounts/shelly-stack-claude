@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Minimize Reader Load
+  short_description: Use the Principle Minimize Reader Load workflow in Codex
+policy:
+  allow_implicit_invocation: false

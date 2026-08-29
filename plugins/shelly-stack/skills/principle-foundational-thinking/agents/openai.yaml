@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Foundational Thinking
+  short_description: Use the Principle Foundational Thinking workflow in Codex
+policy:
+  allow_implicit_invocation: false

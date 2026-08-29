@@ -1,0 +1,5 @@
+interface:
+  display_name: Technical Writing
+  short_description: Use the Technical Writing workflow in Codex
+policy:
+  allow_implicit_invocation: false

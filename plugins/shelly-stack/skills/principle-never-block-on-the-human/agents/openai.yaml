@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Never Block On The Human
+  short_description: Use the Principle Never Block On The Human workflow in Codex
+policy:
+  allow_implicit_invocation: false

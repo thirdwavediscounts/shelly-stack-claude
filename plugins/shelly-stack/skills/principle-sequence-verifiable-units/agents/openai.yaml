@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Sequence Verifiable Units
+  short_description: Use the Principle Sequence Verifiable Units workflow in Codex
+policy:
+  allow_implicit_invocation: false

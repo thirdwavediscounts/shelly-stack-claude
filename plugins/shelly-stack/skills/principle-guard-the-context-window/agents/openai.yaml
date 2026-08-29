@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Guard The Context Window
+  short_description: Use the Principle Guard The Context Window workflow in Codex
+policy:
+  allow_implicit_invocation: false

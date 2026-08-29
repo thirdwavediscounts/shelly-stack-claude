@@ -1,0 +1,20 @@
+{
+  "name": "shelly-stack",
+  "interface": {
+    "displayName": "Shelly Stack"
+  },
+  "plugins": [
+    {
+      "name": "shelly-stack",
+      "source": {
+        "source": "local",
+        "path": "./plugins/shelly-stack"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

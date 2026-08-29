@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Boundary Discipline
+  short_description: Use the Principle Boundary Discipline workflow in Codex
+policy:
+  allow_implicit_invocation: false

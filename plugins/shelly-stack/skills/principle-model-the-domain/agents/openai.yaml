@@ -1,0 +1,5 @@
+interface:
+  display_name: Principle Model The Domain
+  short_description: Use the Principle Model The Domain workflow in Codex
+policy:
+  allow_implicit_invocation: false

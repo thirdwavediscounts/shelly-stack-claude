@@ -1,0 +1,5 @@
+interface:
+  display_name: Recall
+  short_description: Use the Recall workflow in Codex
+policy:
+  allow_implicit_invocation: false
