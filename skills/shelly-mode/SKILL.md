@@ -115,6 +115,7 @@ Your first todolist actions are the matched playbook's steps, copied in verbatim
 
 A large or cross-cutting effort (a migration across many call sites, an ambitious multi-part change), or work the user steps away from to trust later, routes to the **figure-it-out** skill even when a narrower playbook like Feature fits. Use **figure-it-out** whenever no bundled playbook fits. It designs a bespoke, rigorous playbook for the task. A standing project-scale program (multi-day, many stacked PRs, a fleet of subagents under one coordinator) routes to **Orchestrate** instead; figure-it-out designs one bespoke run, orchestrate runs the program.
 
+- **Ticket.** A Linear Dev ticket id as the task ("DEV-200", "work DEV-142", /ticket DEV-99). Invoke the **ticket** skill, do not copy steps from it. It reads the issue, triages or investigates a thin ticket, then dispatches the build to the matching playbook below and owns the Linear status moves and comments through to a merged PR. Also files follow-ups from design or investigation as a parent issue plus sub-issues.
 - **Investigation.** Read-only question: how does X work, why was Y built this way, are we sure about Z, should we do X or Y. `playbooks/investigation.md`.
 - **Bug fix.** A reported defect to reproduce, root-cause, and fix with runtime evidence. `playbooks/bug-fix.md`.
 - **Perf issue.** A measured slowness to trace and improve against a baseline. `playbooks/perf-issue.md`.
