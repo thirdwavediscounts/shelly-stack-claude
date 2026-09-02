@@ -48,7 +48,12 @@ Both marketplaces expose the identity `shelly-stack@shelly-stack`. The Claude ma
 - `make-bot-ui` is built on Cursor's Grok Bot stack (webhook routines, `SendToUser` secret-request cards, `[routine]` wakes). No Claude Code analog exists. The original is kept verbatim at `unported/make-bot-ui/` and is not registered as a skill.
 - The benny automation pack is not part of the Codex package; it still depends on Claude routines.
 
+## Replaced
+
+- Graphite (`gt`) stack workflows now run on `gh` plus git: topology from `gh pr list`, restacks via `git rebase --update-refs`, sequential landing by arming `gh pr merge --auto` on one PR at a time.
+- Cloud and remote execution: every worker runs locally, writers in their own git worktree.
+
 ## Kept as-is
 
-- Graphite (`gt`) stack workflows, Bugbot triage, the `watch-pr` and `orch` scripts (bun), and every principle skill.
+- Bugbot triage, the `watch-pr` and `orch` scripts (bun), and every principle skill.
 - The watch-pr script still recognizes Bugbot comments by `CURSOR_AUTOMATION_ID`; that is what Bugbot posts on GitHub regardless of editor.

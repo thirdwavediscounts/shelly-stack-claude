@@ -15,7 +15,7 @@ This file overrides conflicting Claude Code wording in the shared Shelly Stack s
 - `general-purpose` means an ordinary native subagent with a concrete task name and prompt.
 - A `shelly-stack:shelly-agent` request means a native subagent whose prompt tells it to read `$shelly-stack:shelly-mode` completely before it works.
 - A `shelly-stack:comment-sicko` request means a native read-only review subagent using the bundled `agents/comment-sicko.md` prompt. Prompt it not to edit files because Codex collaboration does not enforce Claude tool allowlists.
-- Launch independent subagents in parallel when the shared skill calls for a panel. Codex has no Claude `isolation: remote` or `environment: cloud` field. Put concurrent writers in separate Git worktrees or give them non-overlapping outputs.
+- Launch independent subagents in parallel when the shared skill calls for a panel. Codex has no Claude `isolation: worktree` field or `Workflow` tool. Put concurrent writers in separate Git worktrees or give them non-overlapping outputs.
 - Model names come from the current `spawn_agent` schema. Never pass Claude aliases such as `fable`, `opus`, `sonnet`, or `haiku` to Codex.
 
 ## Model configuration
