@@ -1,6 +1,6 @@
 # shelly-stack
 
-this repository is one shelly-stack plugin for Claude Code and Codex, ported from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`. see PORTING.md.
+this repository is one shelly-stack plugin for Claude Code and Codex, forked from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`.
 
 shelly-stack is Sean's fork of pstack for Third Wave Discounts: poteto's playbooks and principles, adapted to how we ship. everything runs locally on Claude Code with per-role model and effort pinned through `~/.claude/agents`, stacks land through `gh` and git, and swarm fan-out runs as a Workflow script.
 
