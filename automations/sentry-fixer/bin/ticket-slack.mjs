@@ -33,16 +33,20 @@ const cat = (id) => `https://cataas.com/cat/${id}`;
 
 const IDENTITY = {
   start: { username: "orchestrate", icon_url: cat("G2gU9xo3HUvi70LL") },
-  triage: { username: "triage", icon_url: cat("CyHhy2hqLNBoraUt") },
-  build: { username: "fix", icon_url: cat("C5Ddbc1ilh45jiAk") },
-  verify: { username: "verify", icon_url: cat("0M0Lo3dsYft79xNd") },
-  "verify-live": { username: "verify-live", icon_url: cat("DDnc0SqHG6mI24cM") },
-  pr: { username: "open-pr", icon_url: cat("7U01QMCY91SvOpyk") },
-  ci: { username: "ci", icon_url: cat("FAkFJCfYbZOF8aDI") },
-  blocked: { username: "blocked", icon_url: cat("8Tx4SPtXlW9TR5Lm") },
-  merged: { username: "ship", icon_url: cat("7aqq2nCe7IiZEKjJ") },
+  triage: { header: "Triage", username: "triage", icon_url: cat("CyHhy2hqLNBoraUt") },
+  build: { header: "Fix", username: "fix", icon_url: cat("C5Ddbc1ilh45jiAk") },
+  verify: { header: "Gates", username: "verify", icon_url: cat("0M0Lo3dsYft79xNd") },
+  "verify-live": { header: "Live proof", username: "verify-live", icon_url: cat("DDnc0SqHG6mI24cM") },
+  pr: { header: "PR", username: "open-pr", icon_url: cat("7U01QMCY91SvOpyk") },
+  ci: { header: "CI", username: "ci", icon_url: cat("FAkFJCfYbZOF8aDI") },
+  blocked: { header: "Needs human", username: "blocked", icon_url: cat("8Tx4SPtXlW9TR5Lm") },
+  merged: { header: "Shipped", username: "ship", icon_url: cat("7aqq2nCe7IiZEKjJ") },
 };
 const ROOT_STEPS = new Set(["start", "anchor"]);
+
+// Every reply opens with its step header in bold, so a thread reads as a fixed
+// sequence of sections no matter how the caller phrased the body.
+const withHeader = (step, text) => `*${IDENTITY[step].header}*\n${text}`;
 
 function die(msg) {
   process.stderr.write(`ticket-slack: ${msg}\n`);
@@ -99,7 +103,7 @@ async function findThreadTs(ticket) {
 }
 
 async function postMessage({ text, step, thread_ts }) {
-  const id = IDENTITY[step] || IDENTITY.start;
+  const { header: _header, ...id } = IDENTITY[step] || IDENTITY.start;
   const res = await slack("chat.postMessage", {
     channel: CHANNEL,
     text,
@@ -188,7 +192,7 @@ async function main() {
     }
     // For root steps the anchor already exists; only reply for non-root steps.
     if (!ROOT_STEPS.has(step)) {
-      await postMessage({ step, text, thread_ts });
+      await postMessage({ step, text: withHeader(step, text), thread_ts });
     }
     if (args.file) {
       await uploadFile({
