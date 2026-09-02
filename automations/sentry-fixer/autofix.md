@@ -37,6 +37,7 @@ Linear team `Dev` (key DEV). Sentry org `thirdwave-discounts`. Tickets created b
 ## Rules
 
 - One ticket per run.
+- Stop after the close out. Do not subscribe to PR activity, poll CI, or wait for review; the session ends once the ticket is In Review or Need Human.
 - Never run destructive SQL or anything against the production database.
 - Never edit `CLAUDE.md`, env files, `service:` ids, OAuth origins, public routes, env var names, or cron endpoints.
 - Sentry notes go through `execute_sentry_tool` with `name` = `add_issue_note`; it is a catalog tool, not a direct one.
