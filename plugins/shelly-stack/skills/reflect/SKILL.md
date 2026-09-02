@@ -37,7 +37,9 @@ For each candidate, read the first JSONL line and check that `message.content[0]
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three `Agent` calls, `subagent_type: general-purpose`, explicit `model:` on each, read-write with the MCP tools left in. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript); a read-only tool list strips the MCPs. The prompt forbids file writes; the parent applies edits.
+One message, three `Agent` calls, `subagent_type: general-purpose`, explicit `model:` on each (or `subagent_type` when the configured value is an agent name; see below), read-write with the MCP tools left in. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript); a read-only tool list strips the MCPs. The prompt forbids file writes; the parent applies edits.
+
+Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
 
 | Lens | `model` | Prompt template |
 |---|---|---|

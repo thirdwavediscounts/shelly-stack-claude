@@ -62,21 +62,22 @@ def rewrite_body_for_codex(body: str, skill_name: str) -> str:
             "~/.claude/rules/shelly-stack-models.md",
             "~/.codex/shelly-stack-models.md",
         )
+    body = re.sub(
+        r"A configured role value is either an Agent `model` alias.*?for that spawn\.",
+        "Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.",
+        body,
+        flags=re.DOTALL,
+    )
+    body = re.sub(
+        r"Invoking swarm is the user's opt-in to multi-agent orchestration.*?the Workflow runs locally\.",
+        "Spawn all N workers in one message, one native subagent per brief on the configured worker model. "
+        "Codex has no `Workflow` tool or `isolation` field; give each writing worker its own worktree or branch in the brief, and ask for the report shape below.",
+        body,
+        flags=re.DOTALL,
+    )
     body = body.replace("~/.claude/skills/", "~/.codex/skills/")
     body = body.replace(".claude/skills/", ".agents/skills/")
 
-    if skill_name == "shelly-mode":
-        body = re.sub(
-            r"## Sticky mode\n\n.*?\n\n## Principles",
-            "## Turn-scoped mode\n\n"
-            "Codex does not run the Claude `UserPromptSubmit` hook. Apply Shelly mode to "
-            "the current turn only. Do not create or delete `~/.claude/shelly-mode` marker "
-            "files. If the user explicitly asks for recurring future checks, use a Codex "
-            "heartbeat automation.\n\n## Principles",
-            body,
-            count=1,
-            flags=re.DOTALL,
-        )
     if skill_name == "arena":
         body = body.replace(
             "Otherwise default to one each on `fable`, `opus`, `sonnet`.",

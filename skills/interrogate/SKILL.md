@@ -41,6 +41,8 @@ Launch all reviewers in a single message using the Agent tool. Use the `interrog
 | Reviewer B | `opus` |
 | Reviewer C | `sonnet` |
 
+A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or the name of a user agent under `~/.claude/agents/` (shelly-agent's body with a pinned model and effort, named `shelly-<model>-<effort>`, for example `shelly-opus-high`). An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn.
+
 For each reviewer:
 - `subagent_type`: `general-purpose`
 - `model`: the configured `interrogate reviewers` entry, or the table default with no configured line

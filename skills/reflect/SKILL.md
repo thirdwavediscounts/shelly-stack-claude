@@ -34,7 +34,9 @@ For each candidate, read the first JSONL line and check that `message.content[0]
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three `Agent` calls, `subagent_type: general-purpose`, explicit `model:` on each, read-write with the MCP tools left in. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript); a read-only tool list strips the MCPs. The prompt forbids file writes; the parent applies edits.
+One message, three `Agent` calls, `subagent_type: general-purpose`, explicit `model:` on each (or `subagent_type` when the configured value is an agent name; see below), read-write with the MCP tools left in. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript); a read-only tool list strips the MCPs. The prompt forbids file writes; the parent applies edits.
+
+A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or the name of a user agent under `~/.claude/agents/` (shelly-agent's body with a pinned model and effort, named `shelly-<model>-<effort>`, for example `shelly-opus-high`). An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn.
 
 | Lens | `model` | Prompt template |
 |---|---|---|

@@ -73,9 +73,9 @@ function git({
 
 async function makeGitStack(directory: string): Promise<{
   readonly repo: string;
-  readonly mergedSha: string;
-  readonly closedSha: string;
-  readonly openSha: string;
+  readonly shaA: string;
+  readonly shaB: string;
+  readonly shaC: string;
 }> {
   const repo = join(directory, "repo");
   await mkdir(repo);
@@ -86,7 +86,7 @@ async function makeGitStack(directory: string): Promise<{
   git({ repo, args: ["add", "."] });
   git({ repo, args: ["commit", "-m", "main"] });
 
-  const branches = ["stack/merged", "stack/closed", "stack/open"];
+  const branches = ["stack/a", "stack/b", "stack/c"];
   for (const [index, branch] of branches.entries()) {
     git({ repo, args: ["checkout", "-b", branch] });
     await writeFile(join(repo, `stack-${index}.txt`), `${branch}\n`);
@@ -96,60 +96,59 @@ async function makeGitStack(directory: string): Promise<{
 
   return {
     repo,
-    mergedSha: git({ repo, args: ["rev-parse", "stack/merged"] }),
-    closedSha: git({ repo, args: ["rev-parse", "stack/closed"] }),
-    openSha: git({ repo, args: ["rev-parse", "stack/open"] }),
+    shaA: git({ repo, args: ["rev-parse", "stack/a"] }),
+    shaB: git({ repo, args: ["rev-parse", "stack/b"] }),
+    shaC: git({ repo, args: ["rev-parse", "stack/c"] }),
   };
 }
 
-async function withFakeGt<T>({
+// Stand in for the gh CLI: answer `repo view` with a fixed default branch and
+// `pr list` with the supplied JSON, so the frontier is derived from open PR
+// base/head links exactly as the real gh output would drive it.
+async function withFakeGh<T>({
   directory,
   operation,
-  output,
+  prList,
+  defaultBranch = "main",
 }: {
   directory: string;
-  operation: (outputPath: string) => Promise<T>;
-  output: string;
+  operation: () => Promise<T>;
+  prList: string;
+  defaultBranch?: string;
 }): Promise<T> {
   const bin = join(directory, "bin");
-  const outputPath = join(directory, "gt-output.txt");
+  const prListPath = join(directory, "gh-pr-list.json");
   await mkdir(bin);
-  await writeFile(outputPath, output);
-  const gt = join(bin, "gt");
+  await writeFile(prListPath, prList);
+  const gh = join(bin, "gh");
   await writeFile(
-    gt,
+    gh,
     `#!/usr/bin/env bash
 set -euo pipefail
 if [ "$(pwd -P)" != "${realpathSync(join(directory, "repo"))}" ]; then
-  printf 'gt ran outside the fixture repo: %s\\n' "$(pwd -P)" >&2
+  printf 'gh ran outside the fixture repo: %s\\n' "$(pwd -P)" >&2
   exit 2
 fi
 case "$*" in
-  "--no-interactive log short --stack --reverse")
-    cat "${outputPath}"
+  "repo view --json defaultBranchRef")
+    printf '{"defaultBranchRef":{"name":"${defaultBranch}"}}\\n'
     ;;
-  "--no-interactive info stack/merged")
-    printf 'stack/merged\\nPR #10 (Merged) merged change\\n'
-    ;;
-  "--no-interactive info stack/closed")
-    printf 'stack/closed\\nPR #13 (Closed) closed change\\n'
-    ;;
-  "--no-interactive info stack/open")
-    printf 'stack/open\\nPR #11 (Needs approvals) open change\\n'
+  "pr list --state open --json number,baseRefName,headRefName,headRefOid")
+    cat "${prListPath}"
     ;;
   *)
-    printf 'unexpected gt arguments: %s\\n' "$*" >&2
+    printf 'unexpected gh arguments: %s\\n' "$*" >&2
     exit 2
     ;;
 esac
 `
   );
-  await chmod(gt, 0o755);
+  await chmod(gh, 0o755);
 
   const originalPath = process.env.PATH;
   process.env.PATH = `${bin}:${originalPath ?? ""}`;
   try {
-    return await operation(outputPath);
+    return await operation();
   } finally {
     if (originalPath === undefined) {
       delete process.env.PATH;
@@ -230,7 +229,7 @@ describe("Store", () => {
     const updated = await store.units.set({
       id: "u1",
       state: "done",
-      branch: "poteto/u1",
+      branch: "sean/u1",
       pr: 184530,
       sha: "abc123",
     });
@@ -238,7 +237,7 @@ describe("Store", () => {
       id: "u1",
       track: "build",
       state: "done",
-      branch: "poteto/u1",
+      branch: "sean/u1",
       pr: "184530",
       sha: "abc123",
       brief: "briefs/u1.md",
@@ -406,48 +405,65 @@ describe("Store", () => {
     ]);
   });
 
-  it("resolves the ordered Graphite frontier and validates an optional pin", async () => {
+  it("resolves the ordered gh frontier and validates an optional pin", async () => {
     const { directory, store } = await initializedStore();
     const stack = await makeGitStack(directory);
-    const output = `◯ main
-◯ stack/merged
-◯ stack/closed
-◉ stack/open (current)
-`;
+    // Deliberately out of stack order to prove the chain is rebuilt from the
+    // baseRefName -> headRefName links rather than the gh listing order.
+    const prList = JSON.stringify([
+      {
+        number: 12,
+        baseRefName: "stack/b",
+        headRefName: "stack/c",
+        headRefOid: stack.shaC,
+      },
+      {
+        number: 10,
+        baseRefName: "main",
+        headRefName: "stack/a",
+        headRefOid: stack.shaA,
+      },
+      {
+        number: 11,
+        baseRefName: "stack/a",
+        headRefName: "stack/b",
+        headRefOid: stack.shaB,
+      },
+    ]);
 
-    await withFakeGt({
+    await withFakeGh({
       directory,
-      output,
+      prList,
       operation: async () => {
         expect(await store.frontier.set({ repo: stack.repo })).toEqual({
           generation: 1,
           prs: [
             {
               pr: 10,
-              branches: "stack/merged",
-              sha: stack.mergedSha,
-              state: "MERGED",
-            },
-            {
-              pr: 13,
-              branches: "stack/closed",
-              sha: stack.closedSha,
-              state: "CLOSED",
+              branches: "stack/a",
+              sha: stack.shaA,
+              state: "OPEN",
             },
             {
               pr: 11,
-              branches: "stack/open",
-              sha: stack.openSha,
+              branches: "stack/b",
+              sha: stack.shaB,
+              state: "OPEN",
+            },
+            {
+              pr: 12,
+              branches: "stack/c",
+              sha: stack.shaC,
               state: "OPEN",
             },
           ],
-          lowestUnmerged: 11,
+          lowestUnmerged: 10,
         });
         expect(
           (
             await store.frontier.set({
               repo: stack.repo,
-              prs: [10, 13, 11],
+              prs: [10, 11, 12],
             })
           ).generation
         ).toBe(2);
@@ -455,18 +471,18 @@ describe("Store", () => {
         await expect(
           store.frontier.set({
             repo: stack.repo,
-            prs: [10, 11, 12],
+            prs: [10, 11, 13],
           })
         ).rejects.toThrow(
-          "frontier pin mismatch: missing from gt: 12; extra in gt: 13"
+          "frontier pin mismatch: missing from gh: 13; extra in gh: 12"
         );
         await expect(
           store.frontier.set({
             repo: stack.repo,
-            prs: [13, 10, 11],
+            prs: [12, 10, 11],
           })
         ).rejects.toThrow(
-          "frontier pin mismatch: order differs: expected 13,10,11; gt 10,13,11"
+          "frontier pin mismatch: order differs: expected 12,10,11; gh 10,11,12"
         );
         await expect(
           store.frontier.set({
@@ -478,19 +494,48 @@ describe("Store", () => {
     });
   });
 
-  it("rejects unparseable Graphite output loudly", async () => {
+  it("rejects an ambiguous gh stack rather than guessing", async () => {
     const { directory, store } = await initializedStore();
     const stack = await makeGitStack(directory);
+    const prList = JSON.stringify([
+      {
+        number: 10,
+        baseRefName: "main",
+        headRefName: "stack/a",
+        headRefOid: stack.shaA,
+      },
+      {
+        number: 20,
+        baseRefName: "main",
+        headRefName: "stack/b",
+        headRefOid: stack.shaB,
+      },
+    ]);
 
-    await withFakeGt({
+    await withFakeGh({
       directory,
-      output: "◯ main\nthis line is not Graphite output\n",
+      prList,
       operation: async () => {
         await expect(
           store.frontier.set({ repo: stack.repo })
         ).rejects.toThrow(
-          'gt log short output has an unparseable line 2: "this line is not Graphite output"'
+          "gh pr list output has an ambiguous stack: branch main has children stack/a, stack/b"
         );
+      },
+    });
+  });
+
+  it("rejects unparseable gh output loudly", async () => {
+    const { directory, store } = await initializedStore();
+    const stack = await makeGitStack(directory);
+
+    await withFakeGh({
+      directory,
+      prList: "this is not JSON\n",
+      operation: async () => {
+        await expect(
+          store.frontier.set({ repo: stack.repo })
+        ).rejects.toThrow("gh pr list did not return valid JSON");
       },
     });
   });

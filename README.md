@@ -1,12 +1,12 @@
 # shelly-stack
 
-this repository is one shelly-stack plugin for Claude Code and Codex, ported from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`. see PORTING.md.
+this repository is one shelly-stack plugin for Claude Code and Codex, forked from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`.
 
-i'm [poteto](https://x.com/poteto). i'm not a president or ceo, but i've worked with millions of lines of code at Meta, Netflix, and Cursor. i'm also on the react core team where i help build and maintain react compiler.
+shelly-stack is Sean's fork of pstack for Third Wave Discounts: poteto's playbooks and principles, adapted to how we ship. everything runs locally on Claude Code with per-role model and effort pinned through `~/.claude/agents`, stacks land through `gh` and git, and swarm fan-out runs as a Workflow script.
 
-there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
+there's a growing sense that ai writes too much slop code. we agree. if you want to go fast, go deep first.
 
-**shelly-stack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. this turns your coding agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. shelly-stack helps you write less, but higher quality code.
+**shelly-stack helps you write less, but higher quality code.** it turns your coding agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite.
 
 **shelly-stack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `shelly-mode` and trust that they'll apply rigorous engineering principles to their work.
 
@@ -115,7 +115,7 @@ when invoked it:
 
 the full rules and playbooks live in [`skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
 
-In Claude Code, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) is sticky across turns through its bundled hook. Codex does not run Claude hooks, so `$shelly-stack:shelly-mode` applies to the turn where you invoke it.
+[`/shelly-mode`](./skills/shelly-mode/SKILL.md) applies to the turn where you invoke it, in both Claude Code and Codex. Invoke it again when a later task needs it.
 
 For long work, Claude Code can use `/loop`. Codex uses native subagent waits during the current turn or a heartbeat automation when you explicitly ask for recurring future checks.
 
@@ -250,14 +250,6 @@ twenty-one short skills, one principle each. `shelly-mode` indexes them inline a
 | [encode-lessons-in-structure](./skills/principle-encode-lessons-in-structure/SKILL.md) | meta | Encode the rule as a lint, metadata flag, runtime check, or script instead of more text. |
 
 </details>
-
-## not shipped here
-
-a few things `shelly-mode` references but doesn't bundle:
-
-- `/deslop` and the `deslop` skill are cursor-only, from the `cursor-team-kit` plugin. where a step says run `/deslop`, run the [**unslop**](./skills/unslop/SKILL.md) skill over the diff's prose and comments instead.
-- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) are cursor-only too. in their place use the project's verification skill, generated with [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md).
-- `/create-skill` is a cursor built-in, so this port bundles its own [**create-skill**](./skills/create-skill/SKILL.md) skill. inside `shelly-mode`, the [babysit playbook](./skills/shelly-mode/playbooks/babysit.md) handles pr-status requests.
 
 ## why are there no planning skills?
 

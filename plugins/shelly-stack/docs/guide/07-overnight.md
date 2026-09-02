@@ -2,8 +2,6 @@
 
 This is the payoff for everything before it. An agent you can trust to verify its own work is an agent you can leave alone with a hard task. What makes that safe isn't hope. It's a checkable finish condition, an isolated worktree, and a decision log you audit in the morning.
 
-![She waves goodnight from the door while robots keep the factory running, one updating a DECISION LOG wall board under a BUILD LOOP ACTIVE sign.](./images/overnight.jpg)
-
 ## The overnight contract
 
 A good handoff has the goal, the finish condition, permissions, and an escape hatch. It doesn't need to be long:
@@ -64,7 +62,7 @@ The contract above drives one task to one finish condition. Some nights hold mor
 /shelly-mode full autopilot on this queue. each item is independent. i want them merged by morning.
 ```
 
-[Autopilot-stack](../../skills/shelly-mode/playbooks/autopilot-stack.md) runs the same owner loop but ships nothing. You wake up to one linear Graphite stack with a verifier's verdict on every link, and you review and land it yourself. Pick it over Autopilot-full when the changes are coupled, or when you want your own eyes on the work before anything merges:
+[Autopilot-stack](../../skills/shelly-mode/playbooks/autopilot-stack.md) runs the same owner loop but ships nothing. You wake up to one linear stack of PRs with a verifier's verdict on every link, and you review and land it yourself. Pick it over Autopilot-full when the changes are coupled, or when you want your own eyes on the work before anything merges:
 
 ```text
 /shelly-mode autopilot these five changes but stack them, don't ship. i'll land the stack in the morning.

@@ -49,6 +49,8 @@ The right decomposition depends on the question. Use your judgment. Narrow quest
 
 Spawn all explorers in a single message:
 
+Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
+
 - `subagent_type`: `general-purpose`
 - `model`: your configured how-explorer model (default `sonnet`)
 - `tools`: read-only (give it only Read/Grep/Glob/Bash)

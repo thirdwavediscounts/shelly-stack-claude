@@ -48,7 +48,7 @@ In context, that's enough. [`/tdd`](../../skills/tdd/SKILL.md) writes the smalle
 
 ## Clean before you commit
 
-The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) runs [`/unslop`](../../skills/unslop/SKILL.md) over the diff's prose and comments before each commit, and applies it to the PR description and commit bodies. Upstream this step used `/deslop`, which is Cursor-only and ships in the `cursor-team-kit` plugin. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
+The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) runs [`/unslop`](../../skills/unslop/SKILL.md) over the diff's prose and comments before each commit, and applies it to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
 
 For prose, `/unslop` takes a target and any extra rules you have:
 

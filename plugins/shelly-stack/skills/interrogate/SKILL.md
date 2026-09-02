@@ -44,6 +44,8 @@ Launch all reviewers in a single message using the Agent tool. Use the `interrog
 | Reviewer B | `opus` |
 | Reviewer C | `sonnet` |
 
+Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
+
 For each reviewer:
 - `subagent_type`: `general-purpose`
 - `model`: the configured `interrogate reviewers` entry, or the table default with no configured line
