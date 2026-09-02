@@ -122,6 +122,8 @@ Aim for a complete **coverage map**, not a minimal one. A null result from an is
 
 Launch all matching investigators in a single message so they run concurrently. One investigator per category lets each specialize in one tool's query vocabulary and result shape. Don't ask one agent to cover multiple MCPs.
 
+Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
+
 Subagent config (each):
 - `subagent_type`: `general-purpose`
 - `model`: your configured why-investigators model (default `sonnet`)

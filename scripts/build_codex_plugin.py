@@ -62,6 +62,18 @@ def rewrite_body_for_codex(body: str, skill_name: str) -> str:
             "~/.claude/rules/shelly-stack-models.md",
             "~/.codex/shelly-stack-models.md",
         )
+    body = re.sub(
+        r"A configured role value is either an Agent `model` alias.*?for that spawn\.",
+        "Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.",
+        body,
+        flags=re.DOTALL,
+    )
+    body = re.sub(
+        r"(or the agent name as `subagent_type`\)) and `isolation: \"remote\"`\. Remote isolation.*?N Agent calls\.",
+        r"\1. Codex has no `isolation` field; give each worker its own worktree or branch in the brief.",
+        body,
+        flags=re.DOTALL,
+    )
     body = body.replace("~/.claude/skills/", "~/.codex/skills/")
     body = body.replace(".claude/skills/", ".agents/skills/")
 

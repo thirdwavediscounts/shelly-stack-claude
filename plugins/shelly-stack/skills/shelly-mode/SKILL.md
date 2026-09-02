@@ -94,6 +94,8 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 **Defaults for every `Agent` call.** Spawn, don't wait inline, read-write tool access (a read-only list of Read/Grep/Glob/Bash strips MCP), file pointers not inlined context, explicit model per role (configurable via `/setup-shelly-stack`; defaults `sonnet` for code, `fable` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`fable`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`opus`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model (`sonnet`). Per-role lines in the `/setup-shelly-stack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit` runs that role on the parent chat model (omit Agent `model`).
 
+Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter. Effort is set per agent, not per call, so a role that needs a different reasoning level gets its own agent file.
+
 You own every subagent's work. Review the diff and write your own summary, don't pass through what it said. Interrupt-chained resumes silently drop directives, so fire a fresh subagent with consolidated scope rather than trusting a "done" summary. A second opinion is the same prompt against a different model. Agreement is high-signal.
 
 ## Writing the reply
