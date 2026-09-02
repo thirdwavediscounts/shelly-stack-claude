@@ -175,8 +175,11 @@ async function main() {
 
   if (cmd === "post") {
     const step = ticket ? rest[0] : null;
-    const text = rest.slice(1).join(" ");
-    if (!ticket || !step) die("usage: ticket-slack.mjs post <TICKET> <step> \"<text>\" [--file …]");
+    let text = rest.slice(1).join(" ");
+    // "-" reads the body from stdin so callers can pass backticks, code
+    // blocks, and newlines through a quoted heredoc without shell escaping.
+    if (text === "-") text = readFileSync(0, "utf8").trimEnd();
+    if (!ticket || !step) die("usage: ticket-slack.mjs post <TICKET> <step> \"<text>\"|- [--file …]");
     if (!IDENTITY[step]) die(`unknown step "${step}" (want ${Object.keys(IDENTITY).join("|")})`);
 
     let thread_ts = await findThreadTs(ticket);
