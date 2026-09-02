@@ -7,7 +7,7 @@ Dedupe key: the Sentry short ID (like `IMS-1A`) in the Linear title, and the mar
 
 ## Part 1: new issues become tickets
 
-1. In Sentry, search across the org for unresolved issues seen in the last 3 hours (`is:unresolved lastSeen:-3h`). Ignore issues with fewer than 2 events unless they are errors in a backend route or a worker.
+1. In Sentry, search across the org for unresolved issues from the last 14 days (`is:unresolved`, period 14d, sorted by date). Keep an issue if it was seen in the last 3 hours, or if it has 2 or more events. Ignore the rest.
 2. For each issue, search Linear (team Dev) for the short ID. If a ticket exists in any state, skip to Part 2 handling and do not create another.
 3. Otherwise create one Linear issue:
    - Team Dev, state Triage, labels `Bug` + the app label.
