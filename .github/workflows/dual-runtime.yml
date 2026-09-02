@@ -17,3 +17,4 @@ jobs:
       - run: python -m pip install PyYAML==6.0.2
       - run: ./scripts/build_codex_plugin.py --check
       - run: ./scripts/validate_dual_runtime.py
+      - run: python3 skills/ticket/scripts/test_lint_linear_text.py

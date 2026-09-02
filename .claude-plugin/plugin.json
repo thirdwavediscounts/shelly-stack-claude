@@ -1,7 +1,7 @@
 {
 	"name": "shelly-stack",
 	"description": "if you want to go fast, go deep first. shelly-stack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Claude Code port of poteto's shelly-stack.",
-	"version": "0.15.1",
+	"version": "0.16.0",
 	"author": {
 		"name": "Lauren Tan"
 	},
