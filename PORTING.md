@@ -13,7 +13,7 @@ The goal is fidelity. Poteto's voice, skills, playbooks, and principles stay sha
 | `Task` tool, `subagent_type: "shelly-agent"` / `"Comment Sicko"` / `generalPurpose` | `Agent` tool, `shelly-stack:shelly-agent` / `shelly-stack:comment-sicko` / `general-purpose` |
 | `run_in_background: true`, `readonly:` | dropped; Agent subagents run in the background, access is restricted by tool list |
 | `AskQuestion`, `allow_multiple` | `AskUserQuestion`, `multiSelect` |
-| Skill frontmatter `mode: true` + `reminder:` (sticky mode) | marker file `~/.claude/shelly-mode/<project>` + `hooks/shelly-mode-reminder.sh` on `UserPromptSubmit` |
+| Skill frontmatter `mode: true` + `reminder:` (sticky mode) | dropped; invoke `/shelly-mode` per turn |
 | `~/.cursor/rules/shelly-stack-models.mdc` (`alwaysApply`) | `~/.claude/rules/shelly-stack-models.md` (user-level rule, loaded every session) |
 | `.cursor/skills/`, `~/.cursor/skills/`, `.cursor/settings.json` | `.claude/skills/`, `~/.claude/skills/`, `.claude/settings.json` |
 | Transcripts `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl` | `~/.claude/projects/<slug>/<uuid>.jsonl` (`<slug>` keeps the leading dash) |
@@ -37,7 +37,6 @@ The goal is fidelity. Poteto's voice, skills, playbooks, and principles stay sha
 | `.claude/skills` and `~/.claude/skills` | `.agents/skills` and `~/.codex/skills` |
 | `TodoWrite` | `update_plan` |
 | Claude transcript paths | Codex thread tools, with current-thread-only local fallback |
-| sticky `UserPromptSubmit` hook | turn-scoped skill invocation |
 | Claude routines and cloud-agent fields | excluded or translated to native local subagents and Codex heartbeat automations |
 
 The Codex build copies the shared `skills`, `docs`, and subagent prompts, overlays Codex-specific skills such as setup, inserts a runtime adapter link into every skill, and translates explicit-only invocation metadata. The generated directory is committed so Codex can install it directly from the repository marketplace.
@@ -47,7 +46,7 @@ Both marketplaces expose the identity `shelly-stack@shelly-stack`. The Claude ma
 ## Not ported
 
 - `make-bot-ui` is built on Cursor's Grok Bot stack (webhook routines, `SendToUser` secret-request cards, `[routine]` wakes). No Claude Code analog exists. The original is kept verbatim at `unported/make-bot-ui/` and is not registered as a skill.
-- Claude hooks and the benny automation pack are not part of the Codex package. Codex has no equivalent plugin hook contract for sticky mode, and benny still depends on Claude routines.
+- The benny automation pack is not part of the Codex package; it still depends on Claude routines.
 
 ## Kept as-is
 

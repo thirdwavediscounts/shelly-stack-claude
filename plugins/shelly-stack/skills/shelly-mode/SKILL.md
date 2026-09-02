@@ -34,10 +34,6 @@ Remaining triggers:
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
 - Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X") → a decision trail via the **show-me-your-work** skill. Commit it when stakes need an auditable record; keep it local otherwise.
 
-## Turn-scoped mode
-
-Codex does not run the Claude `UserPromptSubmit` hook. Apply Shelly mode to the current turn only. Do not create or delete `~/.claude/shelly-mode` marker files. If the user explicitly asks for recurring future checks, use a Codex heartbeat automation.
-
 ## Principles
 
 Read the leaf skill in full for any principle you apply. Each entry names when it applies.

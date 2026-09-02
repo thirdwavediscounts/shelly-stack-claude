@@ -29,7 +29,7 @@ Open a todolist with one entry per phase before launching anything.
 
 ## Phase B: Fan out
 
-Spawn all N workers in one message with the configured worker value (`subagent_type: "general-purpose"` plus `model`, or the agent name as `subagent_type`). Codex has no `isolation` field; give each worker its own worktree or branch in the brief.
+Spawn all N workers in one message, one native subagent per brief on the configured worker model. Codex has no `Workflow` tool or `isolation` field; give each writing worker its own worktree or branch in the brief, and ask for the report shape below.
 
 When a worker must start from a non-default pushed branch, name that branch in its brief and tell it to check the branch out first.
 

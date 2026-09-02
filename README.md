@@ -115,7 +115,7 @@ when invoked it:
 
 the full rules and playbooks live in [`skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
 
-In Claude Code, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) is sticky across turns through its bundled hook. Codex does not run Claude hooks, so `$shelly-stack:shelly-mode` applies to the turn where you invoke it.
+[`/shelly-mode`](./skills/shelly-mode/SKILL.md) applies to the turn where you invoke it, in both Claude Code and Codex. Invoke it again when a later task needs it.
 
 For long work, Claude Code can use `/loop`. Codex uses native subagent waits during the current turn or a heartbeat automation when you explicitly ask for recurring future checks.
 

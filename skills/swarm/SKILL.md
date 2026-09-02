@@ -27,7 +27,7 @@ Open a todolist with one entry per phase before launching anything.
 
 ## Phase B: Fan out
 
-Spawn all N workers in one message with the configured worker value (`subagent_type: "general-purpose"` plus `model`, or the agent name as `subagent_type`) and `isolation: "remote"`. Remote isolation is availability-gated: when it is off, the harness silently runs the worker in a local git worktree under `.claude/worktrees/` on this machine, which still gives one writer per worktree. Omit `isolation` only when the worker needs this session's checkout or something on the user's computer. When the user has opted into multi-agent orchestration (they asked to fan out agents or run a workflow), the `Workflow` tool can run the same fan-out as one deterministic script instead of N Agent calls.
+Invoking swarm is the user's opt-in to multi-agent orchestration, so run the fan-out with the `Workflow` tool, not N separate Agent calls. Load the `workflow-authoring` skill, then write one script: `parallel()` over the N briefs, each `agent(brief, opts)`. Set `opts.agentType` to the configured worker value when it is an agent name (for example `shelly-sonnet-medium`), or `opts.model` when it is a model alias. Set `opts.isolation: 'worktree'` for every worker that writes files, so each has one writer; omit it for read-only workers. Set `opts.schema` to the report shape below so each worker returns a validated object instead of prose. A worker that needs this session's checkout or something on the user's computer runs the same way; the Workflow runs locally.
 
 When a worker must start from a non-default pushed branch, name that branch in its brief and tell it to check the branch out first.
 

@@ -32,7 +32,7 @@ Rules:
 
 - `description` is the only text Claude sees before deciding to load the skill. Put the triggers there ("Use for X, Y, or when the user says Z"), not a summary of the body. Quote it or use `description: >-` when punctuation or wrapping needs it. Keep it under ~400 characters.
 - `disable-model-invocation: true` for mode skills and anything heavy or opinionated. Description matching would otherwise fire it on casual turns.
-- No other keys. Cursor's `mode`, `icon`, `color`, `reminder`, and `alwaysApply` are ignored here. A sticky mode is a marker file plus a `UserPromptSubmit` hook; see `skills/shelly-mode/SKILL.md` for the pattern.
+- No other keys. Cursor's `mode`, `icon`, `color`, `reminder`, and `alwaysApply` are ignored here.
 - `$ARGUMENTS` in the body is replaced with whatever the user typed after `/name`.
 
 ## Body
