@@ -65,18 +65,6 @@ def rewrite_body_for_codex(body: str, skill_name: str) -> str:
     body = body.replace("~/.claude/skills/", "~/.codex/skills/")
     body = body.replace(".claude/skills/", ".agents/skills/")
 
-    if skill_name == "shelly-mode":
-        body = re.sub(
-            r"## Sticky mode\n\n.*?\n\n## Principles",
-            "## Turn-scoped mode\n\n"
-            "Codex does not run the Claude `UserPromptSubmit` hook. Apply Shelly mode to "
-            "the current turn only. Do not create or delete `~/.claude/shelly-mode` marker "
-            "files. If the user explicitly asks for recurring future checks, use a Codex "
-            "heartbeat automation.\n\n## Principles",
-            body,
-            count=1,
-            flags=re.DOTALL,
-        )
     if skill_name == "arena":
         body = body.replace(
             "Otherwise default to one each on `fable`, `opus`, `sonnet`.",

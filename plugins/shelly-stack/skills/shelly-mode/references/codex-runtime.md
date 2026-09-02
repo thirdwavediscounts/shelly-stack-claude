@@ -37,7 +37,7 @@ If a configured model is no longer available, use the closest current model for 
 - Personal Codex skills belong under `~/.codex/skills/<name>/`.
 - Codex skill frontmatter contains `name` and `description`. Do not emit Claude-only `disable-model-invocation`, `user-invocable`, or `argument-hint` fields. Put explicit-only policy in `agents/openai.yaml` as `policy.allow_implicit_invocation: false`.
 - Prefer Codex thread-history tools for the current task. When a skill needs a local transcript and no thread tool is available, restrict any `~/.codex/sessions/` lookup to the current thread ID or exact working-directory metadata. Never scan unrelated sessions.
-- Claude hooks do not run in a native Codex plugin. Shelly mode applies to the turn where the skill is invoked unless the user explicitly asks for a recurring Codex heartbeat automation.
+- Shelly mode applies to the task where the skill is invoked, in both runtimes. Use a Codex heartbeat automation only when the user explicitly asks for recurring checks.
 - Claude routines under `automations/` are not included in the Codex build.
 
 ## Planning and long-running work

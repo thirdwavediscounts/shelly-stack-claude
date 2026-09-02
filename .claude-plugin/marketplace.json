@@ -1,10 +1,10 @@
 {
 	"name": "shelly-stack",
 	"owner": {
-		"name": "Lauren Tan (upstream), Third Wave Discounts (Claude Code port)"
+		"name": "Third Wave Discounts"
 	},
 	"metadata": {
-		"description": "Claude Code port of poteto's shelly-stack: shelly-mode, its playbooks, the principle skills, and the review panels."
+		"description": "shelly-stack for Claude Code and Codex: shelly-mode, its playbooks, the principle skills, and the review panels. Based on poteto's pstack (MIT)."
 	},
 	"plugins": [
 		{

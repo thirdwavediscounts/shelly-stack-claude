@@ -31,7 +31,7 @@ Ten states, in order. Backlog, Triage, Needs Investigation, Ready for Agents, In
 
 ## Flow A. Run a ticket
 
-1. Read the issue with `mcp__claude_ai_Linear__get_issue` and its comments with `list_comments`. State the current status. Verify: you can name the state and what the ticket asks for.
+1. Read the issue with the Linear MCP `get_issue` tool and its comments with `list_comments`. State the current status. Verify: you can name the state and what the ticket asks for.
 2. Gate on status.
    - Triage. Confirm the ticket is real against the live DB and code. Set the app label (under the Apps parent), the type (Bug, Feature, Improvement), the Database label if it crosses schema, and native priority. If not actionable, move to Canceled with a one-line reason comment and stop. If real but thin, move to Needs Investigation. If specced, move to Ready for Agents.
    - Needs Investigation. Run the **Investigation** playbook read-only. Write the diagnosis and findings back as a comment. Move to Ready for Agents, or Need Human if it needs a human decision.
@@ -46,7 +46,7 @@ Ten states, in order. Backlog, Triage, Needs Investigation, Ready for Agents, In
 Trigger this at the tail of an **architect** or **Investigation** run when it surfaces work beyond the current ticket, or when asked to file follow-ups.
 
 1. List the follow-ups as concrete outcomes, not vague themes. Verify: each item is a shippable unit.
-2. Create a parent issue for the theme with `mcp__claude_ai_Linear__save_issue` on the Dev team. Attach the design doc or diagnosis in the description.
+2. Create a parent issue for the theme with the Linear MCP `save_issue` tool on the Dev team. Attach the design doc or diagnosis in the description.
 3. Create one sub-issue per shippable unit with `save_issue` and `parentId` set to the parent. Set app label, type, and priority on each. Put each in Triage or Ready for Agents depending on how specced it is. Verify: every sub-issue links to the parent and carries an app label.
 4. Do not start any sub-issue. Report the parent and its sub-issues and stop.
 

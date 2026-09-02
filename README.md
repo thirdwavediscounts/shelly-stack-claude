@@ -1,12 +1,10 @@
 # shelly-stack
 
-this repository is one shelly-stack plugin for Claude Code and Codex, ported from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`. see PORTING.md.
+shelly-stack is Third Wave Discounts' engineering workflow for coding agents, packaged as one plugin for Claude Code and Codex. `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`. it began as a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) by poteto (MIT); PORTING.md records what changed.
 
-i'm [poteto](https://x.com/poteto). i'm not a president or ceo, but i've worked with millions of lines of code at Meta, Netflix, and Cursor. i'm also on the react core team where i help build and maintain react compiler.
+ai writes too much slop code. we do not want to ship like a team of twenty slop artists. throughput without quality is not the goal. if you want to go fast, go deep first.
 
-there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
-
-**shelly-stack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. this turns your coding agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. shelly-stack helps you write less, but higher quality code.
+**shelly-stack is the answer.** these are the skills we use every day to ship the TWD fleet. they turn a coding agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. shelly-stack helps you write less, but higher quality code.
 
 **shelly-stack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `shelly-mode` and trust that they'll apply rigorous engineering principles to their work.
 
@@ -62,7 +60,7 @@ use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) at the start of a task. it r
 
 ### just use [`/shelly-mode`](./skills/shelly-mode/SKILL.md)
 
-this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
+this skill is the main shortcut. use it whenever you need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
 
 ```
 /shelly-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -70,7 +68,7 @@ first, then fix and verify.
 ```
 
 ```
-/shelly-mode i'm going to bed. land the stack even if ci flakes. i want everything merged by
+/shelly-mode i'm going to bed. merge the queue even if ci flakes. i want everything merged by
 morning.
 ```
 
@@ -92,11 +90,11 @@ morning.
 | [authoring a skill](./skills/shelly-mode/playbooks/authoring-a-skill.md) | writing or editing a SKILL.md. |
 | [eval](./skills/shelly-mode/playbooks/eval.md) | test how a skill or prompt change affects agent behavior, blinded. |
 | [babysit](./skills/shelly-mode/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
-| [shipping](./skills/shelly-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run with graphite merge-when-ready. |
+| [shipping](./skills/shelly-mode/playbooks/shipping.md) | independently verify each merge-ready PR, then merge the verified run in order with gh on your explicit go. |
 | [autonomous run](./skills/shelly-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
 | [orchestrate](./skills/shelly-mode/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](./skills/shelly-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and root verification of each merge-ready head. |
-| [autopilot-stack](./skills/shelly-mode/playbooks/autopilot-stack.md) | build and verify one linear graphite stack for the operator to review and land. |
+| [autopilot-stack](./skills/shelly-mode/playbooks/autopilot-stack.md) | build and verify one ordered chain of PRs for the operator to review and land. |
 | [session pickup](./skills/shelly-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/shelly-mode/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
 | [multi-phase plan](./skills/shelly-mode/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
@@ -115,7 +113,7 @@ when invoked it:
 
 the full rules and playbooks live in [`skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
 
-In Claude Code, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) is sticky across turns through its bundled hook. Codex does not run Claude hooks, so `$shelly-stack:shelly-mode` applies to the turn where you invoke it.
+In both Claude Code and Codex, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) applies to the task you invoke it on. invoke it again for the next task.
 
 For long work, Claude Code can use `/loop`. Codex uses native subagent waits during the current turn or a heartbeat automation when you explicitly ask for recurring future checks.
 
@@ -167,7 +165,7 @@ For long work, Claude Code can use `/loop`. Codex uses native subagent waits dur
 
 ### examples
 
-mostly i type [`/shelly-mode`](./skills/shelly-mode/SKILL.md) at the start of a task and let it route to a playbook. the other skills fire as the steps need them. a few i reach for directly.
+type [`/shelly-mode`](./skills/shelly-mode/SKILL.md) at the start of a task and let it route to a playbook. the other skills fire as the steps need them. a few are worth reaching for directly.
 
 
 <details>
@@ -183,7 +181,7 @@ prototype:         /shelly-mode build two prototypes of the markdown renderer so
                    spawn an agent for each.
 multi-phase:       /shelly-mode open source these skills as a plugin. nothing internal leaks, work
                    in a temp dir, show me the dependency graph first.
-overnight run:     /shelly-mode i'm going to bed. land the stack even if ci flakes. i want
+overnight run:     /shelly-mode i'm going to bed. merge the queue even if ci flakes. i want
                    everything merged by morning.
 babysit:           /shelly-mode check on pr 123. anything outstanding?
 visual parity:     /shelly-mode the row spacing is too tall when this flag is on. the second image
@@ -212,7 +210,7 @@ automate-me:       /automate-me
 
 ## the `shelly-agent` and Comment Sicko subagents
 
-shelly-stack also ships a subagent prompt that runs my style end to end. Claude Code exposes it as [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md). Codex uses a native subagent whose prompt requires reading `$shelly-stack:shelly-mode` in full before work starts.
+shelly-stack also ships a subagent prompt that runs the Shelly style end to end. Claude Code exposes it as [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md). Codex uses a native subagent whose prompt requires reading `$shelly-stack:shelly-mode` in full before work starts.
 
 [`/shelly-mode`](./skills/shelly-mode/SKILL.md) and [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md) route through the same wrapper.
 
@@ -251,21 +249,17 @@ twenty-one short skills, one principle each. `shelly-mode` indexes them inline a
 
 </details>
 
-## not shipped here
+## origins
 
-a few things `shelly-mode` references but doesn't bundle:
-
-- `/deslop` and the `deslop` skill are cursor-only, from the `cursor-team-kit` plugin. where a step says run `/deslop`, run the [**unslop**](./skills/unslop/SKILL.md) skill over the diff's prose and comments instead.
-- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) are cursor-only too. in their place use the project's verification skill, generated with [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md).
-- `/create-skill` is a cursor built-in, so this port bundles its own [**create-skill**](./skills/create-skill/SKILL.md) skill. inside `shelly-mode`, the [babysit playbook](./skills/shelly-mode/playbooks/babysit.md) handles pr-status requests.
+shelly-stack began as a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) by poteto (Lauren Tan), MIT. it has since been reshaped into our own workflow for Claude Code and Codex on plain GitHub. the biggest changes: PRs move through `gh` instead of Graphite stacks, review-bot triage is generic instead of tied to one bot, no editor-specific tooling, and no sticky mode. PORTING.md has the full record.
 
 ## why are there no planning skills?
 
-Claude Code and Codex both have plan support that works with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default.
+Claude Code and Codex both have plan support that works with shelly-stack. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default.
 
 ## make it yours
 
-`shelly-mode` is my style. you may not want exactly that.
+`shelly-mode` is the house style. you may not want exactly that.
 
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through shelly-stack underneath. you keep shelly-stack as the base and end up with your own routing skill alongside `shelly-mode`.
 

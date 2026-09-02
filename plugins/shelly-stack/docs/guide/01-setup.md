@@ -60,6 +60,6 @@ Pick something real but small, and describe it the way you'd describe it to a co
 
 Watch the todo list. The first item is always "read the Principles section". The rest are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/shelly-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
 
-From here you can type normal follow-ups. `/shelly-mode` is sticky in Claude Code until you opt out. Codex has no plugin hook for sticky mode, so invoke `$shelly-stack:shelly-mode` on each turn where you want it applied.
+From here you can type normal follow-ups. `/shelly-mode` applies to the task you invoke it on. Invoke it again for the next task, in Claude Code (`/shelly-mode`) and Codex (`$shelly-stack:shelly-mode`) alike.
 
 Next: [Route work through `/shelly-mode`](./02-shelly-mode.md).

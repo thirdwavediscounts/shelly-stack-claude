@@ -74,14 +74,14 @@ Babysit watches the PR with a bundled watcher and takes blockers in order: confl
 
 Babysit stops at merge-ready. It never merges, even with everything green, because merging is a different decision.
 
-## Land the stack with Shipping
+## Land the PRs with Shipping
 
 Green is not the same as safe. When you're ready to land, say so:
 
 ```text
-/shelly-mode land the stack.
+/shelly-mode land these PRs.
 ```
 
-The [Shipping playbook](../../skills/shelly-mode/playbooks/shipping.md) verifies each PR independently before it arms anything. One fresh agent per PR proves the behavior live, and the agent that judges a change is never the one that wrote it. Then Shipping lands only the contiguous verified run from the bottom, through Graphite merge-when-ready, and reports the first PR that breaks the chain. A verified PR sitting above an unverified one waits, because merging it would pull the gap in underneath.
+The [Shipping playbook](../../skills/shelly-mode/playbooks/shipping.md) verifies each PR independently. One fresh agent per PR proves the behavior live, and the agent that judges a change is never the one that wrote it. On your explicit go, Shipping merges the verified PRs in order with `gh pr merge`, and reports the first PR that breaks the chain. A verified PR sitting above an unverified one waits, because merging it would pull the gap in underneath.
 
 Next: [Run work while you sleep](./07-overnight.md).
