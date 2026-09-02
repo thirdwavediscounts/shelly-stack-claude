@@ -52,8 +52,8 @@ Both marketplaces expose the identity `shelly-stack@shelly-stack`. The Claude ma
 
 - Graphite (`gt`) stack workflows now run on `gh` plus git: topology from `gh pr list`, restacks via `git rebase --update-refs`, sequential landing by arming `gh pr merge --auto` on one PR at a time.
 - Cloud and remote execution: every worker runs locally, writers in their own git worktree.
+- Bugbot triage: replaced by `/code-review medium` on the branch. The Bugbot reference and its comment recognition in watch-pr are gone.
 
 ## Kept as-is
 
-- Bugbot triage, the `watch-pr` and `orch` scripts (bun), and every principle skill.
-- The watch-pr script still recognizes Bugbot comments by `CURSOR_AUTOMATION_ID`; that is what Bugbot posts on GitHub regardless of editor.
+- The `watch-pr` and `orch` scripts (bun), and every principle skill.

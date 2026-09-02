@@ -57,7 +57,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] Open the PR ready, never draft, with `gh pr create` and `draft: false`; in a stack, pass `--base <parent-branch>`.
 - [ ] Run the repo's lint and typecheck once before the PR-facing push. Push with hooks on.
 - [ ] Run the **unslop** skill before each commit and `/no-comments` before review.
-- [ ] Triage every Bugbot and security-reviewer comment per `../references/bugbot-triage.md`.
+- [ ] Run `/code-review medium` on the PR branch; fix confirmed findings, dismiss the rest with a reason. Triage every security-reviewer comment the same way.
 - [ ] Rebase onto current trunk before babysit and again before the merge-ready report.
 
 ### Verdict and merge, for every PR
@@ -126,7 +126,7 @@ Each live lane runs in its own git worktree on this machine (`isolation: "worktr
 **Merge.**
 
 - [ ] Root's clean verdict at the exact head SHA.
-- [ ] Bugbot triage done.
+- [ ] `/code-review` findings triaged.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
 - [ ] <The owner squash-merges its own PR, or the root appends the PR to the stack and the operator lands it.>
 
