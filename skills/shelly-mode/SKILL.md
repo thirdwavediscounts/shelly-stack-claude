@@ -1,6 +1,6 @@
 ---
 name: shelly-mode
-description: poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /shelly-mode, or requests to work in this style.
+description: Sean's shelly agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /shelly-mode, or requests to work in this style.
 disable-model-invocation: true
 ---
 

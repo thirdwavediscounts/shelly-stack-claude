@@ -2,7 +2,7 @@
   "name": "shelly-stack",
   "description": "Rigorous engineering workflows, review panels, and reusable principles adapted for native Codex subagents.",
   "author": {
-    "name": "Lauren Tan and Third Wave Discounts"
+    "name": "Sean, Third Wave Discounts"
   },
   "homepage": "https://github.com/thirdwavediscounts/shelly-stack",
   "repository": "https://github.com/thirdwavediscounts/shelly-stack",
@@ -20,7 +20,7 @@
     "displayName": "Shelly Stack",
     "shortDescription": "Rigorous engineering workflows for Codex",
     "longDescription": "Shelly Stack brings structured implementation, review, architecture, verification, and multi-agent workflows to Codex.",
-    "developerName": "Lauren Tan and Third Wave Discounts",
+    "developerName": "Sean, Third Wave Discounts",
     "category": "Developer Tools",
     "capabilities": [
       "Interactive",

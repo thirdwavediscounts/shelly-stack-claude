@@ -2,7 +2,7 @@
 
 shelly-stack is a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) (cursor/plugins @ 397c8660, MIT, Lauren Tan) to Claude Code and Codex. Commit `ef5d652` in this repo is the verbatim upstream import. It is one maintained plugin with one skill, guide, and agent source. Claude Code consumes that source at the repository root. `scripts/build_codex_plugin.py` adds the Codex runtime adapter and produces the native projection at `plugins/shelly-stack`.
 
-The goal is fidelity. Poteto's voice, skills, playbooks, and principles stay shared. Each runtime gets a small adapter for its tools, model names, paths, invocation policy, and unsupported features.
+The goal is fidelity to the upstream mechanics. Poteto's voice, skills, playbooks, and principles stay shared. Each runtime gets a small adapter for its tools, model names, paths, invocation policy, and unsupported features.
 
 ## What changed
 

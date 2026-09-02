@@ -1,12 +1,12 @@
 # shelly-stack
 
-this repository is one shelly-stack plugin for Claude Code and Codex, ported from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`. see PORTING.md.
+this repository is one shelly-stack plugin for Claude Code and Codex, ported from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`. see PORTING.md.
 
-i'm [poteto](https://x.com/poteto). i'm not a president or ceo, but i've worked with millions of lines of code at Meta, Netflix, and Cursor. i'm also on the react core team where i help build and maintain react compiler.
+shelly-stack is Sean's fork of pstack for Third Wave Discounts: poteto's playbooks and principles, adapted to how we ship. everything runs locally on Claude Code with per-role model and effort pinned through `~/.claude/agents`, stacks land through `gh` and git, and swarm fan-out runs as a Workflow script.
 
-there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
+there's a growing sense that ai writes too much slop code. we agree. if you want to go fast, go deep first.
 
-**shelly-stack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. this turns your coding agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. shelly-stack helps you write less, but higher quality code.
+**shelly-stack helps you write less, but higher quality code.** it turns your coding agent into a real engineering team. the goal is not to maximize loc, in fact it's the opposite.
 
 **shelly-stack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `shelly-mode` and trust that they'll apply rigorous engineering principles to their work.
 
