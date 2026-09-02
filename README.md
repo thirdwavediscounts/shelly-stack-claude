@@ -251,14 +251,6 @@ twenty-one short skills, one principle each. `shelly-mode` indexes them inline a
 
 </details>
 
-## not shipped here
-
-a few things `shelly-mode` references but doesn't bundle:
-
-- `/deslop` and the `deslop` skill are cursor-only, from the `cursor-team-kit` plugin. where a step says run `/deslop`, run the [**unslop**](./skills/unslop/SKILL.md) skill over the diff's prose and comments instead.
-- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) are cursor-only too. in their place use the project's verification skill, generated with [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md).
-- `/create-skill` is a cursor built-in, so this port bundles its own [**create-skill**](./skills/create-skill/SKILL.md) skill. inside `shelly-mode`, the [babysit playbook](./skills/shelly-mode/playbooks/babysit.md) handles pr-status requests.
-
 ## why are there no planning skills?
 
 Claude Code and Codex both have plan support that works with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default.

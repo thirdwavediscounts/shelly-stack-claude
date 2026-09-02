@@ -45,7 +45,7 @@ Both marketplaces expose the identity `shelly-stack@shelly-stack`. The Claude ma
 
 ## Not ported
 
-- `make-bot-ui` is built on Cursor's Grok Bot stack (webhook routines, `SendToUser` secret-request cards, `[routine]` wakes). No Claude Code analog exists. The original is kept verbatim at `unported/make-bot-ui/` and is not registered as a skill.
+- `make-bot-ui` (Cursor's Grok Bot webhooks) has no Claude Code analog and was dropped.
 - The benny automation pack is not part of the Codex package; it still depends on Claude routines.
 
 ## Replaced
