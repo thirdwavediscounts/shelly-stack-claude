@@ -1,16 +1,21 @@
 {
-	"name": "shelly-stack",
-	"owner": {
-		"name": "Sean, Third Wave Discounts"
-	},
-	"metadata": {
-		"description": "Sean's Claude Code fork of poteto's pstack: shelly-mode, its playbooks, the principle skills, and the review panels."
-	},
-	"plugins": [
-		{
-			"name": "shelly-stack",
-			"source": "./",
-			"description": "if you want to go fast, go deep first. rigorous agent workflows you can parallelize with confidence."
-		}
-	]
+  "name": "shelly-stack",
+  "owner": {
+    "name": "Sean, Third Wave Discounts"
+  },
+  "metadata": {
+    "description": "Sean's Claude Code fork of poteto's pstack: shelly-mode, its playbooks, the principle skills, and the review panels."
+  },
+  "plugins": [
+    {
+      "name": "shelly-stack",
+      "source": "./",
+      "description": "if you want to go fast, go deep first. rigorous agent workflows you can parallelize with confidence."
+    },
+    {
+      "name": "shelly-team-kit",
+      "source": "./team-kit",
+      "description": "Code cleanup, verification, CI, and PR review for Shelly Stack."
+    }
+  ]
 }

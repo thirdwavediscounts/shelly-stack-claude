@@ -1,20 +1,20 @@
 {
-	"name": "shelly-stack",
-	"description": "if you want to go fast, go deep first. shelly-stack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Sean's Claude Code fork of poteto's pstack for Third Wave Discounts.",
-	"version": "0.18.1",
-	"author": {
-		"name": "Sean, Third Wave Discounts"
-	},
-	"homepage": "https://github.com/thirdwavediscounts/shelly-stack",
-	"repository": "https://github.com/thirdwavediscounts/shelly-stack",
-	"license": "MIT",
-	"keywords": [
-		"shelly-stack",
-		"shelly-mode",
-		"workflow",
-		"principles",
-		"agent-style",
-		"subagents",
-		"unslop"
-	]
+  "name": "shelly-stack",
+  "description": "if you want to go fast, go deep first. shelly-stack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Sean's Claude Code fork of poteto's pstack for Third Wave Discounts.",
+  "version": "0.21.0",
+  "author": {
+    "name": "Sean, Third Wave Discounts"
+  },
+  "homepage": "https://github.com/thirdwavediscounts/shelly-stack",
+  "repository": "https://github.com/thirdwavediscounts/shelly-stack",
+  "license": "MIT",
+  "keywords": [
+    "shelly-stack",
+    "shelly-mode",
+    "workflow",
+    "principles",
+    "agent-style",
+    "subagents",
+    "unslop"
+  ]
 }

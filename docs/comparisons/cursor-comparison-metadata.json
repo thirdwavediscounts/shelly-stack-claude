@@ -1,0 +1,50 @@
+{
+  "cursor_head": "4a48c92e4e7cc3c654dd42ff3086f2e051705690",
+  "verified_origin_main": "4a48c92e4e7cc3c654dd42ff3086f2e051705690",
+  "native_head": "48a09a1cfd1df5f357ee699aedf4e654526cc9b1",
+  "native_changes_committed": false,
+  "packages": {
+    "stack": {
+      "cursor_files": 161,
+      "native_files": 203
+    },
+    "team-kit": {
+      "cursor_files": 29,
+      "native_files": 32
+    }
+  },
+  "comparison_rows": 253,
+  "principles": [
+    "principle-attack-the-premise",
+    "principle-boundary-discipline",
+    "principle-build-the-lever",
+    "principle-encode-lessons-in-structure",
+    "principle-exhaust-the-design-space",
+    "principle-experience-first",
+    "principle-fix-root-causes",
+    "principle-foundational-thinking",
+    "principle-guard-the-context-window",
+    "principle-laziness-protocol",
+    "principle-make-operations-idempotent",
+    "principle-migrate-callers-then-delete-legacy-apis",
+    "principle-minimize-reader-load",
+    "principle-model-the-domain",
+    "principle-never-block-on-the-human",
+    "principle-outcome-oriented-execution",
+    "principle-prove-it-works",
+    "principle-redesign-from-first-principles",
+    "principle-separate-before-serializing-shared-state",
+    "principle-sequence-verifiable-units",
+    "principle-subtract-before-you-add",
+    "principle-test-behavior-not-implementation",
+    "principle-type-system-discipline"
+  ],
+  "excluded_inventory": [
+    ".git",
+    "node_modules",
+    "__pycache__",
+    ".DS_Store",
+    ".audit",
+    "generated plugins and comparison reports from source inventory"
+  ]
+}

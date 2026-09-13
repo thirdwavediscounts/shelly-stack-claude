@@ -1,16 +1,14 @@
 ---
 name: no-comments
-description: Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed
-  constraints.
+description: Spawn a native read-only Comment Sicko reviewer, fix accepted findings,
+  and offer structural encodings for claimed constraints.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # No comments
 
-Spawn Comment Sicko. Act on accepted findings.
-
-Authoring agents defend comments. Defer to Comment Sicko's fresh perspective.
+Spawn Comment Sicko as a native read-only subagent. Act only on findings verified against the scoped code.
 
 ## Scope
 
@@ -18,9 +16,9 @@ Use the caller's files or diff. Otherwise use the current diff against the base 
 
 ## Steps
 
-1. Spawn `Agent` with `subagent_type: "shelly-stack:comment-sicko"`. Pass the scope. Do not restate its rules.
-2. Inspect its report and diff. Reject application-code edits, scope escapes, exception-protected deletions, misstated `MUST KILL` reasons, and flags that treat kept intentional code as guilty. Reshape flags on our-code surprises stay actionable. Do not restore those comments. A keep survives only with proof it is about something we cannot change. Audit missed scoped lint and TypeScript suppressions. Correctness or safety suppressions stay actionable `MUST KILL`s. Restore deletions only with exact exceptions and scoped proof. Before accepting thin `IMPORTANT` or `do not remove` kills or keeps, run `/how` or `/why` on their symbol. If a kill is ambiguous, do not restore. If a keep is refuted or still ambiguous, delete it. Revert and rerun one rejected report with the failure named. Reject a second, report it open, and fail `/no-comments`.
-3. Fix trivial accepted flags directly by deleting a dead path, dropping a parameter, or using the real API. If any fix needs a shape, run `/architect` once for the accepted set and surrounding code. Stop at the sketch. Architect shapes. Step 4 implements.
-4. Implement the smallest root-cause fix in scope. Remove every named workaround. If the root cause is out of scope, land the smallest in-scope fix and report the rest open. The **principle-fix-root-causes** and **principle-redesign-from-first-principles** skills guide intent only: fix real causes, redesign as if requirements always existed, never bolt on symptom guards. Neither authorizes widening the fence nor fixing instances outside it.
-5. Constraint comments say `do not remove`, `do not change wording`, or `talk to X before changing`. Leave keeps about things we cannot change. Offer the cheapest in-scope type, runtime, test, or CI lint. Wait for interactive approval. Unattended and eval require caller pre-approval. If approved, encode then delete. Otherwise delete, report the constraint open, and sketch out-of-scope work.
-6. Report the deletion count, restored comments, reruns, architect sketch, fixes, encoding offers, encodings, unenforced constraints, and other open work.
+1. Read `references/comment-sicko.md`. Dispatch one reviewer with that prompt, the scope, and the configured `code review` model and reasoning effort through the native runtime contract's read-only worker branch.
+2. Inspect its report and any diff. Reject application-code edits, scope escapes, exception-protected deletions, misstated `MUST KILL` reasons, and flags that treat intentional code as guilty. Audit missed scoped lint and TypeScript suppressions. Before accepting thin `IMPORTANT` or `do not remove` kills or keeps, use `$shelly-stack:how` or `$shelly-stack:why` on the named symbol. Rerun one rejected report with the failure named. Reject a second failure, report it open, and fail `$shelly-stack:no-comments`.
+3. Fix trivial accepted flags directly by deleting a dead path, dropping a parameter, or using the real API. If a fix needs a shape, run `$shelly-stack:architect` once for the accepted set and surrounding code. Stop at the sketch before implementation.
+4. Implement the smallest root-cause fix in scope. Remove every named workaround. If the root cause is out of scope, land the smallest in-scope fix and report the remainder.
+5. For comments claiming an external constraint, offer the cheapest in-scope type, runtime check, test, or CI lint. Wait for approval before encoding it unless the caller already authorized unattended changes. Keep only constraints proven to come from something the project cannot change.
+6. Report deletion count, restored comments, reruns, architect sketch, fixes, encoding offers, completed encodings, unenforced constraints, and open work.

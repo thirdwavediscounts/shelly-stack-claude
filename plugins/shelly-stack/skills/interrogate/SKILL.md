@@ -5,13 +5,13 @@ description: Use for "interrogate", "adversarial review", "multi-model review", 
   LLM reviewers challenge changes from independent angles.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Interrogate
 
-Spawn one reviewer per configured model to adversarially review code changes. Each model gets the same prompt and rubric. The adversarial signal comes from model diversity, not assigned personas. Models differ in blind spots, priors, and reasoning patterns. Agreement across models is high-confidence signal; lone-model findings are worth reading but lower confidence.
+Spawn one reviewer per configured `<model>@<reasoning_effort>` pair to adversarially review code changes. Each reviewer gets the same prompt and rubric. The adversarial signal comes from model diversity, not assigned personas.
 
-The deliverable is a synthesized verdict. Do NOT auto-apply changes.
+The deliverable is a synthesized verdict. Do not apply changes.
 
 ## Step 1, Determine Scope
 
@@ -25,33 +25,33 @@ Package the diff (or file contents) plus any surrounding context files the revie
 
 ## Step 2, State the Intent
 
-Before spawning reviewers, state the intent explicitly. What is this code trying to accomplish? Derive this from:
+Before spawning reviewers, state the intent explicitly. Derive this from:
 
 - The user's message
 - Commit messages
 - PR description if one exists
 - The code itself
 
-Write one clear paragraph. Reviewers challenge whether the work achieves the intent well, not whether the intent itself is correct. If you're unsure about the intent, ask the user before proceeding.
+Write one clear paragraph. If you're unsure about the intent, ask the user before proceeding.
 
 ## Step 3, Spawn Reviewers
 
-Launch all reviewers in a single message using the Agent tool. Use the `interrogate reviewers` list from `~/.codex/shelly-stack-models.md` when present, one reviewer per entry, extending or shrinking the Reviewer A/B/C labels below to the configured entry count; otherwise use the table defaults.
+Inspect current child capacity. Launch up to the available reviewer slots together, then refill a rolling window. Use the `interrogate reviewers` list from `~/.codex/shelly-stack-models.md` when present, one reviewer per entry, extending or shrinking the Reviewer A/B/C labels below to the configured entry count; otherwise use the table defaults.
 
-| Subagent | Default model |
-|----------|---------------|
-| Reviewer A | `fable` |
-| Reviewer B | `opus` |
-| Reviewer C | `sonnet` |
+| Subagent | Default role pair |
+|---|---|
+| Reviewer A | native judgment fallback |
+| Reviewer B | native precise-execution fallback |
+| Reviewer C | native implementation fallback |
 
-Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
+A configured Codex role entry is `<model>@<reasoning_effort>`. Pass both values to `spawn_agent` with a non-`all` `fork_turns` when the current native schema supports them. For `inherit@inherit`, omit all three overrides. If a saved pair is unavailable, use the native runtime contract's dynamic fallback for that run and ask the user to rerun `$shelly-stack:setup-shelly-stack`.
 
 For each reviewer:
-- `subagent_type`: `general-purpose`
-- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line
-- `tools`: read-only (give it only Read/Grep/Glob/Bash)
+- native subagent: one concrete brief
+- role pair: one configured `interrogate reviewers` `<model>@<reasoning_effort>` pair, or the native runtime fallback
+- boundary: read-only. Dispatch through the native runtime contract's read-only worker branch
 
-If a model value is rejected as unresolvable when you try to spawn the subagent, check the valid values in the Agent tool's error message, pick the closest equivalent (prefer the highest-reasoning tier), spawn with the valid value, and open a separate PR to update the configured value or default table. Do not block the review on the value issue. If the configured value is `inherit`, omit `model` instead; never treat that alias as a broken value or enter this fallback for it.
+If a configured model or effort is rejected, inspect the current `spawn_agent` schema, choose the closest valid pair, and continue the review. Report the stale saved pair and ask the user to rerun `$shelly-stack:setup-shelly-stack`. For `inherit@inherit`, omit both overrides and do not treat the value as broken.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent
@@ -60,8 +60,6 @@ Read `references/reviewer-prompt.md` and fill in the template with:
 4. The code-quality lens from `references/code-quality-review.md`
 
 The same filled template goes to all reviewers, so every model applies the code-quality lens.
-
-Each reviewer produces structured findings as described in the prompt template.
 
 ## Step 4, Synthesize
 
@@ -77,7 +75,7 @@ As results come back, build a unified picture:
 
 You are the lead reviewer, a pragmatic senior engineer, not a neutral aggregator.
 
-Read `references/lead-judgment.md` for the full framework. Reviewers only see a slice of the codebase. You have the full context (the goal, the constraints, the timeline, which tradeoffs were already considered). Use that context aggressively.
+Read `references/lead-judgment.md` for the full framework.
 
 Categorize every finding using these buckets:
 
@@ -111,7 +109,7 @@ Present the verdict in this structure:
 [Valid but low-priority. Brief list.]
 
 ### Dismissed
-[Rejected findings with brief rationale. This shows the user what was filtered out and why, so they can override your judgment if they disagree.]
+[Rejected findings with brief rationale.]
 
 ### Agreement Map
 [Where did models agree, where did they diverge, and what does the pattern of agreement/disagreement tell us?]

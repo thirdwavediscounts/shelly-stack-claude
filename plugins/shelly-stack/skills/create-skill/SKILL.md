@@ -4,7 +4,7 @@ description: Author or edit a Codex SKILL.md when the user asks to create a skil
   turn a workflow into a skill, or update agent instructions.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Create a Codex skill
 
@@ -12,11 +12,13 @@ Create the smallest skill that changes Codex's decisions in the requested workfl
 
 ## Placement
 
-- Project skill: `.agents/skills/<name>/SKILL.md`. Commit it when the repository should share it.
+- Project skill: `.agents/skills/<name>/SKILL.md`. Commit it only when the current request explicitly authorizes commits; otherwise leave the verified skill in the working tree.
 - Personal skill: `~/.codex/skills/<name>/SKILL.md`.
 - Plugin skill: `<plugin>/skills/<name>/SKILL.md`.
 
 Use lowercase kebab-case for `<name>`. Put optional support files beside `SKILL.md` in `references/`, `scripts/`, or `assets/` only when they have a concrete use.
+
+`agents/openai.yaml` controls a skill's UI metadata and implicit-invocation policy. It is not a custom-agent definition. Native Codex custom agents are TOML files under project `.codex/agents/` or personal `~/.codex/agents/`; create one only when the user asks for a reusable agent role rather than a skill.
 
 ## Entrypoint
 

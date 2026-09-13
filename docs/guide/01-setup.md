@@ -21,7 +21,7 @@ From a local checkout of this repository, run:
 
 ```text
 codex plugin marketplace add /absolute/path/to/shelly-stack
-codex plugin add shelly-stack@shelly-stack-codex
+codex plugin add shelly-stack@shelly-stack
 ```
 
 Start a new Codex task after installation so it discovers the generated skills.
@@ -58,7 +58,7 @@ Pick something real but small, and describe it the way you'd describe it to a co
 /shelly-mode add a --json flag to this command. text output stays byte-identical. verify both.
 ```
 
-Watch the todo list. The first item is always "read the Principles section". The rest are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/shelly-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
+Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/shelly-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
 
 From here you can type normal follow-ups. `/shelly-mode` applies to the turn where you invoke it; in Claude Code invoke `/shelly-mode`, in Codex `$shelly-stack:shelly-mode`, on each turn where you want it applied.
 

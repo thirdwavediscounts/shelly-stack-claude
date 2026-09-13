@@ -19,7 +19,7 @@ The default role-to-model mapping is the rule shape shown in step 5 below. If `~
 
 ### 3. Map and confirm
 
-Show every role with its current model, marking any real value not in the detected set as needing a choice. Ask whether to accept as-is or change specific roles, offering the detected models, the detected agent names, and `inherit` (this role runs on the parent chat model) as the options. Prefer AskUserQuestion over free text. For panel roles (how critics, arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it different from the parent's when possible. If the `openai-codex` plugin is installed, seating a Codex model in a panel or cross-judge list buys you a genuinely different model family, which the Anthropic tiers alone cannot. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+Show every role with its current model, marking any real value not in the detected set as needing a choice. Ask whether to accept as-is or change specific roles, offering the detected models, the detected agent names, and `inherit` (this role runs on the parent chat model) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it different from the parent's when possible. If the `openai-codex` plugin is installed, seating a Codex model in a panel or cross-judge list buys you a genuinely different model family, which the Anthropic tiers alone cannot. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Validate
 
@@ -41,7 +41,6 @@ judgment and prose: fable
 hardest tasks: fable
 how explorer: sonnet
 how explainer: fable
-how critics: fable, opus, sonnet
 why investigators: sonnet
 why synthesizer: fable
 reflect tooling: opus
@@ -60,3 +59,5 @@ Tell the user the rule was written and that it applies to new sessions. Re-runni
 ### 7. Offer a verification skill (optional)
 
 Check whether the project has a way to drive the real app for proof (a `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /create-verification-skill." On yes, invoke `/create-verification-skill` (resolves wherever shelly-stack is installed — workspace, user, or plugin). On no, move on without pushing.
+
+When updating an existing configuration, remove the retired `how critics` role. How now produces explanations only.

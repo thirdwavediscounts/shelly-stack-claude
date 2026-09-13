@@ -14,7 +14,18 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.0"
       - run: python -m pip install PyYAML==6.0.2
       - run: ./scripts/build_codex_plugin.py --check
       - run: ./scripts/validate_dual_runtime.py
+      - run: python3 scripts/build_team_kit_plugin.py --check
+      - run: ./scripts/build_cursor_plugin.py --check
+      - run: ./scripts/validate_cursor_runtime.py
+      - run: python -m unittest discover -s tests -v
+      - run: bash -n plugins/shelly-stack/skills/shelly-mode/scripts/worktree-audit.sh
+      - run: node --check plugins/shelly-stack/skills/shelly-mode/scripts/check-plan.mjs
+      - run: node plugins/shelly-stack/skills/shelly-mode/scripts/bin/orch.mjs --help
+      - run: node plugins/shelly-stack/skills/shelly-mode/scripts/bin/watch-pr.mjs --help
       - run: python3 skills/ticket/scripts/test_lint_linear_text.py
