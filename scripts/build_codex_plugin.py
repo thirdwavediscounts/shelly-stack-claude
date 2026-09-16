@@ -530,7 +530,11 @@ Call `list_agents` to inspect current collaboration capacity before fan-out. Spa
             "when that edit is within the authorized scope; commit, push, or open its own PR only when "
             "the current request authorizes those actions.",
         ),
-        ('\\- Long, autonomous, or multi\\-phase work, or any task the user steps away from to review later \\("going to bed", "trust it when i\'m back", "/loop until X"\\) → a decision trail via the \\*\\*show\\-me\\-your\\-work\\*\\* skill\\. Commit it when stakes need an auditable record\\. Keep it local otherwise\\.', '- Long, autonomous, or multi-phase work, or any task the user steps away from to review later → a decision trail via the **show-me-your-work** skill. Keep it local unless the current request explicitly authorizes commits.'),
+        ('\\- Long, autonomous, or multi\\-phase work, or any task the user steps away from to review later \\("going to bed", "trust it when i\'m back", "/loop until X"\\) → invoke the \\*\\*show\\-me\\-your\\-work\\*\\* skill for the decision trail\\. Commit it when stakes need an auditable record\\. Keep it local otherwise\\.', '- Long, autonomous, or multi-phase work, or any task the user steps away from to review later → invoke the **show-me-your-work** skill for the decision trail. Keep it local unless the current request explicitly authorizes commits.'),
+        (
+            r"Where a trigger says invoke, call the Skill tool with that skill name\. Reading its SKILL\.md instead skips the skill's argument handling and its subagent wiring\.",
+            "Where a trigger says invoke, open that skill's `references/routed/<skill-name>/workflow.md` from this Shelly Mode directory and follow it in full. Skimming it for the gist skips its specialist prompts and subagent wiring.",
+        ),
         (
             r"Every playbook ends with a reply written this way, PR link as `https://github\.com/<owner>/<repo>/pull/<number>`\. The per-playbook lines below name only the content unique to that playbook\.",
             "Every playbook ends with a reply written this way. Include a PR link only when the "

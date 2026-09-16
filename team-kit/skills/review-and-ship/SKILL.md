@@ -14,11 +14,12 @@ Reviewing changes before shipping. Close key issues, verify behavior, and open o
 ## Workflow
 
 1. Gather context: diff against base branch, uncommitted changes, recent commits, changed files, and user intent from recent relevant chats if useful.
-2. Run targeted tests for changed behavior. If no focused tests exist, decide whether to add them or document the gap.
-3. Review for correctness, regressions, security, and intent fit. Use an independent reviewer only when the active delegation rules allow it, following the runtime contract.
-4. Fix critical issues before finalizing and re-run affected tests.
-5. Commit selective files with a concise message.
-6. Push branch and open or update a PR.
+2. Run the repository's lint, format, and type gates, the same commands CI runs, before any review. Read the CI workflow or the root scripts to find them (for example `pnpm ratchet:check`, `pnpm format:check`, `pnpm typecheck`). Fix every red first. A reviewer reading a diff that CI will reject wastes the review.
+3. Run targeted tests for changed behavior. If no focused tests exist, decide whether to add them or document the gap.
+4. Review for correctness, regressions, security, and intent fit. Use an independent reviewer only when the active delegation rules allow it, following the runtime contract.
+5. Fix critical issues before finalizing and re-run affected tests and gates.
+6. Commit selective files with a concise message.
+7. Push branch and open or update a PR.
 
 ## Suggested Checks
 
@@ -38,6 +39,7 @@ gh pr checks --json name,bucket,state,workflow,link
 
 ## Output
 
+- Gate commands run and their results
 - Findings summary (critical, warning, note)
 - Tests run and outcomes
 - PR URL
