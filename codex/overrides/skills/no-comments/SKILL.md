@@ -1,6 +1,6 @@
 ---
 name: no-comments
-description: Spawn a native read-only Comment Sicko reviewer, fix accepted findings, and offer structural encodings for claimed constraints.
+description: Spawn a native read-only Comment Sicko reviewer, fix accepted findings, and offer structural encodings for claimed constraints. Use for 'strip the comments', 'is this PR clean of comments', 'run comment sicko', or before handing a diff to review.
 ---
 
 # No comments
