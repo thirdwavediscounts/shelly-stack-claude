@@ -1,5 +1,0 @@
-interface:
-  display_name: Figure It Out
-  short_description: Use the Figure It Out workflow in Codex
-policy:
-  allow_implicit_invocation: false

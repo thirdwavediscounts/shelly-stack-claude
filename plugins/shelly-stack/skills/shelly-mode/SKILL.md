@@ -18,24 +18,30 @@ The Principles section below grounds every trigger. In your reply, name each pri
 
 Remaining triggers:
 
-- Nontrivial change, architecture decision, or "are we sure?" → the **[how](references/routed/how/workflow.md)** skill.
+- Nontrivial change, architecture decision, or "are we sure?" → invoke the **[how](references/routed/how/workflow.md)** skill.
 - About to `request_user_input` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle.
 - Any code → name the data shape first, and choose its organizing structure per **[principle-model-the-domain](references/routed/principle-model-the-domain/workflow.md)**.
-- Code crossing a function boundary → the **[architect](references/routed/architect/workflow.md)** skill, parallel design exploration before implementing.
-- Parallel fan-out → the **[swarm](references/routed/swarm/workflow.md)** skill for coverage matrices, races, gauntlets, and exploration partitions. Use **[arena](references/routed/arena/workflow.md)** for design or code bakeoffs with base selection and grafting.
-- Contested design → the **[interrogate](references/routed/interrogate/workflow.md)** skill (multi-model adversarial) before shipping.
+- Code crossing a function boundary → invoke the **[architect](references/routed/architect/workflow.md)** skill, parallel design exploration before implementing.
+- Parallel fan-out → invoke the **[swarm](references/routed/swarm/workflow.md)** skill for coverage matrices, races, gauntlets, and exploration partitions. Invoke **[arena](references/routed/arena/workflow.md)** for design or code bakeoffs with base selection and grafting.
+- Contested design → invoke the **[interrogate](references/routed/interrogate/workflow.md)** skill (multi-model adversarial) before shipping.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
-- Any prose surface → the **[unslop](references/routed/unslop/workflow.md)** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **[create-skill](references/routed/create-skill/workflow.md)** skill (the bundled skill for authoring SKILL.md files).
-- Docs, RFCs, readmes, PR descriptions, or commit messages → the **[technical-writing](references/routed/technical-writing/workflow.md)** skill ([`$shelly-stack:technical-writing`](references/routed/technical-writing/workflow.md)).
+- Any prose surface → invoke the **[unslop](references/routed/unslop/workflow.md)** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **[create-skill](references/routed/create-skill/workflow.md)** skill (the bundled skill for authoring SKILL.md files).
+- Docs, RFCs, readmes, PR descriptions, or commit messages → invoke the **[technical-writing](references/routed/technical-writing/workflow.md)** skill.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **[ticket](references/routed/ticket/workflow.md)** route's `references/routed/ticket/references/linear-writing.md` for the shape, then `references/routed/ticket/scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
 - Before commit → `$shelly-team-kit:deslop` for code cleanup, then the **[unslop](references/routed/unslop/workflow.md)** skill over the diff's prose and comments.
-- Before review → the **[no-comments](references/routed/no-comments/workflow.md)** skill ([`$shelly-stack:no-comments`](references/routed/no-comments/workflow.md)).
+- Before review → invoke the **[no-comments](references/routed/no-comments/workflow.md)** skill.
 - Shipping UI / IDE / CLI → the project's verification skill (generate one with [`$shelly-stack:create-verification-skill`](references/routed/create-verification-skill/workflow.md)). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
 - Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - Native Codex review findings and review-bot comments → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so verify each against the code, fix real ones, and dismiss noise with a concrete reason instead of churning code. Classify each as fix, dismiss, or ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → report it and avoid a silent workaround. Fix it locally only when that edit is within the authorized scope; commit, push, or open its own PR only when the current request authorizes those actions.
-- Long, autonomous, or multi-phase work, or any task the user steps away from to review later → a decision trail via the **[show-me-your-work](references/routed/show-me-your-work/workflow.md)** skill. Keep it local unless the current request explicitly authorizes commits.
+- Long, autonomous, or multi-phase work, or any task the user steps away from to review later → invoke the **[show-me-your-work](references/routed/show-me-your-work/workflow.md)** skill for the decision trail. Keep it local unless the current request explicitly authorizes commits.
+- "Give me a handoff prompt", "prompt for the next session", "before I clear context" → the **Pause safely** playbook. Write the checkpoint, then reply with the resume prompt.
+- "Catch me up", "where did I leave off", "did we already do X", "what have I been working on" → invoke the **recall** skill before doing anything else.
+- "Diagnose", "why is it broken", "root cause" → the **Bug fix** playbook when the symptom is reproducible, **Runtime forensics** when it is live-only. Reproduce or instrument before hypothesizing. Never guess from code alone.
+- "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **[ticket](references/routed/ticket/workflow.md)** skill in its Triage gate over the candidates. Report the frontier, do not start a build.
+
+Where a trigger says invoke, open that skill's `references/routed/<skill-name>/workflow.md` from this Shelly Mode directory and follow it in full. Skimming it for the gist skips its specialist prompts and subagent wiring.
 
 ## Principles
 

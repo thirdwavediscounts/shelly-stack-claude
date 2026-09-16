@@ -12,24 +12,30 @@ The Principles section below grounds every trigger. In your reply, name each pri
 
 Remaining triggers:
 
-- Nontrivial change, architecture decision, or "are we sure?" → the **how** skill.
+- Nontrivial change, architecture decision, or "are we sure?" → invoke the **how** skill.
 - About to `AskUserQuestion` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle.
 - Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**.
-- Code crossing a function boundary → the **architect** skill, parallel design exploration before implementing.
-- Parallel fan-out → the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Use **arena** for design or code bakeoffs with base selection and grafting.
-- Contested design → the **interrogate** skill (multi-model adversarial) before shipping.
+- Code crossing a function boundary → invoke the **architect** skill, parallel design exploration before implementing.
+- Parallel fan-out → invoke the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Invoke **arena** for design or code bakeoffs with base selection and grafting.
+- Contested design → invoke the **interrogate** skill (multi-model adversarial) before shipping.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
-- Any prose surface → the **unslop** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill (the bundled skill for authoring SKILL.md files).
-- Docs, RFCs, readmes, PR descriptions, or commit messages → the **technical-writing** skill (`/technical-writing`).
+- Any prose surface → invoke the **unslop** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill (the bundled skill for authoring SKILL.md files).
+- Docs, RFCs, readmes, PR descriptions, or commit messages → invoke the **technical-writing** skill.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
 - Before commit → `/shelly-team-kit:deslop` for code cleanup, then the **unslop** skill over the diff's prose and comments.
-- Before review → the **no-comments** skill (`/no-comments`).
+- Before review → invoke the **no-comments** skill.
 - Shipping UI / IDE / CLI → the project's verification skill (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
 - Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - `/code-review` findings and review-bot comments → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so verify each against the code, fix real ones, and dismiss noise with a concrete reason instead of churning code. Classify each as fix, dismiss, or ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
-- Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X") → a decision trail via the **show-me-your-work** skill. Commit it when stakes need an auditable record. Keep it local otherwise.
+- Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X") → invoke the **show-me-your-work** skill for the decision trail. Commit it when stakes need an auditable record. Keep it local otherwise.
+- "Give me a handoff prompt", "prompt for the next session", "before I clear context" → the **Pause safely** playbook. Write the checkpoint, then reply with the resume prompt.
+- "Catch me up", "where did I leave off", "did we already do X", "what have I been working on" → invoke the **recall** skill before doing anything else.
+- "Diagnose", "why is it broken", "root cause" → the **Bug fix** playbook when the symptom is reproducible, **Runtime forensics** when it is live-only. Reproduce or instrument before hypothesizing. Never guess from code alone.
+- "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **ticket** skill in its Triage gate over the candidates. Report the frontier, do not start a build.
+
+Where a trigger says invoke, call the Skill tool with that skill name. Reading its SKILL.md instead skips the skill's argument handling and its subagent wiring.
 
 ## Principles
 
