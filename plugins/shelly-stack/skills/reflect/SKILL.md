@@ -5,7 +5,7 @@ description: Spawn three parallel review subagents over the active transcript, s
   user says reflect.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Reflect
 
@@ -13,55 +13,41 @@ Mine the current conversation for durable learnings, then route them into skill 
 
 ## When to invoke
 
-- The user said "reflect" or "/reflect".
-- A complex task (5+ tool calls) just landed cleanly and the recipe is worth keeping.
-- The agent hit dead ends, found the working path, and the path generalizes.
-- The user corrected the agent's approach mid-task.
-- A non-trivial workflow emerged that isn't captured anywhere.
-
-Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
+Invoke when the user says "reflect" or "$shelly-stack:reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
 
 ## Process
 
 ### 1. Locate the active transcript
 
-The parent finds its own transcript file before fanning out. Derive the active workspace's transcript directory from the current working directory: `~/.claude/projects/<slug>/`, where `<slug>` is the workspace path with every `/` turned into `-`, including the leading one (`/Users/you/proj` → `-Users-you-proj`); use that path. Do not glob across `~/.claude/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.
-
-```bash
-ls -t <transcripts>/*.jsonl <transcripts>/*/subagents/*.jsonl 2>/dev/null | head -10
-```
-
-Two transcript layouts: the session file (`<id>.jsonl`) and subagent (`<parent>/subagents/<child>.jsonl`).
-
-For each candidate, read the first JSONL line and check that `message.content[0].text` contains the conversation's opening user prompt. Take the matching path. If no path resolves, write a tight digest of the session and pass that instead.
+The parent prepares the current conversation before fanning out. Prefer the current conversation and native `list_threads` and `read_thread` when available. Otherwise write a tight digest, or use an exact session-file path already supplied by the parent or user. Never discover or scan unrelated `~/.codex/sessions/` records.
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three `Agent` calls, `subagent_type: general-purpose`, explicit `model:` on each (or `subagent_type` when the configured value is an agent name; see below), read-write with the MCP tools left in. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript); a read-only tool list strips the MCPs. The prompt forbids file writes; the parent applies edits.
+Load the configured judgment and tooling pairs, then run three contained reviewer workers in total. Dispatch each through the native runtime contract's read-only worker branch. When that branch selects native spawns, call `list_agents`, launch only as many as the available child slots allow, refill a rolling window, and consume each separately delivered terminal result after `wait_agent` reports an update. When it selects bounded CLI workers, collect each command's final output. The parent supplies any required external evidence and applies approved edits.
 
-Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
+A configured Codex role is `<model>@<reasoning_effort>`. Pass both values through the native runtime contract's read-only worker branch; for `inherit@inherit`, omit both. If a saved pair is unavailable, use the native runtime contract's fallback for this run and ask the user to rerun `$shelly-stack:setup-shelly-stack`.
 
-| Lens | `model` | Prompt template |
+| Lens | Role pair | Prompt template |
 |---|---|---|
-| Judgment | your configured reflect-judgment model (default `fable`) | `references/judgment-reviewer.md` |
-| Tooling | your configured reflect-tooling model (default `opus`) | `references/tooling-reviewer.md` |
-| Divergent | your configured reflect-judgment model (default `fable`) | `references/divergent-reviewer.md` |
+| Judgment | configured reflect judgment pair | `references/judgment-reviewer.md` |
+| Tooling | configured reflect tooling pair | `references/tooling-reviewer.md` |
+| Divergent | configured reflect judgment pair | `references/divergent-reviewer.md` |
 
-Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in the `Agent` response body.
+Pass each template verbatim, substituting the transcript path or digest where marked. On the native spawn branch, the initial `spawn_agent` result is only the agent handle and status; wait for completion and consume the separately delivered terminal result. On the CLI branch, consume the command's final output.
 
 ### 3. Synthesize
 
-One `Agent` call, `subagent_type: general-purpose`, using your configured reflect-judgment model (default `fable`), read-write with the MCP tools left in. The synthesizer's quality check includes spot-verifying citations, which can require MCP access; a read-only tool list strips the MCPs. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+Dispatch one synthesizer with the configured reflect judgment pair and the `references/synthesizer.md` prompt through the native runtime contract's read-only worker branch. Inline the three complete reviewer reports and any parent-collected external evidence where marked, then collect the result through the selected branch. The synthesizer returns a structured Accepted / Rejected / Backlog list.
 
 ### 4. Structural enforcement check
 
-Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. The synthesizer already applies this criterion; this is a final pass before edits land. See the **encode-lessons-in-structure** principle skill.
+Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. See the **encode-lessons-in-structure** principle skill.
 
 ### 5. Apply
 
-Before applying any Accepted edit, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill changes affect every future agent in the org; do not auto-apply.
+Before applying any Accepted edit, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill changes affect every future agent in the org. Do not auto-apply.
 
-Backlog items file to whatever devex / backlog tracker your team uses automatically. Those are tracker submissions, not skill edits. Only the Accepted list waits for approval.
+Present Backlog items as proposals. File them in an external tracker only when the user explicitly approves those submissions or already asked this run to file them. Tracker writes and skill edits both wait for the relevant authorization.
 
 For each approved Accepted item, follow the Routing field exactly:
 
@@ -78,5 +64,5 @@ Short list, no preamble:
 
 - Edits applied: `<skill path>`. What changed, one line each.
 - New skills created: `<skill path>`. One line each (rare).
-- Backlog filed to the devex tracker: `<issue title>` (`<tags>`). One line each.
+- Backlog proposed, or filed with explicit authorization: `<issue title>` (`<tags>`). One line each.
 - Dropped: one line per rejected finding + reason from the synthesizer.

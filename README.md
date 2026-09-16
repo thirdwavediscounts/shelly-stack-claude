@@ -1,8 +1,8 @@
 # shelly-stack
 
-this repository is one shelly-stack plugin for Claude Code and Codex, forked from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). `skills`, `docs`, and `agents` are the shared source of truth. the Claude Code package uses them directly. the native Codex package is generated from the same source with a thin runtime adapter under `plugins/shelly-stack`.
+this repository publishes shelly-stack for Claude Code and Codex under one plugin identity, forked from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). Claude Code uses the root `skills`, `docs`, and `agents` directly. Codex gets a separately versioned native distribution generated from the shared workflow skills plus the `codex/` runtime overrides. Building or installing the Codex distribution does not modify the Claude package.
 
-shelly-stack is Sean's fork of pstack for Third Wave Discounts: poteto's playbooks and principles, adapted to how we ship. everything runs locally on Claude Code with per-role model and effort pinned through `~/.claude/agents`, stacks land through `gh` and git, and swarm fan-out runs as a Workflow script.
+shelly-stack is Sean's fork of pstack for Third Wave Discounts: poteto's playbooks and principles, adapted to how we ship. Claude Code keeps its agent files and Workflow runtime. Codex maps the same workflows to native collaboration subagents, model plus reasoning-effort overrides, plans, reviews, waits, and opt-in heartbeat automations.
 
 there's a growing sense that ai writes too much slop code. we agree. if you want to go fast, go deep first.
 
@@ -38,12 +38,32 @@ The Codex package is built from the shared skills with:
 ./scripts/build_codex_plugin.py
 ```
 
-both clients install the same `shelly-stack@shelly-stack` identity and release version. do not edit `plugins/shelly-stack` by hand. edit the shared source or `codex/` adapter, rebuild, then run:
+Building requires Bun 1.4.0. Bun is used only to compile the shared TypeScript helpers into dependency-free Node scripts; installed Codex users do not need Bun.
+
+To refresh an existing local Codex install after rebuilding, remove the cached plugin and marketplace snapshot, then add them again:
+
+```bash
+codex plugin remove shelly-stack@shelly-stack
+codex plugin marketplace remove shelly-stack
+codex plugin marketplace add /absolute/path/to/shelly-stack
+codex plugin add shelly-stack@shelly-stack
+codex plugin list
+```
+
+The final list must show the version from `codex/plugin.template.json`.
+
+both clients install the same `shelly-stack@shelly-stack` identity, but each manifest owns its release version. do not edit `plugins/shelly-stack` by hand. edit the shared workflow source or the `codex/` overrides, rebuild, then run:
 
 ```bash
 ./scripts/build_codex_plugin.py --check
 ./scripts/validate_dual_runtime.py
 ```
+
+## Companion workflows
+
+Install `shelly-team-kit@shelly-stack` from the same marketplace for code cleanup, UI and CLI control, CI repair, and PR review. Claude uses the source under `team-kit`; Codex uses the generated package under `plugins/shelly-team-kit`. The [Team Kit guide](team-kit/README.md) lists the skills and native invocation syntax. Existing project verification skills remain the first choice.
+
+Build the companion with `python3 scripts/build_team_kit_plugin.py` and check it with `python3 scripts/build_team_kit_plugin.py --check`.
 
 ## get started
 
@@ -52,7 +72,7 @@ two steps:
 1. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) in Claude Code or `$shelly-stack:setup-shelly-stack` in Codex, then choose your models.
 2. use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) in Claude Code or `$shelly-stack:shelly-mode` in Codex whenever the task requires rigor.
 
-new here? type `/shelly-guide <what you're trying to do>` and it hands you the skills for that stage. the [shelly-stack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
+new here? use `/shelly-guide <what you're trying to do>` in Claude Code or `$shelly-stack:shelly-guide <what you're trying to do>` in Codex. it hands you the skills for that stage. the [Claude guide](./docs/guide/README.md) walks through a first real task; the Codex skill carries its native stage map inside the generated package.
 
 that's it. the other skills are situational; the mode skill uses them as needed. Claude Code keeps its Anthropic defaults. Codex chooses from the models exposed by its native subagent tool. Each setup writes only its own configuration file.
 
@@ -108,7 +128,7 @@ morning.
 
 when invoked it:
 
-1. opens a todo list. the first item is reading the inline principles index in the skill.
+1. opens the client's native plan. the first item is reading the inline principles index in the skill.
 2. matches your task to a [playbook](./skills/shelly-mode/playbooks/) and copies the steps in verbatim.
 3. routes to the other skills as the steps fire.
 4. writes unslopped replies framed for the consumer and the maintainer.

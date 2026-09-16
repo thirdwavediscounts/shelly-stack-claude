@@ -5,7 +5,7 @@ description: Reconstruct recent working context from the current Codex task, rel
   and resume requests.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Recall
 
@@ -13,7 +13,7 @@ Rebuild the user's recent working context and return a tight current-state brief
 
 1. Classify the request. Use the `session-pickup` playbook for one known task. Use `automate-me` for durable working preferences. If the user already supplied a complete state capsule, use it and skip history mining.
 2. Fix the scope. Default to the active workspace and the last seven days. State any different topic, workspace, or time window the user requested. Never turn “all” into a bounded window silently.
-3. Read Codex history safely. Prefer the current conversation, Codex task tools, and the provided memory index. If local session files are needed, restrict `~/.codex/sessions/` to the current thread ID or exact working-directory metadata. Never scan unrelated tasks. For a large in-scope corpus, split it among read-only native subagents and keep raw transcripts out of the parent context.
+3. Read Codex history safely. Prefer the current conversation, native `list_threads` and `read_thread` when available, and the provided memory index. Otherwise use a parent-provided narrow digest or an exact user-supplied task/session path. Never discover or scan unrelated `~/.codex/sessions/` records. For a large in-scope corpus, split the supplied material among read-only native subagents and keep raw transcripts out of the parent context.
 4. Search the shared record when the topic names a feature, file, subsystem, or bug. Route source control, issues, long-form docs, chat, observability, and error tracking through the **why** skill's investigators. Treat unavailable sources and null results as findings.
 5. Verify live state. Check surfaced branches, PRs, tickets, files, and runtime status with current tools. A prior task summary is history, not proof of the present state.
 6. Write the brief through the **unslop** skill and cite the task, memory, PR, ticket, or external record that supports each consequential claim.

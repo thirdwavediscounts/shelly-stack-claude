@@ -1,73 +1,98 @@
 ---
 name: shelly-guide
-description: Coach for using shelly-stack when you don't know it yet. Tells you which
-  shelly-stack skills fit the stage you're at (understand, design, build, clean, verify,
-  ship, overnight) with a copyable prompt for your actual task, then runs the first
-  one. Use for /shelly-guide, "how do I use shelly-stack", "which skill should I use",
-  "what do I run now", "guide me through this with shelly-stack".
+description: Coach for choosing the right Shelly Stack skill or stage in Codex, then
+  write a task-specific first prompt and offer to run it.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
-# shelly-stack guide
+# Shelly Stack guide for Codex
 
-You are the on-ramp. The user has shelly-stack installed and a real task, and doesn't yet know which skill to reach for. Meet them at the stage they're in, hand them the two to four skills for that stage with a prompt written for their task, and start the first one. Don't lecture through all ten guide pages; the guide is the source, this skill is the index into it.
+Help a user who has a real task but does not know which Shelly Stack workflow fits. Choose the current stage, recommend only the skills that earn their place, and write one copyable prompt for the user's actual task.
 
-The guide lives at `${CLAUDE_PLUGIN_ROOT}/docs/guide/`. Every stage below names its page. Open the page for the stage you land on before replying, and lift its prompts and pitfalls rather than inventing your own.
+## Find the stage
 
-## 1. Find the stage
+Infer the stage from the current request and completed work. If it is genuinely unclear, ask one short question with `request_user_input` when available:
 
-Read `$ARGUMENTS` and the conversation. If the stage is obvious, say which one you picked and why in one line. If not, ask with `AskUserQuestion`, one question, these options:
+- Setup: configure native model and reasoning-effort roles or create a verification harness.
+- Understand: explain current code or recover why it has this shape.
+- Design: compare approaches or settle a risky boundary.
+- Build and clean: implement, fix, refactor, improve performance, or remove weak prose and comments.
+- Verify and ship: prove behavior, open or babysit a PR, or land a stack.
+- Autonomous: drive a checkable outcome while the user is away.
 
-- Getting set up (models, verification skill)
-- Understanding code before touching it
-- Designing a change
-- Building or cleaning a change
-- Verifying and shipping
-- Leaving work running while I'm away
+If the user has not stated a concrete task, ask for it. Do not generate a placeholder prompt.
 
-Then ask for the task in their own words if they haven't given one. Never proceed on a stage without a task; the prompt you hand back must be about their code, not a placeholder.
+## Route by stage
 
-## 2. The stages
+### Setup
 
-Each entry: page, the skills in the order the guide presents them, when each earns its place, the one pitfall.
+- `$shelly-stack:setup-shelly-stack` configures Codex-native `<model>@<reasoning_effort>` role pairs.
+- `$shelly-stack:create-verification-skill` creates a project harness only when no reliable real-app verifier exists.
 
-**Setup.** `01-setup.md`. `/setup-shelly-stack` writes `~/.codex/shelly-stack-models.md` (which model plays which role; `inherit` means the session's model). `/create-verification-skill` when the project has no scripted way to drive the real app. Pitfall: treating `inherit` as a model name.
+Pitfall: treating `inherit@inherit` as a literal model instead of omitting both spawn overrides.
 
-**Front door.** `02-shelly-mode.md`. `/shelly-mode <goal + how you'll know it's done>` matches one of 22 playbooks and runs the other skills itself. Say "new task" to re-match; "don't change any code yet" pins Investigation; ask for "a fresh worktree off <base>" when agents run in parallel. Pitfall: enumerating skills in the prompt ("use /how then /architect"); name a skill only to override a default.
+### Front door
 
-**Understand.** `03-understand.md`. `/how` for what the code does now (add "then critique its boundaries" for Critique mode). `/why` for how it got this shape, from git plus every MCP evidence source. `/teach` when a summary isn't enough ("convince me it fixes the cause"). `/recall` to rebuild your own recent context on a topic. Session pickup playbook (`/shelly-mode take over this branch`) for someone else's in-flight branch. Pitfall: skipping this because "the agent reads the code anyway".
+- `$shelly-stack:shelly-mode <goal and checkable done condition>` owns a task that spans several stages and selects its playbook.
 
-**Design.** `04-design.md`. The ladder: small finished change you're unsure about → `/interrogate` alone; crosses function boundaries or moves ownership → `/architect` (brings `/arena`); a standalone decision (naming, format, algorithm) → `/arena` directly; coverage matrix or race → `/swarm`; contested and expensive to reverse → `/architect` then `/interrogate`. `/architect with checkpoint` to see the design before code. Most changes need none of this; `/shelly-mode` applies the ladder on its own.
+Name a particular skill only when overriding the normal route. Ask for a fresh worktree when concurrent writers need isolation.
 
-**Build.** `05-build-and-clean.md`. Say what you observed and let the playbook demand evidence: bug → "repro first, then fix and verify"; feature → the behavior plus what must not change; refactor → "zero behavior change, record output before, prove unchanged after"; perf → the measurement, not a vibe; one metric over many attempts → Hillclimb. `/tdd implement` when a cheap local test path exists. `typescript-best-practices` loads itself on `.ts`/`.tsx`.
+### Understand
 
-**Clean.** Same page. `/unslop the diff` (prose and comments, before each commit; the Opening-a-PR playbook does it anyway). `/no-comments the diff` hands comments to Comment Sicko, a reviewer who didn't write them. Pitfall: treating cleanup as optional polish.
+- `$shelly-stack:how` explains what the code does now and where behavior belongs.
+- `$shelly-stack:why` reconstructs design history and rationale from code, git, and available evidence.
+- `$shelly-stack:teach` produces a deeper explanation when a summary is insufficient.
+- `$shelly-stack:recall` reconstructs the user's recent Codex context on a topic.
 
-**Verify.** `06-verify-and-ship.md`. Put the finish condition in the first prompt; match the check to the change (CLI → run the command; UI → walk the flow in the running app; parser/migration → replay saved input; perf → before/after profiles; storage → read the value back). `/blast-radius` for a small diff you don't trust. `/create-verification-skill` once, `/maintain-verification-skill` when the feature map rots. Pitfall: accepting "it compiles" or a green build as evidence.
+Pitfall: skipping investigation because an implementation agent can read code later.
 
-**Ship.** Same page. `/shelly-mode open the pr` (small ordered commits, evidence in the description). `/shelly-mode babysit this pr, get it green` (conflicts, then review threads, then CI; stops at merge-ready, never merges). `/shelly-mode land the stack` (independent per-PR verification, then gh merge-when-ready).
+### Design
 
-**Overnight.** `07-overnight.md`. The contract: goal, "done means <checks>", "fresh worktree off <base>", "don't ask me before committing", "keep a decision log", `/loop until done`, an escape hatch. Routes through `/figure-it-out` and `/show-me-your-work`. Morning: `/show-me-your-work catch me up on what you did last night`, read the Attention section first. Queue instead of one task → Autopilot-full (merged by morning), Autopilot-stack (one stack, you land it), Orchestrate (multi-day program). Pitfall: a duration is not a finish condition.
+- `$shelly-stack:interrogate` pressure-tests a small finished proposal.
+- `$shelly-stack:architect` designs changes that cross ownership or function boundaries.
+- `$shelly-stack:arena` compares standalone choices such as formats, algorithms, or names.
+- `$shelly-stack:swarm` covers a matrix of independent checks or competing hypotheses.
 
-**Steer.** `08-principles.md`. Mid-run redirects are one line naming a principle: "apply prove it works, show me the real output". `/bro` when a reply is thorough and you still don't know what it said.
+Most small changes need none of these. Use `$shelly-stack:shelly-mode` when the work spans design and implementation.
 
-**Make it yours.** `09-make-it-yours.md`. `/automate-me` drafts your own `-mode` from your transcripts; `/reflect` after a run that taught you something; the Eval playbook to test a skill change blind.
+### Build and clean
 
-## 3. Reply
+- `$shelly-stack:tdd` fits a feature or bug with a cheap local red-green loop.
+- `$shelly-stack:figure-it-out` fits an underspecified but checkable outcome that needs autonomous investigation and implementation.
+- `$shelly-stack:unslop` removes weak prose and comment noise before a commit.
+- `$shelly-stack:no-comments` reviews comments independently from the author.
 
-Short. In this order:
+Describe observed behavior and a finish condition. For performance work, provide the metric and baseline rather than an impression.
 
-1. **Stage.** One line: which stage, and why this task is there.
-2. **Skills.** Two to four, one line each: name, what it buys for this task, when to skip it.
-3. **Your first prompt.** One copyable prompt, taken from the guide page and rewritten around their task, with a checkable finish condition. Never a generic example.
-4. **Then.** The next stage and its page, one line.
-5. **Pitfall.** The one from the page, one line.
+### Verify and ship
 
-End by offering to run the first prompt now. If they say yes, invoke that skill with the prompt you wrote. If the task is bigger than a stage, say so and hand it to `/shelly-mode` instead, because the playbooks already sequence these stages.
+- `$shelly-stack:blast-radius` checks what a risky diff could break beyond its obvious surface.
+- `$shelly-stack:maintain-verification-skill` repairs a stale project verification map.
+- `$shelly-stack:shelly-mode open the PR` uses the PR-opening playbook.
+- `$shelly-stack:shelly-mode babysit this PR until it is merge-ready` handles review threads, conflicts, and CI without merging.
+- `$shelly-stack:shelly-mode land this stack` verifies and ships only when merge authority is explicit.
 
-## Don'ts
+Pitfall: treating a compile or green build as proof of user-visible behavior.
 
-- Don't paste the guide page; link it (`docs/guide/<page>`) and pull the specific prompt.
-- Don't sequence skills for them in the prompt you write. State goal and constraints; that's what `/shelly-mode` routes on.
-- Don't invent skills. Every name above exists in this plugin; `ls ${CLAUDE_PLUGIN_ROOT}/skills` if unsure.
+### Autonomous
+
+- `$shelly-stack:figure-it-out` drives one uncertain outcome to its predicate.
+- `$shelly-stack:show-me-your-work` keeps a resumable decision trail.
+- `$shelly-stack:shelly-mode` selects autonomous-run, autopilot, or orchestration playbooks for larger programs.
+
+Use native `wait_agent` while the current task is active. Create a Codex heartbeat only when the user explicitly requests recurring checks or a later follow-up. A duration is not a finish condition.
+
+## Reply
+
+Keep the response short and use this order:
+
+1. Stage and why it fits.
+2. Two to four relevant skills, what each adds, and when to skip it.
+3. One copyable prompt rewritten around the actual task with a checkable finish condition.
+4. The next likely stage in one line.
+5. The stage's main pitfall.
+
+Offer to run the first prompt. If the user agrees, invoke the named skill. For a task spanning multiple stages, route to `$shelly-stack:shelly-mode` instead of manually sequencing every leaf skill.
+
+Do not invent skills. Confirm names against the active installed skill catalog when unsure.

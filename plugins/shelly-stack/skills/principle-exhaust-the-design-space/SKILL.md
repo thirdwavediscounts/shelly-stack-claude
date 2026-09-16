@@ -5,7 +5,7 @@ description: Apply when facing a novel UI interaction or architectural decision 
   side before committing.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Exhaust the Design Space
 

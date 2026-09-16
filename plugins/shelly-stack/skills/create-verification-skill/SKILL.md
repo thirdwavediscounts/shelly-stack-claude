@@ -1,12 +1,12 @@
 ---
 name: create-verification-skill
 description: Generate a project-local verification skill that drives your app the
-  way a user does — any language, framework, or platform. Use for /create-verification-skill,
+  way a user does — any language, framework, or platform. Use for $shelly-stack:create-verification-skill,
   "make a control skill for this repo", or when a project has no scripted way to prove
   UI/CLI/service behavior.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Create a verification skill
 
@@ -45,4 +45,4 @@ Run its own instructions end to end once: launch, doctor, drive ONE mapped featu
 
 ## 5. Offer the maintenance loop
 
-Point the user at `/maintain-verification-skill` for keeping the map honest as the app changes. Suggest a cadence only if they ask.
+Point the user at `$shelly-stack:maintain-verification-skill` for keeping the map honest as the app changes. Suggest a cadence only if they ask.

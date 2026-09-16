@@ -9,11 +9,13 @@ Create the smallest skill that changes Codex's decisions in the requested workfl
 
 ## Placement
 
-- Project skill: `.agents/skills/<name>/SKILL.md`. Commit it when the repository should share it.
+- Project skill: `.agents/skills/<name>/SKILL.md`. Commit it only when the current request explicitly authorizes commits; otherwise leave the verified skill in the working tree.
 - Personal skill: `~/.codex/skills/<name>/SKILL.md`.
 - Plugin skill: `<plugin>/skills/<name>/SKILL.md`.
 
 Use lowercase kebab-case for `<name>`. Put optional support files beside `SKILL.md` in `references/`, `scripts/`, or `assets/` only when they have a concrete use.
+
+`agents/openai.yaml` controls a skill's UI metadata and implicit-invocation policy. It is not a custom-agent definition. Native Codex custom agents are TOML files under project `.codex/agents/` or personal `~/.codex/agents/`; create one only when the user asks for a reusable agent role rather than a skill.
 
 ## Entrypoint
 

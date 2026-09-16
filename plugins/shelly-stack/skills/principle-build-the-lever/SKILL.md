@@ -1,27 +1,25 @@
 ---
 name: principle-build-the-lever
-description: 'Apply to any non-trivial work, not just bulk work: edits, migrations,
-  analyses, checks. Build the tool that does it or proves it (codemod, script, generator,
-  or a skill your subagents follow) instead of working by hand. The tool is the artifact
-  a reviewer can rerun.'
+description: Build a rerunnable tool for non-trivial implementation work. During read-only
+  analysis, use existing commands or inline probes without creating repository files.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Build the Lever
 
-When the work isn't trivial, build the tool that does it instead of doing it by hand.
+For non-trivial implementation work, build the smallest tool that makes the authorized change repeatable. For a read-only analysis, use existing commands or an inline probe and do not create repository files.
 
 **Why:** Two payoffs. Throughput: a codemod, generator, or script does the work the same way every time and reruns for free. Confidence: the tool is one artifact a reviewer can read and rerun to check the work. Hand-done changes can only be re-verified by redoing them. A deterministic script turns "trust me" into "run this".
 
-**Pattern:** Default to building the lever. Skip it only when the task is genuinely trivial, a couple of obvious edits you can see at a glance.
+**Pattern:** Build a lever only when local edits are in scope. In a read-only task, the lever is an existing command, in-memory query, or stdout-only check.
 
-- Do the first unit by hand to learn the recipe, then build the tool. Prove it by rerunning it on that unit and diffing against your hand-done version. Make the lever safe to rerun. A reviewer will.
-- Codemod or script for edits, generator for repetitive files, a dump-to-sqlite query for analysis, a rerunnable check for verification.
-- A deterministic lever beats fan-out. If the tool can process every unit in one pass, run it yourself; don't fan out delegates to hand-apply what a script can do.
-- When you fan work out to subagents, write the lever as a skill they all read: the recipe, the verification contract, and the do-not-touch fences in one artifact, so every delegate inherits the same hardened version instead of re-explaining it per prompt and watching each one drift. Keep it outside the delegates' write scope so they can't quietly edit the contract.
-- Applying this principle produces a file. If you cited it and there is no codemod, script, generator, or delegate skill in the diff, you didn't apply it.
-- Commit the lever when the work outlives the session, so the next run reruns it instead of redoing it.
+- Do the first unit by hand to learn the recipe, then build the tool. Prove it by rerunning it on that unit and diffing against your hand-done version. Make the lever safe to rerun.
+- Use a codemod or script for authorized edits and a generator for repetitive files. For read-only analysis, prefer an existing query or a check that writes only to stdout.
+- A deterministic lever beats fan-out. If the tool can process every unit in one pass, run it yourself. Don't fan out delegates to hand-apply what a script can do.
+- When you fan work out to subagents, write the lever as a skill they all read: the recipe, the verification contract, and the do-not-touch fences in one artifact. Keep it outside the delegates' write scope so they can't quietly edit the contract.
+- In implementation scope, applying this principle normally produces a codemod, script, generator, or delegate skill. In read-only scope, producing a file would violate the task; show the exact existing or inline command instead.
+- Commit the lever only when the current request explicitly authorizes commits. Otherwise leave the verified change in the working tree.
 
 **Balance:** The bar is triviality, not repetition. A one-off still earns a lever when the lever is what makes the work checkable. Per the [Laziness Protocol](../principle-laziness-protocol/SKILL.md), build the smallest script that does or proves the job, never a framework.
 

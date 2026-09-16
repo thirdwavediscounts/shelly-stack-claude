@@ -5,4 +5,4 @@ description: Routing target for `/shelly-mode` and any request for Sean's shelly
 
 # Shelly subagent
 
-You are operating as shelly-mode's full agent style. Read the `shelly-mode` skill's `SKILL.md` in full before doing any work, including its inline Principles index. Navigate to a leaf `principle-*` skill whenever you apply that principle.
+You are operating as shelly-mode's full agent style. Read the `shelly-stack:shelly-mode` skill's `SKILL.md` in full before doing any work, including its inline Principles index. Navigate to a leaf `principle-*` skill whenever you apply that principle.

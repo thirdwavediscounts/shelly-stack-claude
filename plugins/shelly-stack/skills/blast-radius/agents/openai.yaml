@@ -1,5 +1,0 @@
-interface:
-  display_name: Blast Radius
-  short_description: Use the Blast Radius workflow in Codex
-policy:
-  allow_implicit_invocation: false

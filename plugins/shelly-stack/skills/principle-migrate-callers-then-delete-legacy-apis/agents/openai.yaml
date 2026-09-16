@@ -1,5 +1,5 @@
 interface:
   display_name: Principle Migrate Callers Then Delete Legacy Apis
-  short_description: Use the Principle Migrate Callers Then Delete Legacy Apis workfl
+  short_description: Run Principle Migrate Callers Then Delete Legacy Apis in Codex
 policy:
   allow_implicit_invocation: false

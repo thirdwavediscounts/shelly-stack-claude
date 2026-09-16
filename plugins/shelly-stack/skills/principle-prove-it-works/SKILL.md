@@ -5,7 +5,7 @@ description: Apply after completing a task, before declaring done. Verify agains
   a proxy, self-report, or 'it compiles.'
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Prove It Works
 
@@ -27,10 +27,10 @@ Code and features:
 4. For integrations, test the full communication path end-to-end
 
 Delegation: trust artifacts, not self-reports.
-When verifying delegated work, inspect the actual output artifact (git diff, file contents, runtime behavior), not the delegate's summary. Agents report what they intended, not always what happened.
+When verifying delegated work, inspect the actual output artifact (git diff, file contents, runtime behavior), not the delegate's summary.
 
 ## Script the check when you can
 
-The strongest proof is a deterministic script that re-runs the same comparison, not a one-time eyeball. Write the script, run it, and keep its output as an artifact a reviewer can re-run instead of trusting your word. A script comparing the old and new compiled output catches what a glance misses.
+The strongest proof is a deterministic check that reruns the same comparison. When file edits are authorized, add the smallest useful script and run it. For a read-only review or diagnosis, use an existing test or an inline, stdout-only command. If proof requires a new repository file, propose it instead of changing the repo.
 
-Keep the artifact visible for the human. Commit it only for large or complex work where the trail has to be auditable later, like a big port or migration (the **show-me-your-work** skill). Most work just needs it visible, not committed.
+Keep authorized artifacts visible for the human. Commit one only when the current request explicitly authorizes commits and the trail must remain auditable later. Most work needs verification evidence, not a new commit.

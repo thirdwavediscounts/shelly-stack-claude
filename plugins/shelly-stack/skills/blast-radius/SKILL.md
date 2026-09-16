@@ -6,7 +6,7 @@ description: Find what a change could break somewhere else before it ships, beyo
   a small diff you don't trust.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Blast radius
 
@@ -18,7 +18,7 @@ Listing the callers is not the job. The agent can grep those in a second. The jo
 
 ## Don't trust your own writeup
 
-A blast-radius writeup that sounds right is worthless. It reads as convincing whether or not it's true, and that is the trap you are walking into. So don't hand back the writeup. Find the one or two facts the whole thing depends on and prove them by running code. Words are where you start, not what you ship.
+A blast-radius writeup that sounds right is worthless. It reads as convincing whether or not it's true. So don't hand back the writeup. Find the one or two facts the whole thing depends on and prove them by running code.
 
 ### How sure are you
 
@@ -30,16 +30,16 @@ For each fact the change's safety depends on, get it as far down this list as is
 4. You ran it. A script or test that calls the real code and fails loud if you're wrong.
 5. You reproduced it in the running app.
 
-Any safety fact you can't get to step 4, say so out loud. Don't write it up as settled. Step 4 is usually one small script that imports the same library the app ships and calls the exact function you're worried about.
+Any safety fact you cannot get to step 4, mark unproven. Prefer an existing test or an inline, stdout-only command that exercises the shipped library. A read-only review does not authorize adding a script or test file.
 
 ## Steps
 
 1. Read the change. The diff, the symbols it adds, changes, and deletes, and what it now does differently, including the part the diff doesn't spell out. Use `why` step 2 to pull the PR and commits.
-2. Find the one fact it's safe because of. Most changes that look scary are safe because of a single fact, like "this call only drops already-dead cache entries and does nothing else". Find that fact. If it holds, most of the scary cases die at once. Spend your time here, not on a long list of maybes.
+2. Find the one fact it's safe because of. Most changes that look risky are safe because of a single fact, like "this call only drops already-dead cache entries and does nothing else". Find that fact. If it holds, most risky cases are cleared at once. Spend your time here, not on a long list of maybes.
 3. Look where grep stops. Read the source of the library you call, and check its pinned version and any local patch. Work out when things run: microtasks, unmount and teardown, Solid versus React. Follow what a symbol search misses: the JSON an API returns, a DB column, a wire format, another language reading the same bytes, a feature flag, code three hops downstream.
-4. Be honest about each risk. Give it a real chance of happening and a real cost if it does. Keep the risks you confirmed; list the ones you checked and cleared separately. Same rules as `why`. Cite a real `file:line`, a search that finds nothing is still an answer, and never make up a caller or an API.
-5. Prove the one fact. Write a script or test that runs the real code, run it, and paste what happened. If you can't prove it cheaply, mark it unproven. Don't round up.
-6. For a big or wide change, run it as an `arena`. Ask several models the same question and merge the answers. Different models catch different real bugs.
+4. Be honest about each risk. Give it a real chance of happening and a real cost if it does. Keep the risks you confirmed. List the ones you checked and cleared separately. Same rules as `why`. Cite a real `file:line`, a search that finds nothing is still an answer, and never make up a caller or an API.
+5. Prove the one fact with existing tests, existing commands, or an inline read-only probe, and report what happened. Do not write a script or test during the review. If a new harness is necessary, propose it and mark the fact unproven.
+6. For a big or wide change, call `list_agents` and run bounded read-only reviewer subagents with the same question through the native runtime contract's read-only worker branch, refilling a rolling window as slots free up. Do not invoke a writing candidate workflow from this read-only review.
 
 ## What to hand back
 
@@ -47,7 +47,7 @@ Any safety fact you can't get to step 4, say so out loud. Don't write it up as s
 - **The one fact it's safe because of.** State it, say which step you got it to, and show the proof. If you couldn't prove it, write unproven.
 - **Risks.** Only the real ones. Each names how it breaks, the `file:line`, how likely and how bad, and how to check. Paste the proof for the ones that matter.
 - **Cleared.** What you checked and why it's fine.
-- **Before you merge.** The cheapest test or repro that catches the real bug, including the script you wrote.
+- **Before you merge.** The cheapest existing test, inline repro, or proposed follow-up harness that catches the real bug.
 
 Write it through `unslop`, cite real code, and strip anything private before it goes anywhere public.
 

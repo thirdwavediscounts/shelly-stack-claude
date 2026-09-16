@@ -1,10 +1,10 @@
 ---
 name: swarm
 description: Fan out N parallel workers, drain them, and return one report. Use for
-  /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.
+  $shelly-stack:swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # Swarm
 
@@ -12,7 +12,7 @@ Fan out N parallel local workers, each in its own worktree when it writes. They 
 
 ## Start
 
-Open a todolist with one entry per phase before launching anything.
+Start the native runtime contract's planning branch with one entry per phase before launching anything.
 
 1. Frame
 2. Fan out
@@ -24,14 +24,14 @@ Open a todolist with one entry per phase before launching anything.
 1. State the done predicate and the artifact or report the swarm must return.
 2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.
 3. Set N from the user or derive it from the shape. N is total workers; size it for one machine.
-4. Pick the worker model from `swarm workers` in `~/.codex/shelly-stack-models.md` when present. Otherwise use `sonnet`. For a model race, name each arm's model up front. Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
-5. Give each worker its own writable output when it writes. Use a worktree, branch, or `/tmp/swarm-<slug>/worker-<n>/`.
+4. Pick the worker `<model>@<reasoning_effort>` pair from `swarm workers` in `~/.codex/shelly-stack-models.md`, or use the native runtime fallback. For a model race, name each arm's full pair before spawning. A configured Codex role entry is `<model>@<reasoning_effort>`. Pass both values to `spawn_agent` with a non-`all` `fork_turns` when the current native schema supports them. For `inherit@inherit`, omit all three overrides. If a saved pair is unavailable, use the native runtime contract's dynamic fallback for that run and ask the user to rerun `$shelly-stack:setup-shelly-stack`.
+5. Give each writing worker a dedicated git worktree that the parent prepares before spawning, or a distinct `/tmp/swarm-<slug>/worker-<n>/` path for non-repository artifacts. A branch name alone is not isolation because native collaboration subagents can share a checkout.
 
 ## Phase B: Fan out
 
-Spawn all N workers in one message, one native subagent per brief on the configured worker model. Codex has no `Workflow` tool or `isolation` field; give each writing worker its own worktree or branch in the brief, and ask for the report shape below.
+Invoking swarm is the user's opt-in to multi-agent orchestration. Inspect current child capacity, spawn up to the available slots together with native `spawn_agent` calls, and refill a rolling window until all N workers have run. Give each one a concrete brief with the configured model and `reasoning_effort`. Give writers non-overlapping ownership or a dedicated git worktree, require the report shape below, and collect them with `wait_agent`.
 
-When a worker must start from a non-default pushed branch, name that branch in its brief and tell it to check the branch out first.
+When a worker must start from a non-default pushed branch, the parent prepares a dedicated worktree at that branch before spawning and passes its path in the brief. Never ask parallel workers to check out branches in a shared checkout.
 
 Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence.
 

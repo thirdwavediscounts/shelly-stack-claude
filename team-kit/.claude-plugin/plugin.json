@@ -1,0 +1,10 @@
+{
+  "name": "shelly-team-kit",
+  "version": "0.2.0",
+  "description": "Companion workflows for code cleanup, verification, CI, and PR review.",
+  "author": {
+    "name": "Sean, Third Wave Discounts"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/thirdwavediscounts/shelly-stack"
+}

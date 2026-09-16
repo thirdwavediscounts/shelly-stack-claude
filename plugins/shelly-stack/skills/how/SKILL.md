@@ -3,139 +3,60 @@ name: how
 description: Use for "how does X work", code walkthroughs before changing something,
   and placement / ownership / layering questions ("where should this live", "which
   package owns this", "is this the right layer"). Explains subsystem architecture,
-  runtime flow, onboarding mental models. Can critique architecture. Use why for motivation.
+  runtime flow, onboarding mental models. Use why for motivation.
 ---
 
-> **Codex runtime:** Read the [Codex runtime adapter](../shelly-mode/references/codex-runtime.md) before following tool, model, configuration, path, transcript, or subagent instructions below. The adapter overrides conflicting Claude Code wording.
+> **Codex runtime:** Follow the [native runtime contract](../shelly-mode/references/codex-runtime.md) for model selection, subagents, planning, review, waits, and Codex paths.
 
 # How
 
-Explore the codebase to answer "how does X work?" questions. Produce clear architectural explanations at the level of a senior engineer onboarding onto a subsystem. Enough to build a working mental model, not annotated source code.
+Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
 
-Two modes:
+A configured Codex role entry is `<model>@<reasoning_effort>`. Pass both values to `spawn_agent` with a non-`all` `fork_turns` when the current native schema supports them. For `inherit@inherit`, omit all three overrides. If a saved pair is unavailable, use the native runtime contract's dynamic fallback for that run and ask the user to rerun `$shelly-stack:setup-shelly-stack`.
 
-1. **Explain** (default). Explore the codebase and produce a clear explanation
-2. **Critique.** Explain first, then spawn multiple models to independently identify architectural issues
+## Step 1. Assess Complexity
 
-## Explain Mode
+If the scope is ambiguous, state your interpretation and explore. The user can redirect.
 
-### Step 1. Understand the Question and Assess Complexity
+- **Simple** (a single module, a small utility, a narrow question such as "how does function X work"): no explorers. One explainer explores and explains in a single pass. Go to Step 2b.
+- **Complex** (a subsystem spanning multiple files or services, a cross-cutting feature, a full architectural overview): spawn parallel explorers first, then hand off to the explainer. Go to Step 2a.
 
-Parse what the user is asking about:
+When in doubt, take the simple path.
 
-- "How does the rate limiter work?", a subsystem
-- "How do we handle billing for on-demand usage?", a feature flow
-- "How is the auth service structured?", an architectural overview
-- "Walk me through what happens when a user submits a form", a runtime trace
+## Step 2a. Explore (complex questions only)
 
-Identify the scope. If ambiguous, state your best-guess interpretation before exploring. Don't ask. Let the user redirect if you're off.
+Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Inspect current child capacity. Spawn up to the available slots together, then refill a rolling window:
 
-**Assess complexity to decide the approach:**
+- native subagent: one concrete brief
+- role pair: the configured how-explorer `<model>@<reasoning_effort>` pair, or the native runtime fallback
+- boundary: read-only. Dispatch through the native runtime contract's read-only worker branch
 
-- **Simple** (a single module, a small utility, a narrow question like "how does function X work"): skip explorer agents; the explainer explores and explains in a single pass. Go to Step 2b.
-- **Complex** (a subsystem spanning multiple files/services, a cross-cutting feature, a full architectural overview): spawn parallel explorer agents first, then hand off to the explainer. Go to Step 2a.
+Each explorer gets the prompt in `references/explorer-prompt.md` with its angle filled in. Then go to Step 3.
 
-When in doubt, lean simple. You can always spawn explorers if the explainer hits a wall.
+## Step 2b. Direct Explain (simple questions)
 
-### Step 2a. Explore (complex questions only)
+Spawn one native subagent that explores and explains in one pass:
 
-Decompose the question into 2-4 parallel exploration angles, each a distinct slice of the subsystem so explorers don't duplicate work. Example split for "how does the rate limiter work?":
+- native subagent: one concrete brief
+- role pair: the configured how-explainer `<model>@<reasoning_effort>` pair, or the native runtime fallback
+- boundary: read-only. Dispatch through the native runtime contract's read-only worker branch
 
-- Explorer 1: data model and state management
-- Explorer 2: request path and enforcement
-- Explorer 3: configuration and metrics infrastructure
+Build its prompt from `references/explainer-prompt.md` without the explorer-findings section. Go to Step 4.
 
-The right decomposition depends on the question. Use your judgment. Narrow questions: 2 explorers is fine. Broad subsystems: up to 4.
+## Step 3. Synthesize (complex questions only)
 
-Spawn all explorers in a single message:
+Once all explorers have returned, spawn one native subagent to synthesize their findings into one explanation:
 
-Codex has no user agent files: treat every configured role value as a model per the Codex runtime adapter.
+- native subagent: one concrete brief
+- role pair: the configured how-explainer `<model>@<reasoning_effort>` pair, or the native runtime fallback
+- boundary: read-only. Dispatch through the native runtime contract's read-only worker branch
 
-- `subagent_type`: `general-purpose`
-- `model`: your configured how-explorer model (default `sonnet`)
-- `tools`: read-only (give it only Read/Grep/Glob/Bash)
+Build its prompt from `references/explainer-prompt.md` with every explorer's findings filled in.
 
-Each explorer gets the same base prompt from `references/explorer-prompt.md` plus a specific exploration angle naming its slice. Each explorer should:
-- Start broad: Glob for relevant directories, Grep for key types/interfaces/class names
-- Follow the thread: from an entry point, trace the call chain (callers, callees, data flow, type definitions)
-- Read the actual code, don't guess from file names
-- Stop when it can describe the full path from input to output (or trigger to effect) without hand-waving any step
-- Note things that are surprising, non-obvious, or that a newcomer would get wrong
+## Step 4. Present
 
-Each explorer returns structured findings: components found, flow traced, files read, anything non-obvious. Overlap between explorers is fine; the explainer reconciles.
+Present the explainer's output to the user. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.
 
-Then proceed to Step 3.
+## Output Format
 
-### Step 2b. Direct Explain (simple questions)
-
-Spawn a single Agent subagent that explores and explains in one pass:
-
-- `subagent_type`: `general-purpose`
-- `model`: your configured how-explainer model (default `fable`)
-- `tools`: read-only (give it only Read/Grep/Glob/Bash)
-
-The agent does its own exploration (Glob, Grep, Read) and writes the explanation directly. Read `references/explainer-prompt.md` for the communication style and output format. Same structure, just no explorer findings as input.
-
-Proceed to Step 4.
-
-### Step 3. Synthesize (complex questions only)
-
-Once all explorers return, spawn a single Agent subagent to synthesize their findings into one coherent explanation:
-
-- `subagent_type`: `general-purpose`
-- `model`: your configured how-explainer model (default `fable`)
-- `tools`: read-only (give it only Read/Grep/Glob/Bash)
-
-The explainer gets all explorers' findings and writes the human-facing explanation (output format below). Read `references/explainer-prompt.md` for the full prompt template. The explainer reconciles overlapping findings, resolves contradictions, and weaves the slices into a unified picture.
-
-### Step 4. Present
-
-Present the explainer's output to the user. You may lightly edit for clarity or add context from the conversation, but don't substantially rewrite. The explainer's communication is the product.
-
-### Output Format
-
-Follow this structure, adapted to the question. Not every section is needed for every question.
-
-**Overview.** 1-2 paragraphs. What it is, what it does, why it exists. Enough to decide whether to keep reading.
-
-**Key Concepts.** The important types, services, or abstractions. Brief definition of each. Not exhaustive, just the ones needed to understand the rest.
-
-**How It Works.** The core of the explanation. Walk through the flow: what triggers it, what happens step by step, where data goes, the decision points. Prose, not pseudocode. Reference specific files and functions so the reader can go look, but don't dump code blocks unless a snippet is genuinely necessary.
-
-**Where Things Live.** A brief map of the relevant files/directories. Not every file, just the ones needed to start working in this area.
-
-**Gotchas.** Non-obvious or surprising things that would trip someone up. Historical context that explains why something looks weird. Known sharp edges.
-
-## Critique Mode
-
-Triggered when the user asks for architectural issues, problems, or improvements, not just understanding.
-
-### Step 1. Explain First
-
-Run the full explain flow above (Steps 1-4). You must understand the architecture before critiquing it.
-
-### Step 2. Spawn Critics
-
-After the explanation is complete, spawn one architectural critic per model in your configured how-critics list (defaults `fable`, `opus`, `sonnet`), all in a single message.
-
-For each critic:
-- `subagent_type`: `general-purpose`
-- `model`: one model from the configured how-critics list. These are minimum reasoning levels. The lead should escalate any model when the architecture warrants deeper analysis.
-- `tools`: read-only (give it only Read/Grep/Glob/Bash)
-
-Read `references/critic-prompt.md` for the prompt template. Each critic gets:
-1. The explanation from Step 1 (so they don't re-explore)
-2. The relevant file paths (so they can read the actual code)
-3. The architectural critique rubric from `references/critique-rubric.md`
-
-### Step 3. Lead Judgment
-
-Same framework as the interrogate skill. You're a pragmatic lead, not an aggregator.
-
-Categorize findings:
-- **Act on.** Architectural problems worth fixing now
-- **Consider.** Real concerns, but the cost/benefit is unclear
-- **Noted.** Valid observations, low priority
-- **Dismissed.** Wrong, missing context, or style preference
-
-Present the explanation first (from Step 1), then the critique verdict below it. The explanation should stand on its own; someone who just wants to understand the system shouldn't wade through critique.
+The explanation uses the sections defined in `references/explainer-prompt.md`, dropping any that do not apply: Overview, Key Concepts, How It Works, Where Things Live, Gotchas.

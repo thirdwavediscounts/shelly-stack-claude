@@ -1,5 +1,5 @@
 interface:
   display_name: Principle Separate Before Serializing Shared State
-  short_description: Use the Principle Separate Before Serializing Shared State workf
+  short_description: Run Principle Separate Before Serializing Shared State in Codex
 policy:
   allow_implicit_invocation: false

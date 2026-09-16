@@ -1,0 +1,2 @@
+# Paths are relative to cursor/overrides. Only declared files enter the Cursor package.
+skills/setup-shelly-stack/SKILL.md
