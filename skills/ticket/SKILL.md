@@ -4,8 +4,8 @@ description: >-
   Drive one Linear Dev ticket from id to merged PR, and file follow-up work as issues/sub-issues.
   Use when the task is a Dev ticket id ("DEV-200", "work DEV-142", /ticket DEV-99): read it,
   triage or investigate if thin, route the build to the right playbook, keep Linear current
-  (status, comments, PR link). Also use to capture follow-ups from design or investigation as a
-  parent plus sub-issues. Not general Linear admin.
+  (status, comments, PR link). Also use, on an explicit ask, to file follow-ups from design or
+  investigation as a parent plus sub-issues. Not general Linear admin.
 argument-hint: "DEV-123"
 ---
 
@@ -35,19 +35,21 @@ Ten states, in order. Backlog, Triage, Needs Investigation, Ready for Agents, In
 
 ## Flow A. Run a ticket
 
-1. Read the issue with the Linear MCP's `get_issue` and its comments with `list_comments`. State the current status. Verify: you can name the state and what the ticket asks for.
+1. Read the issue with the Linear MCP's `get_issue` and its comments with `list_comments`. When the issue or a comment carries an image or attachment, call `extract_images` and read it. State the current status. Verify: you can name the state and what the ticket asks for.
 2. Gate on status.
    - Triage. Confirm the ticket is real against the live DB and code. Set the app label (under the Apps parent), the type (Bug, Feature, Improvement), the Database label if it crosses schema, and native priority. If not actionable, move to Canceled with a one-line reason comment and stop. If real but thin, move to Needs Investigation. If specced, move to Ready for Agents.
    - Needs Investigation. Run the **Investigation** playbook read-only. Write the diagnosis and findings back as a comment per Writing to Linear. Move to Ready for Agents, or Need Human if it needs a human decision.
    - Ready for Agents or later. Continue.
 3. Set up isolation per the repo's `CLAUDE.local.md`. Worktree under `~/Code/twd-worktrees/`, named `<app>/<task>`. Branch `sean/<description>`. Move the ticket to In Progress and comment that build started, one line with the date. Verify: worktree exists on the right branch, ticket is In Progress.
-4. Route the build to the matching playbook. A defect is the **Bug fix** playbook. New or changed behavior is the **Feature** playbook. A behavior-preserving change is the **Refactoring** playbook. This skill dispatches, it does not restate those playbooks. If the build blocks on a human call, move to Need Human, comment the question, and stop.
-5. Verify. Move to Verifying Work. Run the app gates (`pnpm --filter <app> run typecheck|test|build`) and the project verification skill. Comment the real output. Then open the PR per the **Opening a PR** playbook, move to Verifying Live, and confirm the change on the deployed app once Vercel autodeploys. Verify: gates pass on the real output, change confirmed live.
+4. Route the build to the matching playbook. A defect is the **Bug fix** playbook. New or changed behavior is the **Feature** playbook. A behavior-preserving change is the **Refactoring** playbook. This skill dispatches, it does not restate those playbooks. A follow-up found mid-build is fixed on the same branch. One task stays one ticket; Flow B runs only when asked. If the build blocks on a human call, move to Need Human, comment the question, and stop.
+5. Verify. Move to Verifying Work. Run the app gates (`pnpm --filter <app> run typecheck|test|build`) and the project verification skill. Comment the real output. An acceptance criterion the build did not meet as written stays unticked; rewriting it afterwards is a scope change, recorded in the comment. Then open the PR per the **Opening a PR** playbook, move to Verifying Live, and confirm the change on the deployed app once Vercel autodeploys. Verify: gates pass on the real output, change confirmed live.
+
+   Prod runbook. The human pastes production SQL into the Supabase SQL editor, so ship it as one self-contained paste. `SET lock_timeout` and `SET statement_timeout` inline. No state carried across pastes, so no temp table from another chunk. No `CREATE INDEX CONCURRENTLY` inside a transaction. No narrative header and no VERIFY chunk. In the reply, give the absolute file path unasked so it is clickable, and say whether it runs before or after merge. After the user says it ran, verify read-only through the production MCP.
 6. Move to In Review, comment the PR link, and drive it to merge-ready with the **Babysit** playbook, then land with the **Shipping** playbook. On merge, move to Done. Verify: PR merged, ticket Done.
 
 ## Flow B. Capture follow-ups
 
-Trigger this at the tail of an **architect** or **Investigation** run when it surfaces work beyond the current ticket, or when asked to file follow-ups.
+Run this only when asked to file follow-ups, usually at the tail of an **architect** or **Investigation** run that surfaced work beyond the current ticket. Never split one task into several tickets.
 
 1. List the follow-ups as concrete outcomes, not vague themes. Verify: each item is a shippable unit.
 2. Create a parent issue for the theme with the Linear MCP's `save_issue` on the Dev team. Write the description per Writing to Linear. Link the design doc or diagnosis under Links instead of pasting it.

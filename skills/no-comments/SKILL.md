@@ -11,7 +11,7 @@ Defer to Comment Sicko's fresh perspective.
 
 ## Scope
 
-Use the caller's files or diff. Otherwise use the current diff against the base branch, default `main`, including the working tree.
+Use the caller's files or diff. Otherwise use the current diff against the base branch, default `main`, including the working tree. A whole-codebase or multi-lane sweep runs through the **swarm** skill, one worktree per lane, under its formatter, usage, and model rules. Do not fan out ad hoc.
 
 ## Steps
 

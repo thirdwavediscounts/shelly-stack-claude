@@ -30,6 +30,8 @@ After these sections, attach videos or screenshots when they prove a claim. Do n
 
 **Readiness.** Open every PR ready, never as a draft. With Origin, pass `--status open`; with `gh`, omit `--draft`. Some PR tools default to draft, so set `draft: false` on every PR creation call. If a PR still opens as a draft, run `origin pr ready <number>` or `gh pr ready <number>` according to the resolved forge. Run `origin pr view <number>` or `gh pr view <number>` before you refer to PR status.
 
+**Before merge.** Before asking to merge, list every open item you know of (follow-ups, review findings, deferred fixes) and every env var or config the deploy needs. Fold each into the PR, or get an explicit "leave it" from the user per item. The user reads "merge on green" as "nothing left", so an item still open at that point is a surprise, not a follow-up.
+
 **Babysit.** Opening a PR does not start a babysit. Post the URL and keep building. Finish the phase or stack first. Run a separate babysit pass only when the user asks for one after the whole stack exists. A babysit for each new PR stalls the build and spends checks on commits that later waves restart. Push back when feedback drifts from intent.
 
 A subagent that opens a PR runs `interrogate`, the **unslop** skill, and `/no-comments`. It returns the URL and does not babysit. Return to the parent.

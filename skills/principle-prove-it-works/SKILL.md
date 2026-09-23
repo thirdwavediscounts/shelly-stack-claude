@@ -26,6 +26,12 @@ Code and features:
 Delegation: trust artifacts, not self-reports.
 When verifying delegated work, inspect the actual output artifact (git diff, file contents, runtime behavior), not the delegate's summary.
 
+Waiting is not verification. A cron tick, a timer, or a "bake" window proves nothing on its own. Trigger the path yourself on staging, or state that it cannot be triggered.
+
+## Numbers in the reply
+
+Every count or rate names the query and the store it came from, and states its unit once (auctions vs searches, per run vs per hour). A number derived from logs is labelled as such and never stands alone. Read the number back from the store the user looks at.
+
 ## Script the check when you can
 
 The strongest proof is a deterministic script that re-runs the same comparison, not a one-time eyeball. Write the script, run it, and keep its output as an artifact a reviewer can re-run instead of trusting your word.
