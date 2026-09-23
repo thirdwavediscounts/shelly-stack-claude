@@ -1,6 +1,7 @@
 ---
 name: weekly-review
 description: Summarize the current git user's commits from the last seven days into a short themed recap classified as bug fixes, tech debt, and net-new work. Use for a weekly status update, retro, or planning recap.
+disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.

@@ -25,7 +25,7 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 ## cleanup, verification, CI, and PR workflows
 
-shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). Invoke them like any other skill, for example `/shelly-stack:deslop`. Existing project verification skills remain the first choice.
+shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). They don't auto-load. Invoke them by name, for example `/shelly-stack:deslop`, or let shelly-mode's playbooks call them where they apply. `typescript-conventions` is the exception and fires on any `.ts` edit. Existing project verification skills remain the first choice.
 
 | Work | Skills |
 |---|---|

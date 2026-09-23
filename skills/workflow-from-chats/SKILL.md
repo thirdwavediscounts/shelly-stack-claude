@@ -1,6 +1,7 @@
 ---
 name: workflow-from-chats
 description: Extract durable working preferences from recent chats in the active workspace and convert them into skills, rules, or workflow docs. Use when asked to learn preferences, mine feedback, personalize workflows, or generate team/person-specific agent guidance.
+disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.

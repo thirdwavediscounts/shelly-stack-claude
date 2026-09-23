@@ -1,6 +1,7 @@
 ---
 name: new-branch-and-pr
 description: Start new work on a fresh branch cut from the default branch, implement it, and open a pull request. Use when the work has no branch yet. A branch that already carries changes goes through review-and-ship.
+disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.

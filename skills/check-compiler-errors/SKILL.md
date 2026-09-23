@@ -1,6 +1,7 @@
 ---
 name: check-compiler-errors
 description: Run the repository's own compile and type-check commands and report failures grouped by file and category. Use when compile or type-check errors block local validation or CI.
+disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
