@@ -23,16 +23,17 @@ name: <kebab-case, matches the directory>
 description: <one YAML scalar; when to use it, in the user's words, trigger phrases included>
 disable-model-invocation: true   # optional; only /name or an explicit request loads it
 user-invocable: false            # optional; hides it from the / menu, model-only
-argument-hint: "<what to pass after /name>"   # optional
-allowed-tools: Read, Grep, Glob  # optional; restricts tools while the skill runs
+argument-hint: "<what to pass after /name>"   # optional; shown in autocomplete
+allowed-tools: Read, Grep, Glob  # optional; pre-approves these tools for the invoking turn, it restricts nothing
+disallowed-tools: AskUserQuestion  # optional; removes tools while the skill is active
 ---
 ```
 
 Rules:
 
-- `description` is the only text Claude sees before deciding to load the skill. Put the triggers there ("Use for X, Y, or when the user says Z"), not a summary of the body. Quote it or use `description: >-` when punctuation or wrapping needs it. Keep it under ~400 characters.
+- `description` is the only text Claude sees before deciding to load the skill. Put the triggers there ("Use for X, Y, or when the user says Z"), not a summary of the body. Quote it or use `description: >-` when punctuation or wrapping needs it. The skill listing truncates `description` plus `when_to_use` at 1,536 characters, so put the key use case first.
 - `disable-model-invocation: true` for mode skills and anything heavy or opinionated. Description matching would otherwise fire it on casual turns.
-- No other keys. `mode`, `icon`, `color`, `reminder`, and `alwaysApply` are ignored here.
+- Claude Code ignores a key it does not recognize without an error, so a misspelled key is a silent no-op. Other documented keys (`when_to_use`, `arguments`, `model`, `effort`, `context: fork` with `agent`, `hooks`, `paths`) are for special cases; the full table is at https://code.claude.com/docs/en/skills (checked 2026-09-23).
 - `$ARGUMENTS` in the body is replaced with whatever the user typed after `/name`.
 
 ## Body

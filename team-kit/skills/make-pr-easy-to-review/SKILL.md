@@ -27,13 +27,7 @@ git fetch origin <headRefName> <baseRefName>
 ORIGINAL_TREE=$(git rev-parse origin/<headRefName>^{tree})
 ```
 
-Good commit groupings usually follow dependency order:
-
-1. Schema/storage or generated API definitions.
-2. Core logic.
-3. Wiring and integration.
-4. UI or surface behavior.
-5. Tests.
+Each commit should build and review on its own.
 
 After rewriting, verify content identity:
 

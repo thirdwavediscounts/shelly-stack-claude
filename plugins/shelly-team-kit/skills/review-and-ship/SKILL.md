@@ -1,16 +1,13 @@
 ---
 name: review-and-ship
 description: Review the current branch for bugs, intent fit, and test coverage; run
-  or write tests; commit focused work; open or update a PR.
+  the CI gates and tests; commit focused work; open or update a PR. Use when a branch
+  with changes is ready to ship or needs a pre-PR review.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Review and ship
-
-## Trigger
-
-Reviewing changes before shipping. Close key issues, verify behavior, and open or update a PR.
 
 ## Workflow
 

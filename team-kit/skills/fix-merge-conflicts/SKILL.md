@@ -1,15 +1,11 @@
 ---
 name: fix-merge-conflicts
-description: Resolve merge conflicts non-interactively, validate build and tests, and finalize conflict resolution
+description: Resolve merge or rebase conflicts non-interactively, then run compile, lint, and tests to reach a buildable state. Use when a branch has conflict markers or a merge, rebase, or cherry-pick stopped on conflicts.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Fix merge conflicts
-
-## Trigger
-
-Branch has unresolved merge conflicts and needs a reliable path to a buildable state.
 
 ## Workflow
 

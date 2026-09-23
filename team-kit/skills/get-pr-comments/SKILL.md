@@ -1,15 +1,11 @@
 ---
 name: get-pr-comments
-description: Fetch and summarize review comments from the active pull request
+description: Fetch review and discussion comments from the current branch's pull request and summarize them as a prioritized action list. Use when asked what reviewers said, what is outstanding on a PR, or to address review feedback.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Get PR comments
-
-## Trigger
-
-Need a concise, actionable summary of feedback on the active pull request.
 
 ## Workflow
 

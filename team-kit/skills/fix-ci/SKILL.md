@@ -1,15 +1,11 @@
 ---
 name: fix-ci
-description: Find failing PR checks, inspect logs or external check links, and apply focused fixes
+description: Find the failing checks on the current PR, read their logs or check links, and apply one focused fix at a time until the PR is green. Use when a PR's CI is red. Pending checks that still need watching belong to loop-on-ci.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Fix CI
-
-## Trigger
-
-Branch or PR CI is failing and needs a fast, iterative path to green checks.
 
 ## Workflow
 

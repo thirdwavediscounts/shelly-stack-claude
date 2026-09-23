@@ -1,15 +1,11 @@
 ---
 name: loop-on-ci
-description: Monitor PR checks and fix failures until green. Uses gh pr checks as the source of truth for PR-attached checks.
+description: Watch the current PR's checks and fix failures until every required check is green. Use when asked to monitor, babysit, or loop on CI for a branch or pull request, including pending checks that have not finished.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Loop on CI
-
-## Trigger
-
-Need to watch a branch or pull request and iterate on CI failures until all required checks are green.
 
 Use `gh pr checks` as the source of truth. It includes all PR-attached checks, while `gh run list` only covers GitHub Actions.
 
@@ -30,9 +26,6 @@ gh pr view --json number,url,headRefName
 # Inspect all attached checks
 gh pr checks --json name,bucket,state,workflow,link
 
-# Re-read pending checks within the current turn
-gh pr checks --json name,bucket,state,workflow,link
-
 # GitHub Actions logs, when the failing check links to a GHA run
 gh run view <run-id> --log-failed
 ```
@@ -43,7 +36,6 @@ gh run view <run-id> --log-failed
 - Do not bypass hooks (`--no-verify`) to force progress.
 - If the failure is outside the diff, check whether the base is stale. Reconcile with the current base only within the authorized history operations.
 - If failures are flaky, retry once and report flake evidence.
-- Re-run `gh pr checks --json name,bucket,state,workflow,link` after every push; the check set can change.
 
 ## Output
 

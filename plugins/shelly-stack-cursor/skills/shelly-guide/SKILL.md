@@ -28,7 +28,7 @@ Each entry: page, the skills in the order the guide presents them, when each ear
 
 **Setup.** `01-setup.md`. `/setup-shelly-stack` writes `~/.cursor/rules/shelly-stack-models.mdc` (which model plays which role; `inherit-parent` or `auto` means the session's model). `/create-verification-skill` when the project has no scripted way to drive the real app. Pitfall: treating `inherit-parent` or `auto` as a model name.
 
-**Front door.** `02-shelly-mode.md`. `/shelly-mode <goal + how you'll know it's done>` matches one of 22 playbooks and runs the other skills itself. Say "new task" to re-match; "don't change any code yet" pins Investigation; ask for "a fresh worktree off <base>" when agents run in parallel. Pitfall: enumerating skills in the prompt ("use /how then /architect"); name a skill only to override a default.
+**Front door.** `02-shelly-mode.md`. `/shelly-mode <goal + how you'll know it's done>` matches one of its playbooks and runs the other skills itself. Say "new task" to re-match; "don't change any code yet" pins Investigation; ask for "a fresh worktree off <base>" when agents run in parallel. Pitfall: enumerating skills in the prompt ("use /how then /architect"); name a skill only to override a default.
 
 **Understand.** `03-understand.md`. `/how` for what the code does now. `/why` for how it got this shape, from git plus every MCP evidence source. `/teach` when a summary isn't enough ("convince me it fixes the cause"). `/recall` to rebuild your own recent context on a topic. Session pickup playbook (`/shelly-mode take over this branch`) for someone else's in-flight branch. Pitfall: skipping this because "the agent reads the code anyway".
 
