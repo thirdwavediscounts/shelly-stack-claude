@@ -1,7 +1,7 @@
 ---
 name: shelly-opus-high
-description: shelly-agent pinned to claude-opus-4-8 at high effort. Use as subagent_type wherever ~/.claude/rules/shelly-stack-models.md names it. Resume an existing one for the conversation rather than spawning a sibling.
-model: claude-opus-4-8
+description: shelly-agent pinned to claude-opus-5-5 at high effort. Use as subagent_type wherever ~/.claude/rules/shelly-stack-models.md names it. Resume an existing one for the conversation rather than spawning a sibling.
+model: claude-opus-5-5
 effort: high
 ---
 
