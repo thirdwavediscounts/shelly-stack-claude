@@ -24,6 +24,7 @@ Remaining triggers:
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
 - Before commit → `/shelly-stack:deslop` for code cleanup, then the **unslop** skill over the diff's prose and comments.
 - Before review → invoke the **no-comments** skill.
+- Typecheck or compile fails → invoke **check-compiler-errors** for the grouped report before fixing.
 - Shipping UI / IDE / CLI → the project's verification skill (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
 - Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
@@ -94,7 +95,17 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Companion skills
 
-This plugin ships `/shelly-stack:deslop`, `/shelly-stack:control-ui`, and `/shelly-stack:control-cli`. Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
+This plugin ships these companions. The playbooks name each one where it applies.
+
+- `deslop` before every commit.
+- `control-ui` and `control-cli` to drive an app the project verification skill cannot.
+- `verify-this` for a claim that needs a baseline-versus-treatment proof.
+- `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
+- `check-compiler-errors` when typecheck or compile fails.
+- `fix-ci` for a real CI failure and `get-pr-comments` to collect review threads, both inside Babysit.
+- The `shelly-stack:thermo-nuclear-code-quality-review` agent for the maintainability review in Opening a PR.
+
+Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
 
 Use an existing project harness when it proves the same behavior. Do not invent a successful check or assume a browser tool is installed. Resolve every bundled playbook and script from the installed skill directory, not from the target repository.
 

@@ -1,6 +1,7 @@
 ---
 name: loop-on-ci
 description: Watch the current PR's checks and fix failures until every required check is green. Use when asked to monitor, babysit, or loop on CI for a branch or pull request, including pending checks that have not finished.
+disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.

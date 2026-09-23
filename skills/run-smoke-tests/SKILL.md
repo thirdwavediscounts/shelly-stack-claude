@@ -1,6 +1,7 @@
 ---
 name: run-smoke-tests
 description: Run the repository's end-to-end smoke suite, debug failures, and verify fixes. Use when smoke or end-to-end verification is needed before or after a change, whatever framework the repository uses.
+disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.

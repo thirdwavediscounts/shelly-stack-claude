@@ -4,7 +4,7 @@
     "name": "Sean, Third Wave Discounts"
   },
   "metadata": {
-    "description": "Sean's Claude Code fork of poteto's pstack: shelly-mode, its playbooks, the principle skills, the review panels, and the team-kit cleanup, verification, CI, and PR workflows."
+    "description": "Sean's Claude Code fork of poteto's pstack: shelly-mode, its playbooks, the principle skills, the review panels, and the cleanup, verification, CI, and PR workflows."
   },
   "plugins": [
     {

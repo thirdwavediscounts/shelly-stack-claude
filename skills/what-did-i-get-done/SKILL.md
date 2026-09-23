@@ -1,6 +1,7 @@
 ---
 name: what-did-i-get-done
 description: Summarize the current git user's commits over a stated time window (yesterday, the last three days, last week) into a short status update. Use when asked what was done, finished, or shipped in a period.
+disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
