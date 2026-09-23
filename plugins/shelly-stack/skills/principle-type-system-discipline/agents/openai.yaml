@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Type System Discipline
-  short_description: Use the Principle Type System Discipline workflow in Codex
-policy:
-  allow_implicit_invocation: false

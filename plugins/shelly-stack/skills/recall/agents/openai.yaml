@@ -1,5 +1,0 @@
-interface:
-  display_name: Recall
-  short_description: Reconstruct recent Codex working context
-policy:
-  allow_implicit_invocation: false

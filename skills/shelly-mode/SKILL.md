@@ -22,7 +22,7 @@ Remaining triggers:
 - Any prose surface → invoke the **unslop** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill (the bundled skill for authoring SKILL.md files).
 - Docs, RFCs, readmes, PR descriptions, or commit messages → invoke the **technical-writing** skill.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
-- Before commit → `/shelly-team-kit:deslop` for code cleanup, then the **unslop** skill over the diff's prose and comments.
+- Before commit → `/shelly-stack:deslop` for code cleanup, then the **unslop** skill over the diff's prose and comments.
 - Before review → invoke the **no-comments** skill.
 - Shipping UI / IDE / CLI → the project's verification skill (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
@@ -91,9 +91,9 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Companion skills
 
-Shelly Team Kit supplies `/shelly-team-kit:deslop`, `/shelly-team-kit:control-ui`, and `/shelly-team-kit:control-cli`. Resolve them from the active skill catalog. Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
+This plugin ships `/shelly-stack:deslop`, `/shelly-stack:control-ui`, and `/shelly-stack:control-cli`. Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
 
-A missing companion skill is a named dependency gap. Use an existing project harness when it proves the same behavior. Do not invent a successful check or assume a browser tool is installed. Resolve every bundled playbook and script from the installed skill directory, not from the target repository.
+Use an existing project harness when it proves the same behavior. Do not invent a successful check or assume a browser tool is installed. Resolve every bundled playbook and script from the installed skill directory, not from the target repository.
 
 ## Subagents
 

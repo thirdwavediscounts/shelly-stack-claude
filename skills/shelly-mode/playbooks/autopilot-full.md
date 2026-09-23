@@ -1,6 +1,6 @@
 ### Autopilot-full
 
-Before an authorized commit, run `/shelly-team-kit:deslop` on the scoped code diff. Keep the prose pass through **unslop**. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
+Before an authorized commit, run `/shelly-stack:deslop` on the scoped code diff. Keep the prose pass through **unslop**. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
 
 **You own the verdicts, never the PRs. One owner runs each PR from build to merge, and nothing merges without your clean swarm verdict.** For "autopilot this queue", "full autopilot", and one-owner-per-PR programs. Orchestrate runs a standing program whose coordinator lands verified work itself and whose workers never merge. Here each PR's owner carries the whole lifecycle through the merge, and the root keeps only verification, countersigns, and audits.
 

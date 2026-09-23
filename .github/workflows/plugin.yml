@@ -1,0 +1,29 @@
+name: Plugin
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.0"
+      - run: python -m pip install PyYAML==6.0.2
+      - run: python -m unittest discover -s tests -v
+      - run: python3 skills/ticket/scripts/test_lint_linear_text.py
+      - name: shelly-mode tools
+        working-directory: skills/shelly-mode/scripts
+        run: |
+          bash -n worktree-audit.sh
+          node --check check-plan.mjs
+          bun install --frozen-lockfile
+          bun test orch watch-pr

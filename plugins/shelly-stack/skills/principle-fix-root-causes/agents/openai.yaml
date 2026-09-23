@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Fix Root Causes
-  short_description: Use the Principle Fix Root Causes workflow in Codex
-policy:
-  allow_implicit_invocation: false

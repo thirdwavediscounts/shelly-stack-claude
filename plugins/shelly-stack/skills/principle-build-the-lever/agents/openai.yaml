@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Build The Lever
-  short_description: Use the Principle Build The Lever workflow in Codex
-policy:
-  allow_implicit_invocation: false

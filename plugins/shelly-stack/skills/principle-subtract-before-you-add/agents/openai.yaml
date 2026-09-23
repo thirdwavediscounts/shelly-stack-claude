@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Subtract Before You Add
-  short_description: Use the Principle Subtract Before You Add workflow in Codex
-policy:
-  allow_implicit_invocation: false

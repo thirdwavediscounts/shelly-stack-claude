@@ -1,5 +1,0 @@
-interface:
-  display_name: Arena
-  short_description: Use the Arena workflow in Codex
-policy:
-  allow_implicit_invocation: false

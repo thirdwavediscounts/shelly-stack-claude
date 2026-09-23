@@ -1,6 +1,6 @@
 ### Opening a PR
 
-Before an authorized commit, run `/shelly-team-kit:deslop` on the scoped code diff. Keep the prose pass through **unslop**. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
+Before an authorized commit, run `/shelly-stack:deslop` on the scoped code diff. Keep the prose pass through **unslop**. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
 
 Invoked at the end of every other playbook.
 

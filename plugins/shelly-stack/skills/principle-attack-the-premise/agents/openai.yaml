@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Attack The Premise
-  short_description: Use the Principle Attack The Premise workflow in Codex
-policy:
-  allow_implicit_invocation: false

@@ -1,8 +1,8 @@
 # shelly-stack
 
-this repository publishes shelly-stack for Claude Code and Codex under one plugin identity, forked from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). Claude Code uses the root `skills`, `docs`, and `agents` directly. Codex gets a separately versioned native distribution generated from the shared workflow skills plus the `codex/` runtime overrides. Building or installing the Codex distribution does not modify the Claude package.
+this repository is the Claude Code plugin for shelly-stack, forked from [pstack](https://github.com/cursor/plugins/tree/main/pstack) (upstream MIT, by poteto / Lauren Tan). The Codex plugin lives in its own repository, `shelly-stack-codex`, and is maintained separately. A change that applies to both clients is ported by hand.
 
-shelly-stack is Sean's fork of pstack for Third Wave Discounts: poteto's playbooks and principles, adapted to how we ship. Claude Code keeps its agent files and Workflow runtime. Codex maps the same workflows to native collaboration subagents, model plus reasoning-effort overrides, plans, reviews, waits, and opt-in heartbeat automations.
+shelly-stack is Sean's fork of pstack for Third Wave Discounts: poteto's playbooks and principles, adapted to how we ship.
 
 there's a growing sense that ai writes too much slop code. we agree. if you want to go fast, go deep first.
 
@@ -10,71 +10,47 @@ there's a growing sense that ai writes too much slop code. we agree. if you want
 
 **shelly-stack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `shelly-mode` and trust that they'll apply rigorous engineering principles to their work.
 
-**multi-model work gives you the best of all worlds.** every frontier model has strengths and weaknesses. use any model available in your client. the setup skill writes separate Claude Code and Codex configuration files so one client never breaks the other.
+**multi-model work gives you the best of all worlds.** every frontier model has strengths and weaknesses. use any model available in your client.
 
 fork it. improve it. make it yours. PRs are welcome! 
 
 ## install
 
-### Claude Code
-
 ```bash
-/plugin marketplace add thirdwavediscounts/shelly-stack
+/plugin marketplace add thirdwavediscounts/shelly-stack-claude
 /plugin install shelly-stack@shelly-stack
 ```
 
-### Codex
+For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stack-claude` instead.
 
-From this repository, add the native marketplace and install the Codex build:
-
-```bash
-codex plugin marketplace add /absolute/path/to/shelly-stack
-codex plugin add shelly-stack@shelly-stack
-```
-
-The Codex package is built from the shared skills with:
+Check the plugin with:
 
 ```bash
-./scripts/build_codex_plugin.py
+python3 -m unittest discover -s tests -v
 ```
 
-Building requires Bun 1.4.0. Bun is used only to compile the shared TypeScript helpers into dependency-free Node scripts; installed Codex users do not need Bun.
+## cleanup, verification, CI, and PR workflows
 
-To refresh an existing local Codex install after rebuilding, remove the cached plugin and marketplace snapshot, then add them again:
+shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). Invoke them like any other skill, for example `/shelly-stack:deslop`. Existing project verification skills remain the first choice.
 
-```bash
-codex plugin remove shelly-stack@shelly-stack
-codex plugin marketplace remove shelly-stack
-codex plugin marketplace add /absolute/path/to/shelly-stack
-codex plugin add shelly-stack@shelly-stack
-codex plugin list
-```
-
-The final list must show the version from `codex/plugin.template.json`.
-
-both clients install the same `shelly-stack@shelly-stack` identity, but each manifest owns its release version. do not edit `plugins/shelly-stack` by hand. edit the shared workflow source or the `codex/` overrides, rebuild, then run:
-
-```bash
-./scripts/build_codex_plugin.py --check
-./scripts/validate_dual_runtime.py
-```
-
-## Companion workflows
-
-Install `shelly-team-kit@shelly-stack` from the same marketplace for code cleanup, UI and CLI control, CI repair, and PR review. Claude uses the source under `team-kit`; Codex uses the generated package under `plugins/shelly-team-kit`. The [Team Kit guide](team-kit/README.md) lists the skills and native invocation syntax. Existing project verification skills remain the first choice.
-
-Build the companion with `python3 scripts/build_team_kit_plugin.py` and check it with `python3 scripts/build_team_kit_plugin.py --check`.
+| Work | Skills |
+|---|---|
+| Code cleanup and review | `deslop`, `thermo-nuclear-code-quality-review`, `typescript-conventions` |
+| Evidence and app control | `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors` |
+| CI and conflicts | `fix-ci`, `loop-on-ci`, `fix-merge-conflicts` |
+| PR preparation | `review-and-ship`, `new-branch-and-pr`, `make-pr-easy-to-review`, `get-pr-comments`, `pr-review-canvas` |
+| Work history | `weekly-review`, `what-did-i-get-done`, `workflow-from-chats` |
 
 ## get started
 
 two steps:
 
-1. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) in Claude Code or `$shelly-stack:setup-shelly-stack` in Codex, then choose your models.
-2. use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) in Claude Code or `$shelly-stack:shelly-mode` in Codex whenever the task requires rigor.
+1. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md), then choose your models.
+2. use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) whenever the task requires rigor.
 
-new here? use `/shelly-guide <what you're trying to do>` in Claude Code or `$shelly-stack:shelly-guide <what you're trying to do>` in Codex. it hands you the skills for that stage. the [Claude guide](./docs/guide/README.md) walks through a first real task; the Codex skill carries its native stage map inside the generated package.
+new here? use `/shelly-guide <what you're trying to do>`. it hands you the skills for that stage. the [Claude guide](./docs/guide/README.md) walks through a first real task.
 
-that's it. the other skills are situational; the mode skill uses them as needed. Claude Code keeps its Anthropic defaults. Codex chooses from the models exposed by its native subagent tool. Each setup writes only its own configuration file.
+that's it. the other skills are situational; the mode skill uses them as needed. unconfigured roles keep their Anthropic defaults.
 
 ## usage
 
@@ -133,11 +109,11 @@ when invoked it:
 3. routes to the other skills as the steps fire.
 4. writes unslopped replies framed for the consumer and the maintainer.
 
-the full rules and playbooks live in [`skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
+the full rules and playbooks live in [`plugins/shelly-stack-claude/skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
 
-[`/shelly-mode`](./skills/shelly-mode/SKILL.md) applies to the turn where you invoke it, in both Claude Code and Codex. Invoke it again when a later task needs it.
+[`/shelly-mode`](./skills/shelly-mode/SKILL.md) applies to the turn where you invoke it. Invoke it again when a later task needs it.
 
-For long work, Claude Code can use `/loop`. Codex uses native subagent waits during the current turn or a heartbeat automation when you explicitly ask for recurring future checks.
+For long work, use `/loop`.
 
 ## skills
 
@@ -232,11 +208,11 @@ automate-me:       /automate-me
 
 ## the `shelly-agent` and Comment Sicko subagents
 
-shelly-stack also ships a subagent prompt that runs my style end to end. Claude Code exposes it as [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md). Codex uses a native subagent whose prompt requires reading `$shelly-stack:shelly-mode` in full before work starts.
+shelly-stack also ships a subagent prompt that runs my style end to end. it's exposed as [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md).
 
 [`/shelly-mode`](./skills/shelly-mode/SKILL.md) and [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md) route through the same wrapper.
 
-shelly-stack also ships [Comment Sicko](./agents/comment-sicko.md). Claude Code exposes the custom subagent directly. Codex spawns a native read-only reviewer with the same bundled prompt. usually invoke it through [`/no-comments`](./skills/no-comments/SKILL.md), not directly.
+shelly-stack also ships [Comment Sicko](./agents/comment-sicko.md). usually invoke it through [`/no-comments`](./skills/no-comments/SKILL.md), not directly.
 
 ## principles
 
@@ -273,7 +249,7 @@ twenty-one short skills, one principle each. `shelly-mode` indexes them inline a
 
 ## why are there no planning skills?
 
-Claude Code and Codex both have plan support that works with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default.
+Claude Code has plan support that works with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default.
 
 ## make it yours
 
@@ -281,7 +257,7 @@ Claude Code and Codex both have plan support that works with shelly-stack. but p
 
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through shelly-stack underneath. you keep shelly-stack as the base and end up with your own routing skill alongside `shelly-mode`.
 
-models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) in Claude Code or `$shelly-stack:setup-shelly-stack` in Codex. Claude writes `~/.claude/rules/shelly-stack-models.md`. Codex writes `~/.codex/shelly-stack-models.md`. neither setup reads or overwrites the other client's file.
+models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md). it writes `~/.claude/rules/shelly-stack-models.md`.
 
 ## automations
 

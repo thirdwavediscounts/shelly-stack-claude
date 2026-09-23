@@ -4,27 +4,14 @@ In this page you install the plugin, pick which models shelly-stack uses, and ru
 
 ## Install the plugin
 
-### Claude Code
-
 In a Claude Code session, run:
 
 ```text
-/plugin marketplace add thirdwavediscounts/shelly-stack
+/plugin marketplace add thirdwavediscounts/shelly-stack-claude
 /plugin install shelly-stack@shelly-stack
 ```
 
-Claude Code confirms the plugin is installed.
-
-### Codex
-
-From a local checkout of this repository, run:
-
-```text
-codex plugin marketplace add /absolute/path/to/shelly-stack
-codex plugin add shelly-stack@shelly-stack
-```
-
-Start a new Codex task after installation so it discovers the generated skills.
+Claude Code confirms the plugin is installed. For Codex, install the separate Codex plugin described in `plugins/shelly-stack-codex/README.md`.
 
 ## Pick your models
 
@@ -34,9 +21,7 @@ Run:
 /setup-shelly-stack
 ```
 
-In Codex, invoke `$shelly-stack:setup-shelly-stack` instead.
-
-[`/setup-shelly-stack`](../../skills/setup-shelly-stack/SKILL.md) detects the models you have access to, shows you each role (code delegates, judgment, the review panels), and asks what you want. Claude Code writes `~/.claude/rules/shelly-stack-models.md`. Codex writes `~/.codex/shelly-stack-models.md`. Each setup leaves the other client's configuration untouched.
+[`/setup-shelly-stack`](../../skills/setup-shelly-stack/SKILL.md) detects the models you have access to, shows you each role (code delegates, judgment, the review panels), and asks what you want. It writes `~/.claude/rules/shelly-stack-models.md`.
 
 You only override what you care about. A role with no line in the rule keeps the skill's default. To restore a default later, delete that role's line, or just run `/setup-shelly-stack` again.
 
@@ -46,7 +31,7 @@ You might be wondering how to keep a role on whatever you're already running. Se
 
 At the end of setup, `/setup-shelly-stack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`/create-verification-skill`](../../skills/create-verification-skill/SKILL.md).
 
-Say yes and it writes a project-local verification skill: `.claude/skills/verify-<app>/` in Claude Code or `.agents/skills/verify-<app>/` in Codex. It teaches agents to drive your app the way a user does and proves the skill works once before handoff. Say no and setup moves on. You can run the create-verification skill yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers when it earns its place.
+Say yes and it writes a project-local verification skill: `.claude/skills/verify-<app>/`. It teaches agents to drive your app the way a user does and proves the skill works once before handoff. Say no and setup moves on. You can run the create-verification skill yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers when it earns its place.
 
 After setup, start a new chat. The model rule applies to new sessions.
 
@@ -60,6 +45,6 @@ Pick something real but small, and describe it the way you'd describe it to a co
 
 Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/shelly-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
 
-From here you can type normal follow-ups. `/shelly-mode` applies to the turn where you invoke it; in Claude Code invoke `/shelly-mode`, in Codex `$shelly-stack:shelly-mode`, on each turn where you want it applied.
+From here you can type normal follow-ups. `/shelly-mode` applies to the turn where you invoke it, so invoke it on each turn where you want it applied.
 
 Next: [Route work through `/shelly-mode`](./02-shelly-mode.md).

@@ -1,5 +1,0 @@
-interface:
-  display_name: Reflect
-  short_description: Use the Reflect workflow in Codex
-policy:
-  allow_implicit_invocation: false

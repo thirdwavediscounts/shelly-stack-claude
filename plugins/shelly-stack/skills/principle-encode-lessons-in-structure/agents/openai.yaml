@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Encode Lessons In Structure
-  short_description: Use the Principle Encode Lessons In Structure workflow in Codex
-policy:
-  allow_implicit_invocation: false

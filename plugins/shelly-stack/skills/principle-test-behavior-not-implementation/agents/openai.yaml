@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Test Behavior Not Implementation
-  short_description: Run Principle Test Behavior Not Implementation in Codex
-policy:
-  allow_implicit_invocation: false

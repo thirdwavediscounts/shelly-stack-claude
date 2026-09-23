@@ -1,5 +1,0 @@
-interface:
-  display_name: Thermo Nuclear Code Quality Review
-  short_description: Review changes with Shelly Team Kit
-policy:
-  allow_implicit_invocation: false

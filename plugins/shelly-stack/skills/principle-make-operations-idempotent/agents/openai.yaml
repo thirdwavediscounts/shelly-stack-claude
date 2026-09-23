@@ -1,5 +1,0 @@
-interface:
-  display_name: Principle Make Operations Idempotent
-  short_description: Use the Principle Make Operations Idempotent workflow in Codex
-policy:
-  allow_implicit_invocation: false
