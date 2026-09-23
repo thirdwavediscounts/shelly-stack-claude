@@ -44,7 +44,7 @@ When another agent (or you, last week) left a branch mid-flight:
 /shelly-mode take over this branch. read the decision log, figure out what's done, and continue from there. don't redo finished work.
 ```
 
-The [Session pickup playbook](../../skills/shelly-mode/playbooks/session-pickup.md) treats the prior trail as authoritative. It reconstructs the branch state and decisions, names the resume point, and verifies inherited claims against the original goal instead of re-deriving everything from scratch.
+The [Session pickup playbook](../../skills/shelly-mode/playbooks/session-pickup.md) treats the prior trail as authoritative for decisions and finished work, but re-reads hosts, paths, and ssh aliases from the current rules files because those go stale. It reconstructs the branch state and decisions, names the resume point, and verifies inherited claims against the original goal instead of re-deriving everything from scratch.
 
 **Pitfall:** don't skip this page's skills because "the agent will read the code anyway." An agent that starts editing without a traced model tends to fix the symptom at the first plausible spot. `/how` first is cheaper than the second bug.
 

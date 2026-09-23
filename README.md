@@ -23,12 +23,6 @@ fork it. improve it. make it yours. PRs are welcome!
 
 For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stack-claude` instead.
 
-Check the plugin with:
-
-```bash
-python3 -m unittest discover -s tests -v
-```
-
 ## cleanup, verification, CI, and PR workflows
 
 shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). Invoke them like any other skill, for example `/shelly-stack:deslop`. Existing project verification skills remain the first choice.
@@ -58,7 +52,7 @@ use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) at the start of a task. it r
 
 ### just use [`/shelly-mode`](./skills/shelly-mode/SKILL.md)
 
-this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
+this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-three playbooks:
 
 ```
 /shelly-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -71,7 +65,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-two playbooks</summary>
+<summary>the twenty-three playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -87,6 +81,7 @@ morning.
 | [visual parity](./skills/shelly-mode/playbooks/visual-parity.md) | pixel-exact ui equivalence between two implementations. |
 | [authoring a skill](./skills/shelly-mode/playbooks/authoring-a-skill.md) | writing or editing a SKILL.md. |
 | [eval](./skills/shelly-mode/playbooks/eval.md) | test how a skill or prompt change affects agent behavior, blinded. |
+| [opening a pr](./skills/shelly-mode/playbooks/opening-a-pr.md) | turn finished work into a reviewable pr: small ordered commits, clean diff, open items folded in before merge. |
 | [babysit](./skills/shelly-mode/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
 | [shipping](./skills/shelly-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run with graphite merge-when-ready. |
 | [autonomous run](./skills/shelly-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
@@ -258,12 +253,6 @@ Claude Code has plan support that works with shelly-stack. but personally, i don
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through shelly-stack underneath. you keep shelly-stack as the base and end up with your own routing skill alongside `shelly-mode`.
 
 models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md). it writes `~/.claude/rules/shelly-stack-models.md`.
-
-## automations
-
-shelly-stack also ships a dormant, Claude-only [benny automation pack](./automations/benny/). benny triages slack issue reports, then reproduces and fixes confirmed bugs with real ui evidence. the Codex build excludes this pack.
-
-to set it up, point claude code at [`FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md). setup copies the pack into the target repository at `.claude/automations/benny/`, enables shelly-stack there for shared skills, and keeps user configuration outside the copied pack.
 
 ## license
 
