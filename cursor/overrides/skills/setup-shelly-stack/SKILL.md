@@ -37,23 +37,23 @@ alwaysApply: true
 # shelly-stack model configuration. One line per role. Delete a line to fall back to the skill default.
 # `inherit-parent` or `auto` as a value: the role runs on the parent chat model (omit Task `model`). Alias entries in a panel list still count toward its fan-out.
 feature, refactoring: cursor-grok-4.6-high-fast
-bug-fix: claude-opus-4-8-thinking-high
-perf-issue: claude-opus-4-8-thinking-high
-hillclimb: claude-opus-4-8-thinking-high
+bug-fix: claude-opus-5-5-high
+perf-issue: claude-opus-5-5-high
+hillclimb: claude-opus-5-5-high
 judgment and prose: claude-fable-5-1-thinking-high
 hardest tasks: claude-fable-5-1-thinking-high
 how explorer: cursor-grok-4.6-high-fast
 how explainer: claude-fable-5-1-thinking-high
-how critics: claude-fable-5-1-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-opus-4-8-thinking-high
+how critics: claude-fable-5-1-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-opus-5-5-high
 why investigators: cursor-grok-4.6-high-fast
 why synthesizer: claude-fable-5-1-thinking-high
 reflect tooling: gpt-5.6-sol-medium
 reflect judgment, divergent, synthesizer: claude-fable-5-1-thinking-high
-arena runners: claude-opus-4-8-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-sonnet-5-thinking-high
-arena cross-judge pool: claude-fable-5-1-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-opus-4-8-thinking-high
+arena runners: claude-opus-5-5-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-sonnet-5-thinking-high
+arena cross-judge pool: claude-fable-5-1-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-opus-5-5-high
 swarm workers: cursor-grok-4.6-high-fast
-architect runners: claude-opus-4-8-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-sonnet-5-thinking-high
-interrogate reviewers: claude-fable-5-1-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-opus-4-8-thinking-high
+architect runners: claude-opus-5-5-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-sonnet-5-thinking-high
+interrogate reviewers: claude-fable-5-1-thinking-high, gpt-5.6-sol-medium, cursor-grok-4.6-high-fast, claude-opus-5-5-high
 ```
 
 ### 6. Confirm
