@@ -32,7 +32,7 @@ AGENTS = ("shelly-agent.md", "comment-sicko.md")
 
 MODEL_ALIASES = {
     "fable": "claude-fable-5-1-thinking-high",
-    "opus": "claude-opus-4-8-thinking-high",
+    "opus": "claude-opus-5-5-high",
     "sonnet": "cursor-grok-4.6-high-fast",
     "haiku": "claude-4.5-haiku-thinking",
 }
@@ -162,7 +162,7 @@ FILE_REGEX_REPLACEMENTS: dict[str, tuple[tuple[str, str], ...]] = {
 
 **Use `subagent_type: "shelly-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/shelly-mode` and `shelly-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review; respect what the skill prescribes, don't override to `shelly-agent`.
 
-**Defaults for every `Task` call.** `run_in_background: true`, agent mode (the `explore` subagent strips MCP), file pointers not inlined context, explicit model per role (configurable via `/setup-shelly-stack`; defaults `cursor-grok-4.6-high-fast` for code, `claude-fable-5-1-thinking-high` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`claude-fable-5-1-thinking-high`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`claude-opus-4-8-thinking-high`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-shelly-stack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).
+**Defaults for every `Task` call.** `run_in_background: true`, agent mode (the `explore` subagent strips MCP), file pointers not inlined context, explicit model per role (configurable via `/setup-shelly-stack`; defaults `cursor-grok-4.6-high-fast` for code, `claude-fable-5-1-thinking-high` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`claude-fable-5-1-thinking-high`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`claude-opus-5-5-high`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-shelly-stack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).
 
 A subagent that writes files in parallel with others runs as `subagent_type: best-of-n-runner`, which gives it its own git worktree and branch. Cursor's `Task` has no tool allowlist; a read-only posture is a prompt that forbids writes, not a sandbox.
 

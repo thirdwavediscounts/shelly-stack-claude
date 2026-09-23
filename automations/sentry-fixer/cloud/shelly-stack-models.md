@@ -1,7 +1,7 @@
 # shelly-stack model configuration for cloud routines. Copied to ~/.claude/rules/ by the environment setup script.
 # Values are plugin agent names (shelly-agent body + pinned model + effort) shipped in shelly-stack's agents/ folder.
 # Spawn with `subagent_type: "<value>"` and omit the Agent `model` param.
-#   fable = claude-fable-5-1   opus = claude-opus-4-8   sonnet = claude-sonnet-5
+#   fable = claude-fable-5-1   opus = claude-opus-5-5   sonnet = claude-sonnet-5
 feature, refactoring: shelly-stack:shelly-sonnet-medium
 bug-fix: shelly-stack:shelly-opus-high
 perf-issue: shelly-stack:shelly-opus-high

@@ -38,7 +38,7 @@ Launch all reviewers in a single message using the `Task` tool. Use the `interro
 | Subagent | Default model |
 |----------|---------------|
 | Reviewer A | `claude-fable-5-1-thinking-high` |
-| Reviewer B | `claude-opus-4-8-thinking-high` |
+| Reviewer B | `claude-opus-5-5-high` |
 | Reviewer C | `cursor-grok-4.6-high-fast` |
 
 For each reviewer:
