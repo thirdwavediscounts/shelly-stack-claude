@@ -81,7 +81,7 @@ Do not auto-skip these categories, even if a previous PR dismissed something sim
 - Migration, schema, idempotency, concurrency, and cross-system behavior findings.
 - Comments where the suggested fix is small and clearly reduces risk without changing product intent.
 
-Historical data showed humans sometimes dismiss security/data-flow comments. Treat those as owner judgment calls, not team-wide skip rules.
+Humans sometimes dismiss security/data-flow comments. Treat those as owner judgment calls, not team-wide skip rules.
 
 ## Candidate learnings from recent babysits
 
@@ -104,9 +104,9 @@ Append new candidate learnings here during or after babysitting when they look t
   matches the doc" (or vice versa), run that test on the PR tip before
   classifying. A red run confirms the claim empirically; a green run is a
   concrete disproof for the dismissal reply.
-- Do not skip when: n/a — this is a verification shortcut, not a dismissal
-  pattern. Note that repeat-pass lean-dismiss heuristics would misfire here:
-  prose-pinning tests drift precisely BECAUSE earlier fix rounds edit the prose.
+- Do not skip when: n/a. This is a verification shortcut, not a dismissal
+  pattern. An earlier green pass proves nothing about the current tip, because
+  prose-pinning tests drift when later fix rounds edit the prose.
 - Example signal: "Contract test omits the pre-fix wait" on a PR whose earlier
   fix commits reworded the pinned passage; the test run on the tip failed on
   exactly the cited assertion.

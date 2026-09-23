@@ -99,8 +99,6 @@ LITERAL_REPLACEMENTS = (
         "Cursor's built-in `create-skill` skill",
     ),
     ("the **create-skill** skill", "Cursor's built-in `create-skill` skill"),
-    ("`mcp__claude_ai_Linear__get_issue`", "the Linear MCP's `get_issue`"),
-    ("`mcp__claude_ai_Linear__save_issue`", "the Linear MCP's `save_issue`"),
     ("per the repo's `CLAUDE.local.md`", "per the repo's `AGENTS.md` and `.cursor/rules/`"),
     (
         'in its own git worktree (`isolation: "worktree"`)',
@@ -113,8 +111,7 @@ LITERAL_REPLACEMENTS = (
     ("Spawn `Agent` with `subagent_type:", "Spawn a `Task` subagent with `subagent_type:"),
     ('"/code-review flagged regex backtracking', '"Bugbot flagged regex backtracking'),
     (" (or `subagent_type` when the configured value is an agent name; see below)", ""),
-    ("If the configured value is `inherit`, omit `model` instead; never treat that alias as a broken value or enter this fallback for it.",
-     "If the configured value is `inherit-parent` or `auto`, omit `model` instead; never treat those aliases as broken slugs or enter this fallback for them."),
+    ("`inherit` is valid: omit `model` for it.", "`inherit-parent` and `auto` are valid: omit `model` for them."),
     ("a role line of `inherit` runs", "a role line of `inherit-parent` or `auto` runs"),
     ("Set a role to `inherit` and", "Set a role to `inherit-parent` or `auto` and"),
     ("`inherit` is not a model value", "Neither alias is a model value"),
@@ -151,6 +148,12 @@ REGEX_REPLACEMENTS = (
 
 # Per-file regexes. Every pattern must match, so a source rewrite that moves the anchor fails the build.
 FILE_REGEX_REPLACEMENTS: dict[str, tuple[tuple[str, str], ...]] = {
+    "skills/reflect/SKILL.md": (
+        (
+            r"The parent finds its own transcript file before fanning out\. Run `scripts/find-transcript\.sh .*?pass that instead\.",
+            "The parent finds its own transcript file before fanning out. The system prompt names the active workspace's `agent-transcripts/` directory; use only that path. Do not glob across `~/.cursor/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.\n\n```bash\nls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcripts>/*/subagents/*.jsonl 2>/dev/null | head -10\n```\n\nThree transcript layouts: legacy flat (`<id>.jsonl`), current nested (`<id>/<id>.jsonl`), and subagent (`<parent>/subagents/<child>.jsonl`).\n\nFor each candidate, read the first JSONL line and check that `message.content[0].text` contains the conversation's opening user prompt. Take the matching path. If no path resolves, write a tight digest of the session and pass that instead.",
+        ),
+    ),
     "skills/shelly-mode/SKILL.md": (
         (
             r"\A---\nname: shelly-mode\ndescription: (.*?)\ndisable-model-invocation: true\n---\n",
@@ -212,8 +215,8 @@ You own every subagent's work. Review the diff and write your own summary, don't
             "Always `environment: \"cloud\"` unless the task needs this machine: runtime verification through the project's verification skill; reading local transcripts under the workspace's `agent-transcripts/` directory; simulators and local IDE state; auth that exists only here. A local writer runs as `subagent_type: best-of-n-runner` for its own git worktree. Cloud agents cannot read the local store, so their briefs inline what they need or point at repo paths.",
         ),
         (
-            r"A spawn may reference the standing-orders file by store path; verbatim paste is for every resume\.",
-            "Local spawns may reference the standing-orders file by store path; verbatim paste is for cloud spawns and every resume.",
+            r"A spawn may reference the standing-orders file by store path\.",
+            "A local spawn may reference the standing-orders file by store path; a cloud spawn gets it pasted.",
         ),
         (
             r"its spawn budget sized for one laptop,",
@@ -278,10 +281,14 @@ def git_tracked_files(prefix: str) -> list[Path]:
     return paths
 
 
+# Claude-only helpers whose skill text this build rewrites for Cursor.
+CLAUDE_ONLY_SKILL_FILES = frozenset({"reflect/scripts/find-transcript.sh"})
+
+
 def copy_shared_sources(output: Path) -> None:
     for source in git_tracked_files("skills"):
         relative = source.relative_to(SKILLS_SOURCE)
-        if relative.parts[0] in EXCLUDED_SKILLS:
+        if relative.parts[0] in EXCLUDED_SKILLS or relative.as_posix() in CLAUDE_ONLY_SKILL_FILES:
             continue
         copy_file(source, output / "skills" / relative)
     for source in git_tracked_files("docs/guide"):

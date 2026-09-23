@@ -1,15 +1,11 @@
 ---
 name: weekly-review
-description: Produce a weekly synthesis of authored commits with highlights by bugfix, tech debt, and net-new work
+description: Summarize the current git user's commits from the last seven days into a short themed recap classified as bug fixes, tech debt, and net-new work. Use for a weekly status update, retro, or planning recap.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Weekly review
-
-## Trigger
-
-Need a weekly recap of shipped work for status updates, retros, or planning.
 
 ## Workflow
 

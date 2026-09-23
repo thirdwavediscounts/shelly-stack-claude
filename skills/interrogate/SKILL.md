@@ -48,7 +48,7 @@ For each reviewer:
 - `model`: the configured `interrogate reviewers` entry, or the table default with no configured line
 - Read-only posture stated in the prompt. The reviewer keeps every tool, MCPs included; the parent applies edits.
 
-If a model value is rejected as unresolvable when you try to spawn the subagent, check the valid values in the Agent tool's error message, pick the closest equivalent (prefer the highest-reasoning tier), spawn with the valid value, and open a separate PR to update the configured value or default table. Do not block the review on the value issue. If the configured value is `inherit`, omit `model` instead; never treat that alias as a broken value or enter this fallback for it.
+If a configured value fails to resolve when you spawn, run that seat on the table default and name the bad value in the reply so the user can fix the rule. `inherit` is valid: omit `model` for it.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent

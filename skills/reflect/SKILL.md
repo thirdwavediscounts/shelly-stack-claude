@@ -16,15 +16,7 @@ Invoke when the user says "reflect" or "/reflect". Skip when the conversation is
 
 ### 1. Locate the active transcript
 
-The parent finds its own transcript file before fanning out. Derive the active workspace's transcript directory from the current working directory: `~/.claude/projects/<slug>/`, where `<slug>` is the workspace path with every `/` turned into `-`, including the leading one (`/Users/you/proj` → `-Users-you-proj`); use that path. Do not glob across `~/.claude/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.
-
-```bash
-ls -t <transcripts>/*.jsonl <transcripts>/*/subagents/*.jsonl 2>/dev/null | head -10
-```
-
-Two transcript layouts: the session file (`<id>.jsonl`) and subagent (`<parent>/subagents/<child>.jsonl`).
-
-For each candidate, read the first JSONL line and check that `message.content[0].text` contains the conversation's opening user prompt. Take the matching path. If no path resolves, write a tight digest of the session and pass that instead.
+The parent finds its own transcript file before fanning out. Run `scripts/find-transcript.sh "$PWD" "<opening words of this conversation's first user prompt>"`. It derives the workspace's transcript directory (`~/.claude/projects/<slug>/`, never another project's, since those hold private chats) and prints the newest session or subagent transcript whose first line contains that prompt. If it prints nothing, write a tight digest of the session and pass that instead.
 
 ### 2. Spawn three reviewers in parallel
 

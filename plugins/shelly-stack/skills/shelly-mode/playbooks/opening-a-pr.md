@@ -12,7 +12,7 @@ Run this playbook only when the current user request explicitly authorizes creat
 
 **Titles.** Use Conventional Commits in the form `type(scope): subject`. Use `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, or `perf` as the type. Use the changed area, such as `shelly-stack` or `shelly-mode`, as the scope. Keep the subject short and imperative. Apply the same [`$shelly-stack:technical-writing`](../references/routed/technical-writing/workflow.md) and [`$shelly-stack:unslop`](../references/routed/unslop/workflow.md) pass as the body. Name a real symbol when one carries the change. For example, `fix(shelly-stack): retarget opening-a-pr babysit trigger`. Do not add a trailing period.
 
-**Descriptions.** The PR body is a briefing, not the lab notebook. A reviewer who has the diff should learn why the change exists, what is out of scope, and how you proved the change works. The squash commit body is the PR body. If the body would make the squash commit longer than about 40 lines, cut the body.
+**Descriptions.** The PR body is a briefing, not the lab notebook. A reviewer who has the diff should learn why the change exists, what is out of scope, and how you proved the change works. The squash commit body is the PR body, so keep it short enough to read as one commit message.
 
 Use these sections in order. Drop a section when it has nothing to say.
 

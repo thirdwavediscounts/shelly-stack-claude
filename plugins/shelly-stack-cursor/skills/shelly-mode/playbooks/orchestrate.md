@@ -7,7 +7,7 @@ Ceremony must scale with the program. On cheap near-identical units, collapse it
 Three rules carry the rest.
 
 - Completions are queue events, not interrupts.
-- Every spawn and every resume carries the standing orders verbatim.
+- Every spawn carries the standing orders, pasted or by store path.
 - The brief is the product. A vague brief fails quietly, because a worker cannot ask you a question.
 
 #### Roles and placement
@@ -21,7 +21,7 @@ Depth stays at coordinator, track, worker. Author the track decomposition per pr
 
 Create `orchestrate/<project-slug>/` in the current agent's store (path in the system prompt). Every file has exactly one writer. Owners publish facts, readers aggregate at read time. Use `bun scripts/orch/orch.ts` for bookkeeping, written below as `orch`, while its canonical plain TSV and JSON stay readable without the CLI.
 
-- `preferences.md` is the standing-orders register: numbered lines, one constraint each (model policy, stack shape and count, verification bar, forbidden paths, escalation policy). Paste it verbatim into every spawn and every resume. Directives decay across resumes, and each dropped one costs a human turn. When you catch yourself restating an instruction, append the line before you act (principle-encode-lessons-in-structure).
+- `preferences.md` is the standing-orders register: numbered lines, one constraint each (model policy, stack shape and count, verification bar, forbidden paths, escalation policy). Put it in every spawn, pasted or by store path. A resumed agent keeps its context, so a resume carries only what changed since. When you catch yourself restating an instruction, append the line before you act (principle-encode-lessons-in-structure).
 - `overview.md` is the durable PR and issue DB. Append. Never rewrite wholesale per event.
 - `units.tsv` has one row per unit: id, track, state, branch, PR, head SHA, brief path. Update rows in place.
 - `frontier.json` is the computed merge frontier, per Stack safety.
@@ -45,10 +45,10 @@ TIMEBOX      rough cap on runtime; on expiry, return partial findings and stop r
 FORBIDDEN    no rebase, no force-push, no PR retargets, no fixes outside scope, plus unit-specific bans
 REPORT       status, branch, head SHA, PRs, verdict, what you actually ran, deviations,
              suggested follow-ups
-STANDING     <preferences.md pasted verbatim>
+STANDING     <preferences.md pasted, or its store path>
 ```
 
-Size the brief to the unit. A one-command unit gets the template collapsed to a paragraph that still names goal, scope, the verify command, and the report shape; a 4KB scaffold around a two-line edit costs more to write and obey than the edit. Local spawns may reference the standing-orders file by store path; verbatim paste is for cloud spawns and every resume.
+Size the brief to the unit. A one-command unit gets the template collapsed to a paragraph that still names goal, scope, the verify command, and the report shape; a 4KB scaffold around a two-line edit costs more to write and obey than the edit. A local spawn may reference the standing-orders file by store path; a cloud spawn gets it pasted.
 
 A sub-coordinator brief adds its track boundary and unit list, its spawn budget with the cloud default and the local exception list, the drain protocol, and the rollup format (per child: name, status, PR, head SHA, verdict, one line; plus track status and frontier delta).
 

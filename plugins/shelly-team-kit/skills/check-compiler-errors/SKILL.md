@@ -1,15 +1,13 @@
 ---
 name: check-compiler-errors
-description: Run compile and type-check commands and report failures
+description: Run the repository's own compile and type-check commands and report failures
+  grouped by file and category. Use when compile or type-check errors block local
+  validation or CI.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Check compiler errors
-
-## Trigger
-
-Compile or type-check failures are blocking local validation or CI.
 
 ## Workflow
 

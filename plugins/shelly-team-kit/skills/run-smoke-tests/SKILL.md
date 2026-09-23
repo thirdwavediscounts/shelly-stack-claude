@@ -1,15 +1,13 @@
 ---
 name: run-smoke-tests
-description: Run Playwright smoke tests, debug failures, and verify fixes
+description: Run the repository's end-to-end smoke suite, debug failures, and verify
+  fixes. Use when smoke or end-to-end verification is needed before or after a change,
+  whatever framework the repository uses.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # Run smoke tests
-
-## Trigger
-
-Need end-to-end smoke verification before or after changes.
 
 ## Workflow
 

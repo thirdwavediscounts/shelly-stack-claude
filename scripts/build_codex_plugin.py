@@ -110,7 +110,7 @@ FILE_REGEX_REPLACEMENTS = {
     "reflect/SKILL.md": (
         (
             r"The parent finds its own transcript file before fanning out\..*?"
-            r"If no path resolves, write a tight digest of the session and pass that instead\.",
+            r"If it prints nothing, write a tight digest of the session and pass that instead\.",
             "The parent prepares the current conversation before fanning out. Prefer the current "
             "conversation and native `list_threads` and `read_thread` when available. Otherwise write "
             "a tight digest, or use an exact session-file path already supplied by the parent or user. "
@@ -171,7 +171,7 @@ FILE_REGEX_REPLACEMENTS = {
             "entry can file follow-up work as a parent issue plus sub-issues.",
         ),
         (
-            r"Read the issue with `mcp__claude_ai_Linear__get_issue` and its comments with `list_comments`\.",
+            r"Read the issue with the Linear MCP's `get_issue` and its comments with `list_comments`\.",
             "Inspect the current tool catalog for an authenticated Linear connector. If none is "
             "available, stop before any Linear-dependent read or write and report that exact "
             "prerequisite. Otherwise read the issue and its comments with that connector.",
@@ -181,7 +181,7 @@ FILE_REGEX_REPLACEMENTS = {
             "Set up isolation per the repository's `AGENTS.md` and active workspace instructions.",
         ),
         (
-            r"Create a parent issue for the theme with `mcp__claude_ai_Linear__save_issue` on the Dev team\.",
+            r"Create a parent issue for the theme with the Linear MCP's `save_issue` on the Dev team\.",
             "Create a parent issue for the theme with the authenticated Linear connector on the Dev team.",
         ),
         (
@@ -227,7 +227,7 @@ FILE_REGEX_REPLACEMENTS = {
             "review code changes. Each reviewer gets the same prompt and rubric.",
         ),
         (
-            r"If a model value is rejected as unresolvable.*?enter this fallback for it\.",
+            r"If a configured value fails to resolve when you spawn.*?`inherit` is valid: omit `model` for it\.",
             "If a configured model or effort is rejected, inspect the current `spawn_agent` schema, "
             "choose the closest valid pair, and continue the review. Report the stale saved pair and "
             "ask the user to rerun `$shelly-stack:setup-shelly-stack`. For `inherit@inherit`, omit both "
@@ -471,7 +471,7 @@ FILE_REGEX_REPLACEMENTS = {
             "Read the linked routed reference in full for every principle you apply.",
         ),
         ('Cite only principles whose leaf SKILL\\.md you read this session\\.', 'Cite only principles whose routed reference you read this session.'),
-        ("Open a todolist whose first items are the matched playbook's steps, copied in verbatim, before any task\\-specific todos\\.", "Start the native runtime contract's planning branch with the matched playbook's steps copied verbatim. Put them before task-specific items and before task-specific reasoning."),
+        ("Match the task to a playbook below and open its file\\. Open a todolist whose first items are that playbook's steps, copied in verbatim, before any task\\-specific todos\\.", "Match the task to a playbook below and open its file. Start the native runtime contract's planning branch with that playbook's steps copied verbatim. Put them before task-specific items and before task-specific reasoning."),
         (
             r"Any Linear write \(issue, sub-issue, project, comment, status update\), from any playbook or an ad hoc session → the \*\*ticket\*\* skill's `references/linear-writing\.md` for the shape, then its `scripts/lint_linear_text\.py` before the save\.",
             "Any Linear write (issue, sub-issue, project, comment, status update), from any playbook "
@@ -919,7 +919,7 @@ Depth stays at coordinator, track, worker.""",
     ),
     "shelly-mode/scripts/check-plan.mjs": (
         (
-            r'const LANES = "Ten lanes on `grok-4\.6-fast-xhigh` at the PR head";',
+            r'const LANES = "Ten lanes on the configured swarm worker model at the PR head";',
             'const LANES = "Ten lanes using the configured implementation role pair or native runtime fallback at the PR head";',
         ),
         (
@@ -1030,9 +1030,16 @@ def git_tracked_files(prefix: str) -> list[Path]:
     return paths
 
 
+# Claude-only helpers the Codex rewrite of their skill never references.
+CLAUDE_ONLY_SKILL_FILES = frozenset({"reflect/scripts/find-transcript.sh"})
+
+
 def copy_shared_skills(destination: Path) -> None:
     for source in git_tracked_files("skills"):
-        copy_file(source, destination / source.relative_to(SKILLS_SOURCE))
+        relative = source.relative_to(SKILLS_SOURCE)
+        if relative.as_posix() in CLAUDE_ONLY_SKILL_FILES:
+            continue
+        copy_file(source, destination / relative)
 
 
 def copy_codex_overrides(destination: Path) -> None:
@@ -1358,7 +1365,7 @@ def rewrite_body_for_codex(
     )
 
     body = body.replace(
-        "Ten lanes on `sonnet` at the PR head",
+        "Ten lanes on the configured swarm worker model at the PR head",
         "Ten lanes using the configured implementation role pair or native runtime fallback at the PR head",
     )
     body = body.replace(

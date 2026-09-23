@@ -1,16 +1,13 @@
 ---
 name: what-did-i-get-done
-description: Summarize authored commits over a user-specified time period into a concise
-  update
+description: Summarize the current git user's commits over a stated time window (yesterday,
+  the last three days, last week) into a short status update. Use when asked what
+  was done, finished, or shipped in a period.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.
 
 # What did I get done
-
-## Trigger
-
-Need a short, high-signal summary of work completed in a specific time range (for example: yesterday, last 3 days, or last week).
 
 ## Workflow
 

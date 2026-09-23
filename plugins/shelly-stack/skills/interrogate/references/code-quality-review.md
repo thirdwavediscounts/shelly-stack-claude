@@ -28,8 +28,6 @@ Each dimension is stated once. Apply the ones that are relevant.
 
 Prioritize structural code-quality regressions and missed simplifications first, then spaghetti and branching complexity, then boundary, type, and file-size concerns, then smaller modularity and legibility issues. Do not flood the review with low-value nits when larger structural issues exist. Prefer a few high-conviction comments over a long list of cosmetic notes.
 
-## Approval Bar
+## Severity bar
 
-Do not approve merely because behavior seems correct. Treat these as presumptive blockers unless the author can justify them: the PR keeps a lot of incidental complexity when a code-judo move would delete it. Pushes a file from below 1000 lines to above 1000 lines. Adds ad-hoc branching that tangles an existing flow. Scatters feature checks across shared code. Adds an unnecessary abstraction, wrapper, or cast-heavy contract, or duplicates an existing helper or puts logic in the wrong layer when there is a clear canonical home. If those conditions are not met, leave explicit, actionable feedback and push for a cleaner decomposition.
-
-State major maintainability issues as blockers, not suggestions, and name the structural fix rather than a rename.
+Correct behavior does not lower severity. Rate these `warning` or higher and name the structural fix, not a rename: incidental complexity a code-judo move would delete; a file pushed from under 1,000 lines to over; ad-hoc branching that tangles an existing flow; feature checks scattered across shared code; an unnecessary abstraction, wrapper, or cast-heavy contract; a duplicated helper or logic outside its clear canonical home.
