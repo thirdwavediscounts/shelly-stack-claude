@@ -52,7 +52,7 @@ use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) at the start of a task. it r
 
 ### just use [`/shelly-mode`](./skills/shelly-mode/SKILL.md)
 
-this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
+this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-three playbooks:
 
 ```
 /shelly-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -65,7 +65,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-two playbooks</summary>
+<summary>the twenty-three playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -81,6 +81,7 @@ morning.
 | [visual parity](./skills/shelly-mode/playbooks/visual-parity.md) | pixel-exact ui equivalence between two implementations. |
 | [authoring a skill](./skills/shelly-mode/playbooks/authoring-a-skill.md) | writing or editing a SKILL.md. |
 | [eval](./skills/shelly-mode/playbooks/eval.md) | test how a skill or prompt change affects agent behavior, blinded. |
+| [opening a pr](./skills/shelly-mode/playbooks/opening-a-pr.md) | turn finished work into a reviewable pr: small ordered commits, clean diff, open items folded in before merge. |
 | [babysit](./skills/shelly-mode/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
 | [shipping](./skills/shelly-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run with graphite merge-when-ready. |
 | [autonomous run](./skills/shelly-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |

@@ -10,6 +10,8 @@ A bug prompt states the symptom and asks for a reproduction first:
 /shelly-mode this command emits two records after a retry. repro first, then fix and verify.
 ```
 
+For a production bug, you don't need to paste logs. The Bug fix playbook pulls them itself from Vercel runtime logs, the Supabase MCPs, Sentry, and Argus Engine over `ssh twd`, and quotes the matching log line as evidence before it names a cause.
+
 A feature prompt states the behavior and what must not change:
 
 ```text
