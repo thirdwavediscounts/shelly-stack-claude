@@ -42,9 +42,11 @@ class TicketsTest(unittest.TestCase):
     def test_ids_subtickets_index_and_log(self):
         self.ignore()
         (self.repo / "tickets" / "DEV-182").mkdir(parents=True)
+        (self.repo / "tickets" / "DEV-182" / "DEV-182.md").write_text("---\nid: DEV-182\ntitle: Returns queue\nstatus: Done\n---\n")
+        (self.repo / "tickets" / "DEV-250").mkdir()
         r = run(self.repo, "new", "--title", "Partial refunds", "--app", "ccg", "--type", "Bug")
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertTrue(r.stdout.startswith("DEV-183 "))
+        self.assertEqual(r.stdout.split()[0], "DEV-183")
         self.assertEqual(run(self.repo, "new", "--title", "Classifier", "--parent", "DEV-183").stdout.split()[0], "DEV-183-1")
         self.assertEqual(run(self.repo, "new", "--title", "Backfill", "--parent", "DEV-183").stdout.split()[0], "DEV-183-2")
 
@@ -54,6 +56,7 @@ class TicketsTest(unittest.TestCase):
         index = (self.repo / "tickets" / "index.tsv").read_text().splitlines()
         self.assertEqual(index[0], "id\ttitle\tstatus\tparent\tapp\tbranch\tpr\tupdated")
         self.assertEqual([row.split("\t")[:7] for row in index[1:]], [
+            ["DEV-182", "Returns queue", "Done", "", "", "", ""],
             ["DEV-183", "Partial refunds", "In Progress", "", "ccg", "sean/partial-refunds", "https://github.com/o/r/pull/7"],
             ["DEV-183-1", "Classifier", "Triage", "DEV-183", "", "", ""],
             ["DEV-183-2", "Backfill", "Triage", "DEV-183", "", "", ""],

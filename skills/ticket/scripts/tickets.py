@@ -184,7 +184,7 @@ def next_id(tdir: Path, parent: str | None) -> str:
             raise TicketError(f"parent {parent} not found")
         subs = [int(m.group(2)) for p in (tdir / parent).glob(f"{parent}-*.md") if (m := SUB_ID.match(p.stem))]
         return f"{parent}-{max(subs, default=0) + 1}"
-    roots = [int(m.group(1)) for p in tdir.glob(f"{PREFIX}-*") if p.is_dir() and (m := ROOT_ID.match(p.name))]
+    roots = [int(m.group(1)) for p in tdir.glob(f"{PREFIX}-*/{PREFIX}-*.md") if (m := ROOT_ID.match(p.stem))]
     return f"{PREFIX}-{max(roots, default=0) + 1}"
 
 
