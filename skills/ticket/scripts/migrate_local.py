@@ -215,7 +215,10 @@ def local_tickets(tdir: Path, apps: set[str], repo_name: str, migrating: dict[st
             if entry.strip():
                 history.append((date, f"{entry.strip()}\n\n<sub>Local log entry, {date}</sub>"))
         for row in read_tsv(folder / f"{ident}.tsv"):
-            moved = re.fullmatch(r"moved (.+) to (.+)", row.get("decision", ""))
+            # Creation and title or priority edits are already in the issue itself.
+            if re.fullmatch(r"created|set (title|priority)\b.*", row.get("decision", "")):
+                continue
+            moved =re.fullmatch(r"moved (.+) to (.+)", row.get("decision", ""))
             if moved:
                 text = status_comment(status_name(moved.group(1)), status_name(moved.group(2)), row["why"] or "not recorded", row["evidence"])
             else:
