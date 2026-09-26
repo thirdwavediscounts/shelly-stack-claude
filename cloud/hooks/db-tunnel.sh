@@ -15,7 +15,8 @@ run() {
     sleep 1
   done
   # host:port pairs from postgres URLs; prints no credentials.
-  mapfile -t pairs < <(cat "$ROOT"/apps/*/.env* "$ROOT"/apps/*/frontend/.env* 2>/dev/null \
+  mapfile -t pairs < <(find "$ROOT"/apps -maxdepth 3 -name '.env*' ! -name '*.example' -type f \
+    -not -path '*/node_modules/*' -exec cat {} + 2>/dev/null \
     | grep -oE "postgres(ql)?://[^@[:space:]'\"]+@[^:/?[:space:]'\"]+(:[0-9]+)?" \
     | sed -E 's|.*@||; /:[0-9]+$/!s|$|:5432|' | sort -u)
   [ ${#pairs[@]} -gt 0 ] || { echo "no postgres hosts found" >>"$LOG"; return; }
