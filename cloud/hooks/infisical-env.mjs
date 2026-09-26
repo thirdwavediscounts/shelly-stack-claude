@@ -1,5 +1,5 @@
 // SessionStart: writes each twd app's env file from Infisical `dev` so cloud sessions can run apps.
-// The machine identity's role forbids prod secrets; this only fetches what that role allows.
+// The machine identity has Viewer on the project; only the dev environment is written.
 // No-op without INFISICAL_CLIENT_ID, INFISICAL_CLIENT_SECRET and INFISICAL_PROJECT_ID. Prints names only.
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
