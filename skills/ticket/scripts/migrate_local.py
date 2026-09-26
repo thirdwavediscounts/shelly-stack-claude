@@ -451,6 +451,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--plan-json", type=Path, default=Path("/tmp/ticket-migration-plan.json"))
     ap.add_argument("--mapping", type=Path, help="progress file for --execute; default <tickets-dir>/github-mapping.json")
     ap.add_argument("--execute", action="store_true", help="create the issues for real")
+    ap.add_argument("--only", action="append", default=[], help="limit to these keys and their sub-tickets, e.g. local:DEV-4; repeatable")
     ap.add_argument("--pace", type=float, default=1.0, help="seconds between writes under --execute")
     args = ap.parse_args(argv)
     try:
@@ -461,6 +462,14 @@ def main(argv: list[str] | None = None) -> int:
         apps = {p.name for p in apps_dir.iterdir() if p.is_dir()} if apps_dir.is_dir() else set()
         repo = resolve_repo(args.repo)
         plan, dropped = build_plan(tdir, linear, apps, repo.split("/")[1])
+        if args.only:
+            inside = lambda key: any(key == o or key.startswith(o + "-") for o in args.only)
+            plan = [p for p in plan if inside(p.key)]
+            # A ref to a ticket left out of this run stays as its old id, not a link.
+            outside = lambda text: re.sub(r"\{\{ref:([^}]+)\}\}", lambda m: m.group(0) if inside(m.group(1)) else m.group(1).split(":", 1)[1], text)
+            for p in plan:
+                p.body = outside(p.body)
+                p.comments = [outside(c) for c in p.comments]
         args.plan_json.write_text(json.dumps({"repo": repo, "issues": [asdict(p) for p in plan]}, indent=1, ensure_ascii=False))
         if not args.execute:
             print(f"repo: {repo}\nlocal: {tdir or 'none'}\nlinear: {args.linear if linear is not None else 'none'}\n")
