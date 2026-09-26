@@ -30,9 +30,10 @@
 
 import { appendFileSync, readFileSync } from "node:fs";
 
-// Modes where "ask" never reaches a human: auto mode's classifier or bypass approves it.
+// Modes where "ask" never reaches a human: auto mode's classifier decides it. Bypass mode
+// still shows the prompt (seen locally), so it isn't listed.
 // There the guard denies instead, so prod writes still need a person.
-const UNATTENDED_MODES = new Set(["auto", "bypassPermissions", "dontAsk"]);
+const UNATTENDED_MODES = new Set(["auto", "dontAsk"]);
 
 // Every call leaves a line in ~/.claude/prod-db-guard.log, so a session can prove the
 // guard ran and what it decided.
@@ -47,7 +48,7 @@ function emit(output) {
   const mode = input?.permission_mode ?? "unknown";
   if (out.permissionDecision === "ask" && UNATTENDED_MODES.has(mode)) {
     out.permissionDecision = "deny";
-    out.permissionDecisionReason += ` Blocked: '${mode}' mode can't get a human approval. Ask Sean to run it, or switch this session to default mode and retry.`;
+    out.permissionDecisionReason += ` Blocked: '${mode}' mode can't get a human approval. Ask Sean to run it, or switch the session to Accept edits (cloud) or default mode (local) and retry.`;
   }
   log(`${input?.tool_name ?? "?"} mode=${mode} decision=${out.permissionDecision}`);
   process.stdout.write(JSON.stringify(output));
