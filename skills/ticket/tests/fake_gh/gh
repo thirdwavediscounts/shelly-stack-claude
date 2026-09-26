@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Stand-in for the gh CLI. Keeps one repo's issues, comments, labels and sub-issues in $FAKE_GH_STATE,
-appends every call to $FAKE_GH_LOG, and fails the Nth write when $FAKE_GH_FAIL_WRITE=N."""
+appends every call to $FAKE_GH_LOG, fails the Nth write when $FAKE_GH_FAIL_WRITE=N, and applies the
+Nth write but reports failure when $FAKE_GH_LOSE_RESPONSE=N."""
 
 import json
 import os
@@ -138,6 +139,8 @@ def main():
     s = load()
     out = api(s, args, stdin) if args[0] == "api" else issue_cmd(s, args)
     STATE.write_text(json.dumps(s, indent=1))
+    if args[0] == "api" and "-X" in args and str(s["writes"]) == os.environ.get("FAKE_GH_LOSE_RESPONSE"):
+        die("gh: connection reset after the write landed")
     print(json.dumps(out))
 
 

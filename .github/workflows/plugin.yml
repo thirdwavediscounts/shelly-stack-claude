@@ -19,6 +19,7 @@ jobs:
           bun-version: "1.4.0"
       - run: python3 skills/ticket/tests/test_lint_ticket_text.py
       - run: python3 skills/ticket/tests/test_tickets.py
+      - run: python3 skills/ticket/tests/test_migrate_local.py
       - name: shelly-mode tools
         working-directory: skills/shelly-mode/scripts
         run: |
