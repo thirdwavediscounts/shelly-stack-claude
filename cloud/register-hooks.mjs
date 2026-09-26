@@ -11,6 +11,7 @@ const SUPABASE_WRITES =
 const hooks = [
   { event: "SessionStart", command: "bash ~/.claude/hooks/tailscale-up.sh" },
   { event: "SessionStart", command: "bash ~/.claude/hooks/git-staleness-check.sh" },
+  { event: "SessionStart", command: "node ~/.claude/hooks/infisical-env.mjs" },
   {
     event: "PreToolUse",
     matcher: SUPABASE_WRITES,
