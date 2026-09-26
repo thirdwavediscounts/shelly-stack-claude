@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""Stand-in for the gh CLI. Keeps one repo's issues, comments, labels and sub-issues in $FAKE_GH_STATE,
+appends every call to $FAKE_GH_LOG, and fails the Nth write when $FAKE_GH_FAIL_WRITE=N."""
+
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+STATE = Path(os.environ["FAKE_GH_STATE"])
+LOG = Path(os.environ["FAKE_GH_LOG"])
+
+
+def load():
+    if STATE.exists():
+        return json.loads(STATE.read_text())
+    return {"repo": "", "next": 1, "issues": {}, "labels": [], "writes": 0}
+
+
+def die(msg, code=1):
+    print(msg, file=sys.stderr)
+    sys.exit(code)
+
+
+def rest_issue(s, issue):
+    out = {k: v for k, v in issue.items() if k not in ("comments", "subs", "parent", "prs")}
+    out["labels"] = [{"name": n} for n in issue["labels"]]
+    out["html_url"] = f"https://github.com/{s['repo']}/issues/{issue['number']}"
+    return out
+
+
+def find(s, number):
+    issue = s["issues"].get(str(number))
+    if not issue:
+        die(f"gh: Not Found (HTTP 404) issue {number}")
+    return issue
+
+
+def flag(args, name, default=None):
+    return args[args.index(name) + 1] if name in args else default
+
+
+def api(s, args, stdin):
+    method = flag(args, "-X", "GET")
+    path = next(a for a in args[1:] if a.startswith("repos/")).split("?")[0]
+    m = re.fullmatch(r"repos/([^/]+/[^/]+)/(.*)", path)
+    repo, rest = m.group(1), m.group(2)
+    s["repo"] = repo
+    payload = json.loads(stdin) if "--input" in args else {}
+    if method != "GET":
+        s["writes"] += 1
+        if str(s["writes"]) == os.environ.get("FAKE_GH_FAIL_WRITE"):
+            STATE.write_text(json.dumps(s, indent=1))
+            die("gh: HTTP 502 injected failure")
+    slurp = "--slurp" in args
+
+    def page(items):
+        return [items] if slurp else items
+
+    if rest == "issues" and method == "POST":
+        number = s["next"]
+        s["next"] += 1
+        issue = {"number": number, "id": 9000 + number, "title": payload["title"], "body": payload.get("body", ""),
+                 "labels": payload.get("labels", []), "state": "open", "state_reason": None,
+                 "comments": [], "subs": [], "parent": None, "prs": []}
+        s["issues"][str(number)] = issue
+        return rest_issue(s, issue)
+    if rest == "labels":
+        if method == "POST":
+            if payload["name"] in s["labels"]:
+                die("gh: Validation Failed (HTTP 422) already_exists")
+            s["labels"].append(payload["name"])
+            return {"name": payload["name"]}
+        return page([{"name": n} for n in s["labels"]])
+    m = re.fullmatch(r"issues/(\d+)(?:/(comments|sub_issues))?", rest)
+    if not m:
+        die(f"fake gh: unhandled path {path}")
+    issue = find(s, m.group(1))
+    if m.group(2) is None:
+        if method == "PATCH":
+            for key in ("title", "body", "labels", "state", "state_reason"):
+                if key in payload:
+                    issue[key] = payload[key]
+        return rest_issue(s, issue)
+    if m.group(2) == "comments":
+        if method == "POST":
+            issue["comments"].append(payload["body"])
+            return {"id": len(issue["comments"])}
+        return page([{"body": b} for b in issue["comments"]])
+    if method == "POST":
+        child_id = payload["sub_issue_id"]
+        if not isinstance(child_id, int):
+            die("gh: Invalid request (HTTP 422) sub_issue_id must be an integer")
+        child = next((i for i in s["issues"].values() if i["id"] == child_id), None)
+        if child is None:
+            die(f"gh: Not Found (HTTP 404) no issue with id {child_id}")
+        if child["parent"] is not None:
+            die("gh: Validation Failed (HTTP 422) sub-issue already has a parent")
+        child["parent"] = issue["number"]
+        issue["subs"].append(child["number"])
+        return rest_issue(s, issue)
+    return [rest_issue(s, find(s, n)) for n in issue["subs"]]
+
+
+def gql_issue(s, issue):
+    parent = s["issues"].get(str(issue["parent"])) if issue["parent"] else None
+    return {
+        "number": issue["number"], "title": issue["title"], "state": issue["state"].upper(),
+        "stateReason": (issue["state_reason"] or "").upper(), "body": issue["body"],
+        "labels": [{"name": n} for n in issue["labels"]],
+        "comments": [{"author": {"login": "thirdwavediscounts"}, "body": b, "createdAt": "2026-09-26T00:00:00Z"} for b in issue["comments"]],
+        "parent": {"number": parent["number"], "title": parent["title"]} if parent else None,
+        "closedByPullRequestsReferences": [{"number": n, "url": f"https://github.com/{s['repo']}/pull/{n}"} for n in issue["prs"]],
+        "url": f"https://github.com/{s['repo']}/issues/{issue['number']}",
+    }
+
+
+def issue_cmd(s, args):
+    s["repo"] = flag(args, "--repo", s["repo"])
+    fields = flag(args, "--json").split(",")
+    if args[1] == "view":
+        full = gql_issue(s, find(s, args[2]))
+        return {k: full[k] for k in fields}
+    if args[1] == "list":
+        state, label = flag(args, "--state", "open"), flag(args, "--label")
+        rows = [gql_issue(s, i) for i in s["issues"].values()
+                if (state == "all" or i["state"] == state) and (label is None or label in i["labels"])]
+        return [{k: r[k] for k in fields} for r in rows]
+    die(f"fake gh: unhandled issue {args[1]}")
+
+
+def main():
+    args = sys.argv[1:]
+    stdin = sys.stdin.read() if "--input" in args else None
+    with LOG.open("a") as fh:
+        fh.write(json.dumps({"args": args, "stdin": stdin}) + "\n")
+    s = load()
+    out = api(s, args, stdin) if args[0] == "api" else issue_cmd(s, args)
+    STATE.write_text(json.dumps(s, indent=1))
+    print(json.dumps(out))
+
+
+main()

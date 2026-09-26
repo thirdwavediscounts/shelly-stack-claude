@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint local ticket text (ticket body or comment) before save. Reads stdin, prints violations, exits 1 on any."""
+"""Lint ticket text (issue body or comment) before it is posted. Reads stdin, prints violations, exits 1 on any."""
 
 from __future__ import annotations
 
@@ -12,6 +12,8 @@ BOLD_LABEL = re.compile(r"^\s*(?:[-*]\s+|\d+\.\s+)?\*\*[^*\n]+?(?::\*\*|\*\*:)")
 HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
 CURLY = re.compile(r"[‘’“”]")
 EMOJI = re.compile(r"[\U0001F300-\U0001FAFF☀-➿]")
+DEV_REF = re.compile(r"(?<![\w/\[-])DEV-\d+(?:-\d+)?\b")
+MIGRATION_FOOTER = re.compile(r"^\s*(<sub>Migrated from .*</sub>|<!-- migrated:[^>]*-->)\s*$")
 CHATBOT = re.compile(r"\b(I hope this helps|Let me know if|Certainly!|Of course!|Great question)", re.I)
 
 
@@ -23,7 +25,7 @@ def strip_code(text: str) -> list[tuple[int, str, str]]:
         if line.strip().startswith("```"):
             fenced = not fenced
             continue
-        if fenced:
+        if fenced or MIGRATION_FOOTER.match(line):
             continue
         out.append((n, re.sub(r"`[^`]*`", "`", line), line))
     return out
@@ -59,6 +61,8 @@ def lint(text: str, kind: str) -> list[str]:
             problems.append(f"{n}: bold label with colon: {raw.strip()[:80]}")
         if CURLY.search(line):
             problems.append(f"{n}: curly quote: {raw.strip()[:80]}")
+        if ref := DEV_REF.search(line):
+            problems.append(f"{n}: ticket reference {ref.group(0)}, use the issue number #N: {raw.strip()[:80]}")
         if CHATBOT.search(line):
             problems.append(f"{n}: chatbot phrase: {raw.strip()[:80]}")
         m = HEADING.match(line)

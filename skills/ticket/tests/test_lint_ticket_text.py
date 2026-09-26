@@ -3,7 +3,7 @@ import sys
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from lint_ticket_text import lint  # noqa: E402
 
 GOOD = """Both syncs book any refund as REFUNDED, so a partial refund reads as a full return. Define the signal at the line.
@@ -27,8 +27,9 @@ GOOD = """Both syncs book any refund as REFUNDED, so a partial refund reads as a
 
 ## Links
 
-* Parent, spec item 4: DEV-158
-* Needs-disposition queue: DEV-176
+* Parent, spec item 4: #158
+* Needs-disposition queue: #176
+* Branch `sean/dev-176-queue`, from https://linear.app/t/issue/DEV-176/queue
 """
 
 BAD = """Scope
@@ -68,6 +69,14 @@ class LintTest(unittest.TestCase):
 
     def test_code_is_ignored(self):
         text = "x" * 100 + "\n```sql\n-- DEV-1 DEV-2 — fine\n```\nSee `a — b` inline.\n"
+        self.assertEqual(lint(text, "ticket"), [])
+
+    def test_dev_ids_in_prose_are_refused(self):
+        problems = lint("x" * 100 + "\nBlocked by DEV-2-6 until the trigger fix lands.\n", "ticket")
+        self.assertEqual(problems, ["2: ticket reference DEV-2-6, use the issue number #N: Blocked by DEV-2-6 until the trigger fix lands."])
+
+    def test_migration_footer_is_exempt(self):
+        text = "x" * 100 + "\n<sub>Migrated from local ticket DEV-2</sub>\n<!-- migrated:local:DEV-2 -->\n"
         self.assertEqual(lint(text, "ticket"), [])
 
     def test_short_comment_allowed(self):
