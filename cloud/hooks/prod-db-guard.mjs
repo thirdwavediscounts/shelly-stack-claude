@@ -28,19 +28,40 @@
 // (`supabase-staging`) never reaches this hook, so agent-driven migrations there run
 // without a prompt.
 
-import { readFileSync } from "node:fs";
+import { appendFileSync, readFileSync } from "node:fs";
+
+// Modes where "ask" never reaches a human: auto mode's classifier or bypass approves it.
+// There the guard denies instead, so prod writes still need a person.
+const UNATTENDED_MODES = new Set(["auto", "bypassPermissions", "dontAsk"]);
+
+// Every call leaves a line in ~/.claude/prod-db-guard.log, so a session can prove the
+// guard ran and what it decided.
+function log(line) {
+  try {
+    appendFileSync(`${process.env.HOME}/.claude/prod-db-guard.log`, `${new Date().toISOString()} ${line}\n`);
+  } catch {}
+}
+
+function emit(output) {
+  const out = output.hookSpecificOutput;
+  const mode = input?.permission_mode ?? "unknown";
+  if (out.permissionDecision === "ask" && UNATTENDED_MODES.has(mode)) {
+    out.permissionDecision = "deny";
+    out.permissionDecisionReason += ` Blocked: '${mode}' mode can't get a human approval. Ask Sean to run it, or switch this session to default mode and retry.`;
+  }
+  log(`${input?.tool_name ?? "?"} mode=${mode} decision=${out.permissionDecision}`);
+  process.stdout.write(JSON.stringify(output));
+  process.exit(0);
+}
 
 function decide(permissionDecision, reason) {
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: "PreToolUse",
-        permissionDecision, // "allow" | "deny" | "ask"
-        permissionDecisionReason: reason,
-      },
-    }),
-  );
-  process.exit(0);
+  emit({
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision, // "allow" | "deny" | "ask"
+      permissionDecisionReason: reason,
+    },
+  });
 }
 
 let input;
@@ -65,7 +86,10 @@ const targetsProd =
   ti.project_id !== undefined
     ? ti.project_id === PROD_REF
     : !STAGING_SERVERS.has(server) && !/staging/i.test(server);
-if (!targetsProd) process.exit(0);
+if (!targetsProd) {
+  log(`${tool} mode=${input.permission_mode ?? "unknown"} decision=pass (not prod)`);
+  process.exit(0);
+}
 
 // Prod tools that only ever read — let them through untouched.
 const READONLY_TOOLS = new Set([
@@ -255,17 +279,15 @@ if (explicit.length === 0 && NO_TX_BLOCK.test(norm)) {
 }
 
 const updatedInput = explicit.length > 0 ? ti : { ...ti, query: TIMEOUT_PREFIX + sql };
-process.stdout.write(
-  JSON.stringify({
-    hookSpecificOutput: {
-      hookEventName: "PreToolUse",
-      permissionDecision: askReason ? "ask" : "allow",
-      permissionDecisionReason:
-        askReason ??
-        (isRead
-          ? "prod-db-guard: read runs under a 30s statement_timeout."
-          : "prod-db-guard: additive SQL runs under a 30s statement_timeout."),
-      updatedInput,
-    },
-  }),
-);
+emit({
+  hookSpecificOutput: {
+    hookEventName: "PreToolUse",
+    permissionDecision: askReason ? "ask" : "allow",
+    permissionDecisionReason:
+      askReason ??
+      (isRead
+        ? "prod-db-guard: read runs under a 30s statement_timeout."
+        : "prod-db-guard: additive SQL runs under a 30s statement_timeout."),
+    updatedInput,
+  },
+});
