@@ -13,7 +13,7 @@ Open a todolist whose first items are the phases below. Cite only principles who
 
 ## Phase A: Frame
 
-Ground first, then commit. When the task names a ticket or matches one in the repo's `tickets/` folder, read it with the **ticket** skill's `tickets.py show DEV-n`, and log each landed phase to it with `tickets.py log`. Don't start the run until you can state:
+Ground first, then commit. When the task names a ticket or matches one in `tickets.py list`, read it with the **ticket** skill's `tickets.py show N`, and log each landed phase to it with `tickets.py log`. Don't start the run until you can state:
 
 - The definition of done as a falsifiable predicate (the **prove-it-works** principle skill).
 - Scope, quantified: rough units and effort, plus the blockers grounding surfaced.
