@@ -130,8 +130,7 @@ For long work, use `/loop`.
 | [`/shelly-mode`](./skills/shelly-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`/shelly-guide`](./skills/shelly-guide/SKILL.md) | you don't know shelly-stack yet. names the skills for the stage you're at (understand, design, build, verify, ship, overnight) with a prompt for your task, then runs the first one. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
-| [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, the local tickets/ folder, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
-| [`/ticket`](./skills/ticket/SKILL.md) | the task is a ticket number (`#512`). reads the GitHub issue through `gh`, routes the build to the right playbook, and keeps its status label, decision comments, branch, and PR current. also files follow-ups as a parent plus sub-issues. |
+| [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |

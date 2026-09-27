@@ -94,7 +94,7 @@ Be specific. "We searched the issue tracker for [query1], [query2], [query3] and
 Bulleted list of what was actually searched, so the user can judge coverage and redirect. Format:
 
 - **Source control history**: {file paths}, {number of commits reviewed}, PRs #{numbers}, and code comments searched. Or "Not searched. This should not happen because git and `gh` are always expected."
-- **Issue / ticket tracker**: {ticket IDs and keyword searches in `tickets/`}. Or "Not searched. This repo has no `tickets/` folder."
+- **Issue / ticket tracker**: {ticket IDs and keyword searches}. Or "Not searched. No matching MCP available in this environment."
 - **Long-form documents**: {page titles and search queries}. Or "Not searched. No matching MCP available in this environment."
 - **Real-time team chat**: {channels searched, date ranges, queries}. Or "Not searched. No matching MCP available in this environment."
 - **Infrastructure observability**: {dashboards, monitors, metrics, logs, traces, or incidents searched}. Or "Not searched. No matching MCP available in this environment."

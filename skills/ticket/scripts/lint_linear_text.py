@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint ticket text (issue body or comment) before it is posted. Reads stdin, prints violations, exits 1 on any."""
+"""Lint Linear text (issue, project, comment) before save. Reads stdin, prints violations, exits 1 on any."""
 
 from __future__ import annotations
 
@@ -7,27 +7,29 @@ import argparse
 import re
 import sys
 
+ISSUE_TAG = re.compile(r"<issue\b[^>]*>.*?</issue>", re.S)
+MENTION = re.compile(r"@@ISSUE@@|\bDEV-\d+\b")
+MD_ISSUE_LINK = re.compile(r"\]\(<?https://linear\.app/[^)>\s]*/issue/")
 DASH = re.compile(r"[—–]")
 BOLD_LABEL = re.compile(r"^\s*(?:[-*]\s+|\d+\.\s+)?\*\*[^*\n]+?(?::\*\*|\*\*:)")
 HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
 CURLY = re.compile(r"[‘’“”]")
 EMOJI = re.compile(r"[\U0001F300-\U0001FAFF☀-➿]")
-DEV_REF = re.compile(r"(?<![\w/\[-])DEV-\d+(?:-\d+)?\b")
-MIGRATION_FOOTER = re.compile(r"^\s*(<sub>Migrated from .*</sub>|<!-- migrated:[^>]*-->)\s*$")
 CHATBOT = re.compile(r"\b(I hope this helps|Let me know if|Certainly!|Of course!|Great question)", re.I)
 
 
 def strip_code(text: str) -> list[tuple[int, str, str]]:
-    """Return (line_no, cleaned, original) for prose lines. Inline code is masked, fenced blocks dropped."""
+    """Return (line_no, cleaned, original) for prose lines. Inline code and issue tags are masked, fenced blocks dropped."""
     out = []
     fenced = False
     for n, line in enumerate(text.splitlines(), 1):
         if line.strip().startswith("```"):
             fenced = not fenced
             continue
-        if fenced or MIGRATION_FOOTER.match(line):
+        if fenced:
             continue
-        out.append((n, re.sub(r"`[^`]*`", "`", line), line))
+        cleaned = ISSUE_TAG.sub("@@ISSUE@@", line)
+        out.append((n, re.sub(r"`[^`]*`", "`", cleaned), line))
     return out
 
 
@@ -53,16 +55,18 @@ def lint(text: str, kind: str) -> list[str]:
     lines = strip_code(text)
     proper = proper_nouns(lines)
     if kind != "comment" and len(text.strip()) < 100:
-        problems.append("1: too short for a ticket body")
+        problems.append("1: too short for a description")
     for n, line, raw in lines:
+        if len(MENTION.findall(line)) > 1:
+            problems.append(f"{n}: more than one issue mention on a line: {raw.strip()[:80]}")
+        if MD_ISSUE_LINK.search(line):
+            problems.append(f"{n}: markdown link to an issue, use the <issue> tag or a bare DEV-N: {raw.strip()[:80]}")
         if DASH.search(line):
             problems.append(f"{n}: em or en dash: {raw.strip()[:80]}")
         if BOLD_LABEL.search(line):
             problems.append(f"{n}: bold label with colon: {raw.strip()[:80]}")
         if CURLY.search(line):
             problems.append(f"{n}: curly quote: {raw.strip()[:80]}")
-        if ref := DEV_REF.search(line):
-            problems.append(f"{n}: ticket reference {ref.group(0)}, use the issue number #N: {raw.strip()[:80]}")
         if CHATBOT.search(line):
             problems.append(f"{n}: chatbot phrase: {raw.strip()[:80]}")
         m = HEADING.match(line)
@@ -77,7 +81,7 @@ def lint(text: str, kind: str) -> list[str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--kind", choices=["ticket", "comment"], default="ticket")
+    ap.add_argument("--kind", choices=["issue", "project", "comment"], default="issue")
     args = ap.parse_args()
     problems = lint(sys.stdin.read(), args.kind)
     for p in problems:
