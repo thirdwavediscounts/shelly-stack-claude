@@ -14,7 +14,7 @@ For each such moment:
 - Routing: the skill that owns the workflow this came up in. Extend it to call the relevant MCP tool or sibling skill so the next agent fetches the context itself.
 
 Examples of the pattern:
-- User pastes a ticket title because the agent didn't read the ticket issue. Routing: the relevant triage skill should run the **ticket** skill's `tickets.py show` first.
+- User pastes a ticket title because the agent didn't query the ticket-tracker MCP. Routing: the relevant triage skill should call the ticket-tracker MCP first.
 - User describes a flaky test the agent could have queried via an observability MCP. Routing: the debugging skill should mention the observability MCP.
 - User links a chat thread the agent could have fetched via a chat MCP. Routing: the relevant skill should mention the chat MCP.
 

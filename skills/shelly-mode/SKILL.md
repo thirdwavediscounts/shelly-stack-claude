@@ -21,7 +21,7 @@ Remaining triggers:
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
 - Any prose surface → invoke the **unslop** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill (the bundled skill for authoring SKILL.md files).
 - Docs, RFCs, readmes, PR descriptions, or commit messages → invoke the **technical-writing** skill.
-- Any ticket write (new ticket, sub-ticket, comment, status or field change), from any playbook or an ad hoc session → the **ticket** skill's `scripts/tickets.py`, with the body shaped per its `references/ticket-writing.md`. Tickets are GitHub issues labeled `sean`, written through `gh`. The script lints the text and refuses what fails. Never use Linear.
+- Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
 - Before commit → `/shelly-stack:deslop` for code cleanup, then the **unslop** skill over the diff's prose and comments.
 - Before review → invoke the **no-comments** skill.
 - Typecheck or compile fails → invoke **check-compiler-errors** for the grouped report before fixing.
@@ -35,7 +35,7 @@ Remaining triggers:
 - "Give me a handoff prompt", "prompt for the next session", "before I clear context" → the **Pause safely** playbook. Write the checkpoint, then reply with the resume prompt.
 - "Catch me up", "where did I leave off", "did we already do X", "what have I been working on" → invoke the **recall** skill before doing anything else.
 - "Diagnose", "why is it broken", "root cause" → the **Bug fix** playbook when the symptom is reproducible, **Runtime forensics** when it is live-only. Reproduce or instrument before hypothesizing. Never guess from code alone.
-- "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **ticket** skill's Triage the queue step. Report the frontier, do not start a build.
+- "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **ticket** skill in its Triage gate over the candidates. Report the frontier, do not start a build.
 
 Where a trigger says invoke, call the Skill tool with that skill name. Reading its SKILL.md instead skips the skill's argument handling and its subagent wiring.
 
@@ -87,7 +87,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 **Propose first** for external artifacts and production: new tickets, pushes to shared branches, prod writes, deploys. **Always pause** for irreversible writes: force-push to shared branches, data deletion, customer messages. A permission guard or MCP refusal on a production target is a pause, never a reason to switch to a tool that bypasses it. A change made outside the repo (an edit on a VPS, SQL run by hand) stays open in Found until a repo commit carries it.
 
-**Use the connected tool before asking.** Before asking the user for a screenshot, log, ticket image, Slack message, DOM, or env change, name the connected tool that could fetch or do it (browser tools, the Slack, Sentry, Vercel, or Supabase MCP, ssh, `tickets.py show`) and use it. When a permission guard blocks a step, name the exact allow rule. Do not paste the command back for the user to run.
+**Use the connected tool before asking.** Before asking the user for a screenshot, log, ticket image, Slack message, DOM, or env change, name the connected tool that could fetch or do it (browser tools, the Slack, Linear, Sentry, Vercel, or Supabase MCP, ssh) and use it. When a permission guard blocks a step, name the exact allow rule. Do not paste the command back for the user to run.
 
 **Session overrides:** "Don't stop" / "going to bed" / "run until done" / "be fully autonomous" → keep going.
 
@@ -145,7 +145,7 @@ Match the task to a playbook below and open its file. Open a todolist whose firs
 
 A large or cross-cutting effort (a migration across many call sites, an ambitious multi-part change), or work the user steps away from to trust later, routes to the **figure-it-out** skill even when a narrower playbook like Feature fits. Use **figure-it-out** whenever no bundled playbook fits. It designs a bespoke, rigorous playbook for the task. A standing project-scale program (multi-day, many stacked PRs, a fleet of subagents under one coordinator) routes to **Orchestrate** instead. figure-it-out designs one bespoke run, orchestrate runs the program.
 
-- **Ticket.** A ticket issue number as the task ("#512", "work ticket 512", /ticket 512). Invoke the **ticket** skill, do not copy steps from it. It reads the issue through `gh`, triages or investigates a thin ticket, then dispatches the build to the matching playbook below and owns the status moves and decision comments through to a merged PR. Also files follow-ups from design or investigation as a parent issue plus sub-issues.
+- **Ticket.** A Linear Dev ticket id as the task ("DEV-200", "work DEV-142", /ticket DEV-99). Invoke the **ticket** skill, do not copy steps from it. It reads the issue, triages or investigates a thin ticket, then dispatches the build to the matching playbook below and owns the Linear status moves and comments through to a merged PR. Also files follow-ups from design or investigation as a parent issue plus sub-issues.
 - **Investigation.** Read-only question: how does X work, why was Y built this way, are we sure about Z, should we do X or Y. `playbooks/investigation.md`.
 - **Bug fix.** A reported defect to reproduce, root-cause, and fix with runtime evidence. `playbooks/bug-fix.md`.
 - **Perf issue.** A measured slowness to trace and improve against a baseline. `playbooks/perf-issue.md`.
