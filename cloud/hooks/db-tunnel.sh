@@ -5,6 +5,8 @@
 # TLS still verifies. Backgrounds itself; no-op without tailscale or env files.
 [ -n "${TS_AUTHKEY:-}" ] && command -v ssh >/dev/null 2>&1 || exit 0
 ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+# Cloud sessions start in the folder that holds the clones, so apps/ sits one level down.
+[ -d "$ROOT/apps" ] || [ ! -d "$ROOT/twd-apps-monorepo/apps" ] || ROOT="$ROOT/twd-apps-monorepo"
 LOG=/tmp/db-tunnel.log
 
 run() {

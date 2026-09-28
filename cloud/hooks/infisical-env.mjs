@@ -7,7 +7,9 @@ const { INFISICAL_CLIENT_ID: id, INFISICAL_CLIENT_SECRET: secret, INFISICAL_PROJ
 if (!id || !secret || !project) process.exit(0);
 
 const API = process.env.INFISICAL_API_URL ?? "https://app.infisical.com/api";
-const ROOT = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+const START = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+// Cloud sessions start in the folder that holds the clones, so apps/ sits one level down.
+const ROOT = !existsSync(`${START}/apps`) && existsSync(`${START}/twd-apps-monorepo/apps`) ? `${START}/twd-apps-monorepo` : START;
 const HEADER = "# Written by the shelly-stack infisical-env hook from Infisical dev. Edits are overwritten.";
 // Folders whose app loads `.env` or lives in a subdirectory; the rest map to apps/<folder>/.env.local.
 const FILES = {
