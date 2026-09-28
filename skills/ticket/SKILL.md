@@ -51,7 +51,7 @@ Ten states, in order. Backlog, Triage, Needs Investigation, Ready for Agents, In
 
 Run this only when asked to file follow-ups, usually at the tail of an **architect** or **Investigation** run that surfaced work beyond the current ticket. Never split one task into several tickets.
 
-1. List the follow-ups as concrete outcomes, not vague themes. Verify: each item is a shippable unit.
+1. List the follow-ups as concrete outcomes, not vague themes. A follow-up whose outcome is "verify after <date>" first gets a forced or replayed attempt with the **compress-the-clock** skill. Its issue records only what that attempt could not prove, the alert or log field that will reveal a failure, and who reads it. Verify: each item is a shippable unit.
 2. Create a parent issue for the theme with the Linear MCP's `save_issue` on the Dev team. Write the description per Writing to Linear. Link the design doc or diagnosis under Links instead of pasting it.
 3. Create one sub-issue per shippable unit with `save_issue` and `parentId` set to the parent. Each description follows the sub-issue shape in the reference and passes the lint. Set app label, type, and priority on each. Put each in Triage or Ready for Agents depending on how specced it is. Verify: every sub-issue links to the parent and carries an app label.
 4. Do not start any sub-issue. Report the parent and its sub-issues and stop.

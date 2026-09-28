@@ -27,7 +27,7 @@ Code and features:
 Delegation: trust artifacts, not self-reports.
 When verifying delegated work, inspect the actual output artifact (git diff, file contents, runtime behavior), not the delegate's summary.
 
-Waiting is not verification. A cron tick, a timer, or a "bake" window proves nothing on its own. Trigger the path yourself on staging, or state that it cannot be triggered.
+Waiting is not verification. A cron tick, a timer, or a "bake" window proves nothing on its own. Trigger the path yourself on staging. When the check seems to need hours or days, invoke **compress-the-clock** and force or replay it before you put anything on a date.
 
 ## Numbers in the reply
 

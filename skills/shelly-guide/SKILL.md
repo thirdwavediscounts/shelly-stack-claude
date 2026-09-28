@@ -39,7 +39,7 @@ Each entry: page, the skills in the order the guide presents them, when each ear
 
 **Clean.** Same page. `/unslop the diff` (prose and comments, before each commit; the Opening-a-PR playbook does it anyway). `/no-comments the diff` hands comments to Comment Sicko, a reviewer who didn't write them. Pitfall: treating cleanup as optional polish.
 
-**Verify.** `06-verify-and-ship.md`. Put the finish condition in the first prompt; match the check to the change (CLI → run the command; UI → walk the flow in the running app; parser/migration → replay saved input; perf → before/after profiles; storage → read the value back). `/blast-radius` for a small diff you don't trust. `/create-verification-skill` once, `/maintain-verification-skill` when the feature map rots. Pitfall: accepting "it compiles" or a green build as evidence.
+**Verify.** `06-verify-and-ship.md`. Put the finish condition in the first prompt; match the check to the change (CLI → run the command; UI → walk the flow in the running app; parser/migration → replay saved input; perf → before/after profiles; storage → read the value back). `/blast-radius` for a small diff you don't trust. `/compress-the-clock` when the check would mean waiting hours or days. `/create-verification-skill` once, `/maintain-verification-skill` when the feature map rots. Pitfall: accepting "it compiles" or a green build as evidence.
 
 **Ship.** Same page. `/shelly-mode open the pr` (small ordered commits, evidence in the description). `/shelly-mode babysit this pr, get it green` (conflicts, then review threads, then CI; stops at merge-ready, never merges). `/shelly-mode land the stack` (independent per-PR verification, then gh merge-when-ready).
 
