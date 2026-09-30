@@ -18,6 +18,7 @@ jobs:
         with:
           bun-version: "1.4.0"
       - run: python3 skills/ticket/scripts/test_lint_linear_text.py
+      - run: python3 skills/create-skill/scripts/check_invoke_targets.py
       - name: shelly-mode tools
         working-directory: skills/shelly-mode/scripts
         run: |

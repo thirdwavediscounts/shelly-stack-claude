@@ -59,7 +59,7 @@ Short. In this order:
 4. **Then.** The next stage and its page, one line.
 5. **Pitfall.** The one from the page, one line.
 
-End by offering to run the first prompt now. If they say yes, invoke that skill with the prompt you wrote. If the task is bigger than a stage, say so and hand it to `/shelly-mode` instead, because the playbooks already sequence these stages.
+End by offering to run the first prompt now. If they say yes, invoke that skill with the prompt you wrote. If the task is bigger than a stage, say so and spawn a `shelly-stack:shelly-agent` subagent with it instead (the agent `/shelly-mode` routes to), because the playbooks already sequence these stages.
 
 ## Don'ts
 

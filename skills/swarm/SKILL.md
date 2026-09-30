@@ -1,7 +1,6 @@
 ---
 name: swarm
-description: "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration."
-disable-model-invocation: true
+description: "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or when a shelly-mode playbook or another skill calls for parallel coverage, races, gauntlets, or exploration."
 ---
 
 # Swarm

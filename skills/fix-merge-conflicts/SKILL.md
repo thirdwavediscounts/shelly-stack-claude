@@ -1,7 +1,6 @@
 ---
 name: fix-merge-conflicts
 description: Resolve merge or rebase conflicts non-interactively, then run compile, lint, and tests to reach a buildable state. Use when a branch has conflict markers or a merge, rebase, or cherry-pick stopped on conflicts.
-disable-model-invocation: true
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.

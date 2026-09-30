@@ -32,7 +32,7 @@ disallowed-tools: AskUserQuestion  # optional; removes tools while the skill is 
 Rules:
 
 - `description` is the only text Claude sees before deciding to load the skill. Put the triggers there ("Use for X, Y, or when the user says Z"), not a summary of the body. Quote it or use `description: >-` when punctuation or wrapping needs it. The skill listing truncates `description` plus `when_to_use` at 1,536 characters, so put the key use case first.
-- `disable-model-invocation: true` for mode skills and anything heavy or opinionated. Description matching would otherwise fire it on casual turns.
+- `disable-model-invocation: true` for mode skills and user-only workflows. Description matching would otherwise fire it on casual turns. The flag also makes the Skill tool refuse the skill, so never set it on a skill that another skill or agent invokes; `scripts/check_invoke_targets.py` fails CI when one does. For a heavy skill that agents invoke, narrow its description to explicit requests and the skills that call it.
 - Claude Code ignores a key it does not recognize without an error, so a misspelled key is a silent no-op. Other documented keys (`when_to_use`, `arguments`, `model`, `effort`, `context: fork` with `agent`, `hooks`, `paths`) are for special cases; the full table is at https://code.claude.com/docs/en/skills (checked 2026-09-23).
 - `$ARGUMENTS` in the body is replaced with whatever the user typed after `/name`.
 

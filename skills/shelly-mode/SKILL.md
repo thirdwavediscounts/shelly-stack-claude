@@ -41,7 +41,7 @@ Where a trigger says invoke, call the Skill tool with that skill name. Reading i
 
 ## Principles
 
-Read the leaf skill in full for any principle you apply. Each entry names when it applies.
+Read the leaf skill in full for any principle you apply. Each entry names when it applies. Principle skills are not model-invocable, so Read `../principle-<name>/SKILL.md` from this skill's base directory rather than calling the Skill tool.
 
 **Core**
 
