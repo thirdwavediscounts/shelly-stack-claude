@@ -9,8 +9,9 @@
 //   - Read-only tools / plain SELECTs .......... allow (prod diagnosis stays frictionless)
 //   - Additive SQL (CREATE, CREATE OR REPLACE, INSERT, COMMENT, GRANT to non-public roles)
 //                                              .. allow
-//   - Catastrophic ops (DROP TABLE/SCHEMA/..., TRUNCATE, DELETE|UPDATE without WHERE,
-//     branch delete/reset) ..................... DENY outright (cannot be approved by a mis-click)
+//   - Branch delete/reset ...................... DENY outright (cannot be approved by a mis-click)
+//   - Catastrophic SQL (DROP TABLE/SCHEMA/..., TRUNCATE, DELETE|UPDATE without WHERE)
+//                                              .. ASK with a CATASTROPHIC warning
 //   - Destructive SQL (DELETE, UPDATE, upsert DO UPDATE, MERGE, other DROPs, RENAME,
 //     column TYPE change, REVOKE, DISABLE RLS/triggers, GRANT to anon/public, DO, CALL)
 //                                              .. ASK (forces your explicit approval prompt)
@@ -187,12 +188,7 @@ const CATASTROPHIC_SQL = [
   /\bDELETE\s+FROM\b(?![\s\S]*\bWHERE\b)/i, // DELETE with no WHERE anywhere in the statement
   /\bUPDATE\b[\s\S]*?\bSET\b(?![\s\S]*\bWHERE\b)/i, // UPDATE ... SET with no WHERE
 ];
-if (CATASTROPHIC_SQL.some((re) => re.test(scan))) {
-  decide(
-    "deny",
-    "prod-db-guard: catastrophic SQL (DROP / TRUNCATE / DELETE|UPDATE without WHERE) blocked on prod. Run on staging or split into a reviewed, guarded migration.",
-  );
-}
+const catastrophic = CATASTROPHIC_SQL.some((re) => re.test(scan));
 
 // Each statement is classified by its leading keyword. Anything not matched here asks.
 const SAFE_START =
@@ -227,8 +223,9 @@ const flagged = statements.filter(
     !(SAFE_START.test(s) || ALTER_START.test(s)),
 );
 const isRead = statements.every((s) => READ_START.test(s)) && flagged.length === 0;
-const askReason =
-  flagged.length > 0
+const askReason = catastrophic
+  ? "prod-db-guard: CATASTROPHIC SQL on PROD (DROP / TRUNCATE / DELETE|UPDATE without WHERE). This can destroy fleet-wide data. Approve only if it was proven on staging and you mean to run it on prod."
+  : flagged.length > 0
     ? `prod-db-guard: destructive or unrecognized SQL on PROD: ${flagged
         .map((s) => (s.length > 80 ? `${s.slice(0, 80)}…` : s))
         .join(" | ")}. Review the statement, then approve to run.`
