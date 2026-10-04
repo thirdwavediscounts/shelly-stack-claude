@@ -1,14 +1,23 @@
 ### Opening a PR
 
-Before an authorized commit, run `/shelly-stack:deslop` on the scoped code diff. Keep the prose pass through **unslop**. For a nontrivial diff, spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on it and fix or dismiss each finding with a reason before the PR opens. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent in the same message. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
+Invoked at the end of every other playbook. Add these steps to the todo list when a playbook reaches this one.
 
-Invoked at the end of every other playbook.
+1. Run `/shelly-stack:deslop` on the scoped code diff.
+2. Run the **unslop** skill over the diff's prose and comments.
+3. For a nontrivial diff, spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on it. Fix or dismiss each finding with a reason.
+4. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent in the same message as step 3. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason.
+5. Commit per **Commits**.
+6. Run `/no-comments` before review.
+7. Write the title and description per **Titles** and **Descriptions**. Open the PR per **Forge** and **Readiness**.
+8. Before asking to merge, clear the list in **Before merge**.
+
+Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
 
 **Worktree.** Work from a git worktree off main. Subagents inherit it. Multiple `Agent` calls on the same branch each get their own worktree, or `git fetch && git reset --hard origin/<branch>` between them. Dirty branch with unrelated work: patch out, fresh worktree, apply. Snarled worktree: reset from main, redo minimally.
 
 **Commits.** Commit liberally. Rebase into small, ordered commits before opening PRs. Each commit is a future PR: landable, ordered to tell the story. Amend when the fix belongs in a just-made commit. New commit when separable.
 
-**PRs.** Run the **unslop** skill over the diff's prose and comments before commit. Run `/no-comments` before review. Write every PR title, PR description, and commit body with `/technical-writing`, then apply `/unslop`. Apply every technical-writing layer except Diátaxis. Use one word for each action, keep articles, and avoid `-ing` when a plain verb works.
+**PRs.** Write every PR title, PR description, and commit body with `/technical-writing`, then apply `/unslop`. Apply every technical-writing layer except Diátaxis. Use one word for each action, keep articles, and avoid `-ing` when a plain verb works.
 
 **Titles.** Use Conventional Commits in the form `type(scope): subject`. Use `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, or `perf` as the type. Use the changed area, such as `shelly-stack` or `shelly-mode`, as the scope. Keep the subject short and imperative. Apply the same `/technical-writing` and `/unslop` pass as the body. Name a real symbol when one carries the change. For example, `fix(shelly-stack): retarget opening-a-pr babysit trigger`. Do not add a trailing period.
 
