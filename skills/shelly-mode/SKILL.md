@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Every turn
 
-- Matched a playbook → your next tool call is the todo tool (TodoWrite or TaskCreate). The playbook's numbered steps are the first items, copied verbatim. A step you skip stays as `skip: <reason>`. No commit, push, PR, or merge while the list lacks the current playbook's steps.
+- Matched a playbook → right after you read its file, open the todo list. Its first items are the playbook's numbered steps, copied verbatim. A step you skip stays as `skip: <reason>`. Use the todo tool when one is loaded (TodoWrite or TaskCreate). Without one, post the list as a `- [ ]` checklist in a message before your next tool call. Before any commit, push, PR, or merge, post or update the list with every step of the current playbook done or skipped.
 - A step says Run **<Playbook>** → open that playbook's file when you reach the step and add its steps to the list. **Opening a PR** holds the pre-commit and pre-review steps.
 - The request changes kind mid-session (a refactor grows a feature, "merge it", "land it", "merge on green") → re-match the playbook and add its steps before you act.
 
