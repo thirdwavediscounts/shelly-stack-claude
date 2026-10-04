@@ -13,8 +13,10 @@ The Principles section below grounds every trigger. In your reply, name each pri
 Remaining triggers:
 
 - Nontrivial change, architecture decision, or "are we sure?" → invoke the **how** skill.
-- About to `AskUserQuestion` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle.
-- Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**.
+- About to `AskUserQuestion` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle. Two or more such calls at once go out as one round through the **grilling** skill, each with your recommended answer.
+- Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**. Name it with the project's `GLOSSARY.md` terms when one exists (read `GLOSSARY-MAP.md` first in a monorepo).
+- "Grill me", "interview me", "stress-test this plan" → invoke the **grilling** skill.
+- A term the user and the code use differently, a new domain concept, or a hard-to-reverse decision with a real trade-off → invoke the **domain-modeling** skill.
 - Code crossing a function boundary → invoke the **architect** skill, parallel design exploration before implementing.
 - Parallel fan-out → invoke the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Invoke **arena** for design or code bakeoffs with base selection and grafting.
 - Contested design → invoke the **interrogate** skill (multi-model adversarial) before shipping.
@@ -30,7 +32,7 @@ Remaining triggers:
 - Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - `/code-review` findings and review-bot comments → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so verify each against the code, fix real ones, and dismiss noise with a concrete reason instead of churning code. Classify each as fix, dismiss, or ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
-- A credential is needed → name the no-paste destination (a file, an MCP, a dashboard) in the same message and ask for "set" back. Never hand over a command that prints a secret. Read env-shaped files through a value mask (`sed 's/=.*/=<redacted>/'`). A leaked value goes in Found as an incident, and rotation precedes the next step.
+- A credential is needed → name the no-paste destination (a file, an MCP, a dashboard) in the same message and ask for "set" back. Never hand over a command that prints a secret. Read env-shaped files through a value mask (`sed 's/=.*/=<redacted>/'`). Setup with more than one manual step (a vendor dashboard, several keys, secrets for both local and Vercel) → invoke the **wizard** skill so the human runs a script instead of following chat instructions. A leaked value goes in Found as an incident, and rotation precedes the next step.
 - Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X") → invoke the **show-me-your-work** skill for the decision trail. Commit it when stakes need an auditable record. Keep it local otherwise.
 - "Give me a handoff prompt", "prompt for the next session", "before I clear context" → the **Pause safely** playbook. Write the checkpoint, then reply with the resume prompt.
 - "Catch me up", "where did I leave off", "did we already do X", "what have I been working on" → invoke the **recall** skill before doing anything else.
@@ -103,7 +105,7 @@ This plugin ships these companions. The playbooks name each one where it applies
 - `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
 - `check-compiler-errors` when typecheck or compile fails.
 - `fix-ci` for a real CI failure and `get-pr-comments` to collect review threads, both inside Babysit.
-- The `shelly-stack:thermo-nuclear-code-quality-review` agent for the maintainability review in Opening a PR.
+- The `shelly-stack:thermo-nuclear-code-quality-review` agent for the maintainability review in Opening a PR, and the `shelly-stack:spec-conformance-review` agent beside it when the work came from a ticket or spec.
 
 Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
 

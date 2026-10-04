@@ -38,7 +38,7 @@ Ten states, in order. Backlog, Triage, Needs Investigation, Ready for Agents, In
 1. Read the issue with the Linear MCP's `get_issue` and its comments with `list_comments`. When the issue or a comment carries an image or attachment, call `extract_images` and read it. State the current status. Verify: you can name the state and what the ticket asks for.
 2. Gate on status.
    - Triage. Confirm the ticket is real against the live DB and code. Set the app label (under the Apps parent), the type (Bug, Feature, Improvement), the Database label if it crosses schema, and native priority. If not actionable, move to Canceled with a one-line reason comment and stop. If real but thin, move to Needs Investigation. If specced, move to Ready for Agents.
-   - Needs Investigation. Run the **Investigation** playbook read-only. Write the diagnosis and findings back as a comment per Writing to Linear. Move to Ready for Agents, or Need Human if it needs a human decision.
+   - Needs Investigation. Run the **Investigation** playbook read-only. Write the diagnosis and findings back as a comment per Writing to Linear. Move to Ready for Agents, or Need Human if it needs a human decision. When the open items are product decisions and the user is in the session, invoke the **grilling** skill to settle them now instead of parking the ticket. Write the settled decisions into the description, then move to Ready for Agents.
    - Ready for Agents or later. Continue.
 3. Set up isolation per the repo's `CLAUDE.local.md`. Worktree under `~/Code/twd-worktrees/`, named `<app>/<task>`. Branch `sean/<description>`. Move the ticket to In Progress and comment that build started, one line with the date. Verify: worktree exists on the right branch, ticket is In Progress.
 4. Route the build to the matching playbook. A defect is the **Bug fix** playbook. New or changed behavior is the **Feature** playbook. A behavior-preserving change is the **Refactoring** playbook. This skill dispatches, it does not restate those playbooks. A follow-up found mid-build is fixed on the same branch. One task stays one ticket; Flow B runs only when asked. If the build blocks on a human call, move to Need Human, comment the question, and stop.
@@ -51,9 +51,9 @@ Ten states, in order. Backlog, Triage, Needs Investigation, Ready for Agents, In
 
 Run this only when asked to file follow-ups, usually at the tail of an **architect** or **Investigation** run that surfaced work beyond the current ticket. Never split one task into several tickets.
 
-1. List the follow-ups as concrete outcomes, not vague themes. A follow-up whose outcome is "verify after <date>" first gets a forced or replayed attempt with the **compress-the-clock** skill. Its issue records only what that attempt could not prove, the alert or log field that will reveal a failure, and who reads it. Verify: each item is a shippable unit.
+1. List the follow-ups as concrete outcomes, not vague themes. Slice each one vertically. A sub-issue cuts a thin path through every layer it needs (schema, RPC, UI, tests), so it can be shipped and verified alone and fits one fresh session. Put any refactor that makes the later work easier first. A wide mechanical change (renaming a column, retyping a shared symbol) cannot ship as one green slice, so sequence it as add the new form, then move callers in batches, then delete the old form. Each batch is its own sub-issue. A follow-up whose outcome is "verify after <date>" first gets a forced or replayed attempt with the **compress-the-clock** skill. Its issue records only what that attempt could not prove, the alert or log field that will reveal a failure, and who reads it. Verify: each item is a shippable unit.
 2. Create a parent issue for the theme with the Linear MCP's `save_issue` on the Dev team. Write the description per Writing to Linear. Link the design doc or diagnosis under Links instead of pasting it.
-3. Create one sub-issue per shippable unit with `save_issue` and `parentId` set to the parent. Each description follows the sub-issue shape in the reference and passes the lint. Set app label, type, and priority on each. Put each in Triage or Ready for Agents depending on how specced it is. Verify: every sub-issue links to the parent and carries an app label.
+3. Create one sub-issue per shippable unit with `save_issue` and `parentId` set to the parent, blockers first. Set `blockedBy` to the sub-issues that must land before it, so Linear shows which ones can start now. A sub-issue with no blocker can start immediately. Each description follows the sub-issue shape in the reference and passes the lint. Set app label, type, and priority on each. Put each in Triage or Ready for Agents depending on how specced it is. Verify: every sub-issue links to the parent, carries an app label, and has its blocking relations set.
 4. Do not start any sub-issue. Report the parent and its sub-issues and stop.
 
 ## Reply
@@ -61,6 +61,6 @@ Run this only when asked to file follow-ups, usually at the tail of an **archite
 - The ticket id and its final status.
 - What playbook ran the build and the PR link as `https://github.com/thirdwavediscounts/twd-apps-monorepo/pull/<number>`.
 - The real gate output, not a claim of success.
-- For Flow B, the parent issue and each sub-issue with its state.
+- For Flow B, the parent issue and each sub-issue with its state and its blockers.
 
 Write the reply per the **unslop** skill. No long dashes, no colon-as-connector, short declarative sentences.

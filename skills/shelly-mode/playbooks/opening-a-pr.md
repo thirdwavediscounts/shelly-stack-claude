@@ -1,6 +1,6 @@
 ### Opening a PR
 
-Before an authorized commit, run `/shelly-stack:deslop` on the scoped code diff. Keep the prose pass through **unslop**. For a nontrivial diff, spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on it and fix or dismiss each finding with a reason before the PR opens. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
+Before an authorized commit, run `/shelly-stack:deslop` on the scoped code diff. Keep the prose pass through **unslop**. For a nontrivial diff, spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on it and fix or dismiss each finding with a reason before the PR opens. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent in the same message. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
 
 Invoked at the end of every other playbook.
 

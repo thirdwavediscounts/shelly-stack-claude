@@ -14,7 +14,7 @@ An explicit `review-and-ship` or `new-branch-and-pr` request includes focused co
 
 Do the work in the parent unless the user or active instructions permit delegation. When an independent reviewer is required, use an available contained read-only agent. If the runtime cannot enforce that boundary, report independent review unavailable. A prompt asking a writable agent not to edit is not enforced isolation. Collect any external evidence in the parent through authorized read-only tools and supply the relevant excerpts to the reviewer. Do not send reviewer output directly to an external service.
 
-The [CI watcher](ci-watcher.md) supplies a bounded status report. The [maintainability reviewer](maintainability-reviewer.md) supplies findings without edits. These prompts also work in the parent when independence is not required. Never recursively invoke the parent workflow from a reviewer.
+The [CI watcher](ci-watcher.md) supplies a bounded status report. The [maintainability reviewer](maintainability-reviewer.md) supplies findings without edits. The [spec reviewer](spec-reviewer.md) checks the same diff against its ticket or spec, also without edits. These prompts also work in the parent when independence is not required. Never recursively invoke the parent workflow from a reviewer.
 
 ## CI and waits
 
