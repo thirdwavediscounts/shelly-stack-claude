@@ -13,6 +13,8 @@ The human supervises asynchronously. Agents must stay unblocked. Make reasonable
 **Pattern:**
 - **Proceed, then present.** Do the work, show the result. Don't ask "should I do X?" Do X, explain why.
 - **Reserve questions for genuine ambiguity.** Ask only when you cannot infer intent from context.
+- **Facts are never the human's job.** Look up anything the code, a database, a log, or a connected tool can answer, and observe anything a run can show. Ask the human only for decisions.
+- **Batch the decisions you must ask.** Several open product calls go out as one round, each with your recommended answer, per the **grilling** skill. Keep working on everything that does not depend on the answers.
 - **Make the system self-healing.** When you notice a problem, log it and fix it in the next round.
 - **Supervision is async.** Design workflows for review-after-the-fact.
 

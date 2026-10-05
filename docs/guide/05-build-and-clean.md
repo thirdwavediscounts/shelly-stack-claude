@@ -48,6 +48,14 @@ In context, that's enough. [`/tdd`](../../skills/tdd/SKILL.md) writes the smalle
 
 [`typescript-best-practices`](../../skills/typescript-best-practices/SKILL.md) has no slash command in your workflow. It loads whenever the agent touches a `.ts` or `.tsx` file and turns the type-system principles into concrete rules: discriminated unions, `unknown` at boundaries, exhaustive variants, schema-derived types.
 
+## Script the steps only you can do with `/wizard`
+
+```text
+/wizard set up the eBay production keys for ebay-auctions, locally and on Vercel.
+```
+
+When a change needs keys from a vendor dashboard, [`/wizard`](../../skills/wizard/SKILL.md) writes a bash script for you to run. Each stage opens the page, says what to copy, reads secrets with hidden input, and writes them to the env file, GitHub secrets, or Vercel. The agent never sees the values. It checks afterward that the keys exist.
+
 ## Clean before you commit
 
 The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) runs `/shelly-stack:deslop` over the code diff and [`/unslop`](../../skills/unslop/SKILL.md) over prose and comments before each authorized commit, and applies it to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.

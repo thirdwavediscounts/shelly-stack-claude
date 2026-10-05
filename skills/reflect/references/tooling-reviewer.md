@@ -27,6 +27,9 @@ Scan for:
 - Test commands, CI flags, and how to reproduce a failing run locally
 - Debugging entry points: how to capture a trace, where logs land, which RPC to hit
 - Build / package-manager / sandbox surprises that cost minutes the first time
+- A mistake an automated check could have caught. First look for a lint, typecheck, test, or CI job that already exists but did not run or is broken; that is the finding. A fixed pattern (a banned API, an import shape, a file location) routes to a lint rule or script, not more prose
+- Instructions in CLAUDE.md or a skill that changed nothing the agent did this session. Route these as deletions
+- Tool calls that spent many tokens for little signal (a full-file read where a grep would do, an unfiltered log query)
 
 ## Scope to skills and tools the session actually used
 

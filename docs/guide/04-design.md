@@ -2,6 +2,16 @@
 
 One attempt at a hard design locks in the first shape the model thought of. `/architect` settles types and boundaries before implementation. `/arena` runs several attempts at the same brief and merges the best parts. `/interrogate` has other models try to break the result. When the job is coverage rather than design synthesis, `/swarm` fans out slices or races and aggregates their results.
 
+## Settle the decisions with `/grilling`
+
+```text
+/grilling i want sellers to relist unsold auctions from the drawer. grill me before anyone designs it.
+```
+
+[`/grilling`](../../skills/grilling/SKILL.md) interviews you in rounds. Each round asks every question that can be answered now, numbered, with the agent's recommended answer under each. It looks up facts itself and asks you only for decisions. It stops when nothing is left to decide and shows you the decision list to confirm.
+
+In a repository it also runs [`/domain-modeling`](../../skills/domain-modeling/SKILL.md). When you and the code use a word differently, it asks which meaning is right and records the answer in `GLOSSARY.md`. It offers an ADR in `docs/adr/` only for a decision that is hard to reverse, surprising, and a real trade-off.
+
 ## Settle the shape with `/architect`
 
 ```text

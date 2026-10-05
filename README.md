@@ -142,6 +142,9 @@ For long work, use `/loop`.
 | [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) | you want to pick which models shelly-stack uses per role. detects your models and writes a config rule. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
+| [`/grilling`](./skills/grilling/SKILL.md) | you want to be interviewed about a plan before anyone builds it. asks in numbered rounds with a recommended answer each, looks up facts itself. |
+| [`/domain-modeling`](./skills/domain-modeling/SKILL.md) | a word means different things to you and the code. settles it in `GLOSSARY.md` and records hard-to-reverse decisions as ADRs. |
+| [`/wizard`](./skills/wizard/SKILL.md) | setup needs keys or clicks only you can do. writes a bash script that walks you through it and stores each value without the agent seeing it. |
 | [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
 | [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
@@ -245,7 +248,7 @@ twenty-one short skills, one principle each. `shelly-mode` indexes them inline a
 
 ## why are there no planning skills?
 
-Claude Code has plan support that works with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default.
+Claude Code has plan support that works with shelly-stack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/shelly-mode`](./skills/shelly-mode/SKILL.md) covers it, but it's not a default. [`/grilling`](./skills/grilling/SKILL.md) is not a planner either. it settles the product decisions only you can make, then hands them to the normal playbooks.
 
 ## make it yours
 
@@ -257,4 +260,4 @@ models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-s
 
 ## license
 
-MIT
+MIT. `grilling`, `domain-modeling`, `wizard`, the spec reviewer, and parts of the Bug fix playbook are adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT, see [LICENSE.mattpocock-skills](LICENSE.mattpocock-skills)).
