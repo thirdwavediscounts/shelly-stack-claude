@@ -6,6 +6,12 @@ disable-model-invocation: true
 
 # Shelly mode
 
+## Every turn
+
+- Matched a playbook → right after you read its file, open the todo list. Its first items are the playbook's numbered steps, copied verbatim. A step you skip stays as `skip: <reason>`. Use the todo tool when one is loaded (TodoWrite or TaskCreate). Without one, post the list as a `- [ ]` checklist in a message before your next tool call. Before any commit, push, PR, or merge, post or update the list with every step of the current playbook done or skipped.
+- A step says Run **<Playbook>** → open that playbook's file when you reach the step and add its steps to the list. **Opening a PR** holds the pre-commit and pre-review steps.
+- The request changes kind mid-session (a refactor grows a feature, "merge it", "land it", "merge on green") → re-match the playbook and add its steps before you act.
+
 ## Non-negotiables
 
 The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
@@ -24,12 +30,11 @@ Remaining triggers:
 - Any prose surface → invoke the **unslop** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill (the bundled skill for authoring SKILL.md files).
 - Docs, RFCs, readmes, PR descriptions, or commit messages → invoke the **technical-writing** skill.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
-- Before commit → `/shelly-stack:deslop` for code cleanup, then the **unslop** skill over the diff's prose and comments.
-- Before review → invoke the **no-comments** skill.
+- Before commit or review → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook.
 - Typecheck or compile fails → invoke **check-compiler-errors** for the grouped report before fixing.
 - Shipping UI / IDE / CLI → the project's verification skill (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
-- Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
+- Asked to merge or land one PR or a stack ("merge it", "land it", "merge on green", "merge when ready") → the **Shipping** playbook (`playbooks/shipping.md`), even mid-session in another playbook. Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - `/code-review` findings and review-bot comments → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so verify each against the code, fix real ones, and dismiss noise with a concrete reason instead of churning code. Classify each as fix, dismiss, or ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
 - A credential is needed → name the no-paste destination (a file, an MCP, a dashboard) in the same message and ask for "set" back. Never hand over a command that prints a secret. Read env-shaped files through a value mask (`sed 's/=.*/=<redacted>/'`). Setup with more than one manual step (a vendor dashboard, several keys, secrets for both local and Vercel) → invoke the **wizard** skill so the human runs a script instead of following chat instructions. A leaked value goes in Found as an incident, and rotation precedes the next step.
@@ -143,7 +148,7 @@ Comments follow the same rule as the reply. Write them clean as you go. Keep a c
 
 ## Playbooks
 
-Match the task to a playbook below and open its file. Open a todolist whose first items are that playbook's steps, copied in verbatim, before any task-specific todos. A step you choose not to do stays in the list with a one-line `skip: <reason>`.
+Match the task to a playbook below, open its file, and open the todo list per **Every turn**. Task-specific todos come after the playbook's steps.
 
 A large or cross-cutting effort (a migration across many call sites, an ambitious multi-part change), or work the user steps away from to trust later, routes to the **figure-it-out** skill even when a narrower playbook like Feature fits. Use **figure-it-out** whenever no bundled playbook fits. It designs a bespoke, rigorous playbook for the task. A standing project-scale program (multi-day, many stacked PRs, a fleet of subagents under one coordinator) routes to **Orchestrate** instead. figure-it-out designs one bespoke run, orchestrate runs the program.
 
