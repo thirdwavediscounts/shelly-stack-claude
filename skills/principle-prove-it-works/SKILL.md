@@ -16,6 +16,8 @@ Check the real thing, not a proxy:
 - Check process liveness directly, not indirectly through derived state
 - Read the actual value, not a cached or derived representation
 - When verification fails, suspect the observation method before suspecting the system
+- A "no difference" result proves safety only after you confirm the change reached the system (the server echoes the version or build it used). Otherwise report it as inconclusive
+- A check proves only the build it ran against. After you move, rewrite, or reconfigure the thing, run the check again
 
 Code and features:
 1. Build it (necessary but not sufficient)
@@ -37,4 +39,4 @@ Every count or rate names the query and the store it came from, and states its u
 
 The strongest proof is a deterministic script that re-runs the same comparison, not a one-time eyeball. Write the script, run it, and keep its output as an artifact a reviewer can re-run instead of trusting your word.
 
-Keep the artifact visible for the human. Commit it only for large or complex work where the trail has to be auditable later, like a big port or migration (the **show-me-your-work** skill).
+Keep the artifact visible for the human. Show screenshots and images in the reply itself, not only as a file path. Commit it only for large or complex work where the trail has to be auditable later, like a big port or migration (the **show-me-your-work** skill).

@@ -86,15 +86,15 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 **Meta**
 
-- **Encode Lessons in Structure** (**principle-encode-lessons-in-structure**). You catch yourself writing the same instruction a second time. Encode it as a lint, metadata flag, runtime check, or script instead of more text.
+- **Encode Lessons in Structure** (**principle-encode-lessons-in-structure**). You catch yourself writing the same instruction a second time, or the user states a rule for the whole codebase ("all", "every", "the whole app"). Encode it on the first ask as a lint, metadata flag, runtime check, or script instead of more text.
 
 ## Autonomy
 
 **Just do it.** Reversible, in-session work proceeds without asking: rebase, push to your own branch, open the PR, run tests and scripts, MCP reads, staging writes, status and comment updates on the ticket you are working, kicking off evals. A "ship it" or "proceed" covers that whole chain. Do not re-ask at each step boundary, and do not end a turn with a "Want me to?" option menu.
 
-**Propose first** for external artifacts and production: new tickets, pushes to shared branches, prod writes, deploys. **Always pause** for irreversible writes: force-push to shared branches, data deletion, customer messages. A permission guard or MCP refusal on a production target is a pause, never a reason to switch to a tool that bypasses it. A change made outside the repo (an edit on a VPS, SQL run by hand) stays open in Found until a repo commit carries it.
+**Propose first** for external artifacts and production: new tickets, pushes to shared branches, prod writes, deploys. **Always pause** for irreversible writes: force-push to shared branches, data deletion, customer messages. A permission guard or MCP refusal on a production target is a pause, never a reason to switch to a tool that bypasses it. A change made outside the repo (an edit on a VPS, SQL run by hand) stays open in Found until a repo commit carries it. When a chain needs approval (merge, prod write, deploy, watching the next run), list every step in one message and ask once. A yes covers the whole listed chain.
 
-**Use the connected tool before asking.** Before asking the user for a screenshot, log, ticket image, Slack message, DOM, or env change, name the connected tool that could fetch or do it (browser tools, the Slack, Linear, Sentry, Vercel, or Supabase MCP, ssh) and use it. When a permission guard blocks a step, name the exact allow rule. Do not paste the command back for the user to run.
+**Use the connected tool before asking.** Before asking the user for a screenshot, log, ticket image, Slack message, DOM, or env change, name the connected tool that could fetch or do it (browser tools, the Slack, Linear, Sentry, Vercel, or Supabase MCP, ssh) and use it. When a permission guard blocks a step, name the exact allow rule. Do not paste the command back for the user to run. The same holds before you claim a limit: test access, permissions, or a quota with the connected tool (a probe query, `sudo -n true` over ssh, the provider's rate-limit endpoint) before you tell the user you can't or quote a number from memory.
 
 **Session overrides:** "Don't stop" / "going to bed" / "run until done" / "be fully autonomous" → keep going.
 
