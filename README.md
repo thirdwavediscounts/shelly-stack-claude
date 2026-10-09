@@ -25,7 +25,7 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 ## cleanup, verification, CI, and PR workflows
 
-shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). They don't auto-load. Invoke them by name, for example `/shelly-stack:deslop`, or let shelly-mode's playbooks call them where they apply. `typescript-conventions` is the exception and fires on any `.ts` edit. Existing project verification skills remain the first choice.
+shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest are user-only. Type them by name, for example `/shelly-stack:review-and-ship`. Existing project verification skills remain the first choice.
 
 | Work | Skills |
 |---|---|
@@ -83,11 +83,11 @@ morning.
 | [eval](./skills/shelly-mode/playbooks/eval.md) | test how a skill or prompt change affects agent behavior, blinded. |
 | [opening a pr](./skills/shelly-mode/playbooks/opening-a-pr.md) | turn finished work into a reviewable pr: small ordered commits, clean diff, open items folded in before merge. |
 | [babysit](./skills/shelly-mode/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
-| [shipping](./skills/shelly-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run with graphite merge-when-ready. |
+| [shipping](./skills/shelly-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run one PR at a time with `gh pr merge --squash --auto`, or with Origin's merge-when-ready. |
 | [autonomous run](./skills/shelly-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
 | [orchestrate](./skills/shelly-mode/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](./skills/shelly-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and root verification of each merge-ready head. |
-| [autopilot-stack](./skills/shelly-mode/playbooks/autopilot-stack.md) | build and verify one linear graphite stack for the operator to review and land. |
+| [autopilot-stack](./skills/shelly-mode/playbooks/autopilot-stack.md) | build and verify one linear base-branch stack for the operator to review and land. |
 | [session pickup](./skills/shelly-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/shelly-mode/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
 | [multi-phase plan](./skills/shelly-mode/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
@@ -99,14 +99,16 @@ morning.
 
 when invoked it:
 
-1. opens the client's native plan. the first item is reading the inline principles index in the skill.
-2. matches your task to a [playbook](./skills/shelly-mode/playbooks/) and copies the steps in verbatim.
-3. routes to the other skills as the steps fire.
+1. matches your task to a [playbook](./skills/shelly-mode/playbooks/) and posts its steps as a checklist in the reply, copied verbatim. a skipped step stays as `skip: <reason>`.
+2. routes to the other skills as the steps fire.
+3. before every PR, runs `deslop`, `unslop`, and `no-comments` in that order through the [opening a pr](./skills/shelly-mode/playbooks/opening-a-pr.md) playbook. you don't run them by hand.
 4. writes unslopped replies framed for the consumer and the maintainer.
 
-the full rules and playbooks live in [`plugins/shelly-stack-claude/skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
+the full rules and playbooks live in [`skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).
 
-[`/shelly-mode`](./skills/shelly-mode/SKILL.md) applies to the turn where you invoke it. Invoke it again when a later task needs it.
+[`/shelly-mode`](./skills/shelly-mode/SKILL.md) stays in effect for the rest of the session. When you switch subjects, say "new task" so it re-matches the playbook. If a long session drifts, invoke it again.
+
+only you can invoke `/shelly-mode`. the agent cannot call it through the Skill tool. subagents load it by reading its SKILL.md file, and the plugin's `shelly-*` agents do that on their own.
 
 For long work, use `/loop`.
 
@@ -128,9 +130,10 @@ For long work, use `/loop`.
 | skill | use it when |
 |---|---|
 | [`/shelly-mode`](./skills/shelly-mode/SKILL.md) | default entry point for any non-trivial task. |
-| [`/shelly-guide`](./skills/shelly-guide/SKILL.md) | you don't know shelly-stack yet. names the skills for the stage you're at (understand, design, build, verify, ship, overnight) with a prompt for your task, then runs the first one. |
+| [`/shelly-guide`](./skills/shelly-guide/SKILL.md) | you don't know shelly-stack yet. names the skills for the stage you're at (understand, design, build, clean, verify, ship, overnight) with a prompt for your task, then runs the first one. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
+| [`/ticket`](./skills/ticket/SKILL.md) | you have a Linear Dev ticket id. it reads and triages the ticket, routes the build to the right playbook, and keeps Linear current until the PR merges. |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/compress-the-clock`](./skills/compress-the-clock/SKILL.md) | a check would mean waiting hours or days. forces the expiry on a copy, replays past events, or forces time at the scheduler, and dates only what that can't reach. |
@@ -146,7 +149,7 @@ For long work, use `/loop`.
 | [`/domain-modeling`](./skills/domain-modeling/SKILL.md) | a word means different things to you and the code. settles it in `GLOSSARY.md` and records hard-to-reverse decisions as ADRs. |
 | [`/wizard`](./skills/wizard/SKILL.md) | setup needs keys or clicks only you can do. writes a bash script that walks you through it and stores each value without the agent seeing it. |
 | [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
-| [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. |
+| [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments from a diff. spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. opening a pr runs it on every PR, so run it yourself only on work not yet going through a PR. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
 | [`/figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
 | [`/show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
@@ -209,22 +212,30 @@ automate-me:       /automate-me
 
 shelly-stack also ships a subagent prompt that runs my style end to end. it's exposed as [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md).
 
-[`/shelly-mode`](./skills/shelly-mode/SKILL.md) and [`subagent_type: "shelly-stack:shelly-agent"`](./agents/shelly-agent.md) route through the same wrapper.
+[`/shelly-mode`](./skills/shelly-mode/SKILL.md) runs in your chat. [`shelly-agent`](./agents/shelly-agent.md) runs the same rules in a subagent. it reads the shelly-mode SKILL.md file before any work.
 
 shelly-stack also ships [Comment Sicko](./agents/comment-sicko.md). usually invoke it through [`/no-comments`](./skills/no-comments/SKILL.md), not directly.
 
+it also ships these agents:
+
+- pinned shelly agents. each is `shelly-agent` with a fixed model and effort: `shelly-opus-{low,medium,high,xhigh}`, `shelly-fable-{low,medium,high,xhigh}`, and `shelly-sonnet-{low,medium,high}`. a role in `~/.claude/rules/shelly-stack-models.md` can name one, for example `shelly-stack:shelly-opus-medium`.
+- [`thermo-nuclear-code-quality-review`](./agents/thermo-nuclear-code-quality-review.md) reviews a diff for maintainability. opening a pr runs it on every diff that changes code.
+- [`spec-conformance-review`](./agents/spec-conformance-review.md) checks a diff against its ticket or spec. opening a pr runs it beside the maintainability review.
+- [`ci-watcher`](./agents/ci-watcher.md) returns a short, read-only snapshot of a PR's checks when a parent agent asks for one.
+
 ## principles
 
-twenty-one short skills, one principle each. `shelly-mode` indexes them inline and reads that index at task start. the standalone files are there so other skills can reference a principle by name, and so the index can point at the full rule for each.
+twenty-three short skills, one principle each. `shelly-mode` indexes them inline and reads that index at task start. the standalone files are there so other skills can reference a principle by name, and so the index can point at the full rule for each.
 
 <details>
-<summary>all twenty-one principles</summary>
+<summary>all twenty-three principles</summary>
 
 | principle | group | rule |
 |---|---|---|
 | [laziness-protocol](./skills/principle-laziness-protocol/SKILL.md) | core | Bias toward deletion and the smallest change that solves the problem. |
 | [foundational-thinking](./skills/principle-foundational-thinking/SKILL.md) | core | Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious. |
 | [redesign-from-first-principles](./skills/principle-redesign-from-first-principles/SKILL.md) | core | Redesign as if the requirement had been a foundational assumption from day one, instead of bolting it on. |
+| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | After two or more fixes that share one premise fail, count which actors hold the imbalance, then question the premise. |
 | [subtract-before-you-add](./skills/principle-subtract-before-you-add/SKILL.md) | core | Remove dead weight, redundant validators, and stub references first, then build on the simpler base. |
 | [minimize-reader-load](./skills/principle-minimize-reader-load/SKILL.md) | core | Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope. |
 | [outcome-oriented-execution](./skills/principle-outcome-oriented-execution/SKILL.md) | core | Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code. |
@@ -240,6 +251,7 @@ twenty-one short skills, one principle each. `shelly-mode` indexes them inline a
 | [prove-it-works](./skills/principle-prove-it-works/SKILL.md) | verification | Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'. |
 | [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom to its root cause and fix it there; reproduce first, ask why until you reach it, resist nil-check guards that silence crashes. |
 | [sequence-verifiable-units](./skills/principle-sequence-verifiable-units/SKILL.md) | verification | Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer. |
+| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Call the code the way its users do and assert a literal expected value. |
 | [guard-the-context-window](./skills/principle-guard-the-context-window/SKILL.md) | delegation | Route bulk to subagents; keep summaries in the main thread, not raw payloads. |
 | [never-block-on-the-human](./skills/principle-never-block-on-the-human/SKILL.md) | delegation | Proceed, present the result, let the human course-correct after the fact; reserve confirmation for irreversible actions. |
 | [encode-lessons-in-structure](./skills/principle-encode-lessons-in-structure/SKILL.md) | meta | Encode the rule as a lint, metadata flag, runtime check, or script instead of more text. |

@@ -54,7 +54,7 @@ Apps change and feature maps rot. When yours drifts, run:
 /shelly-mode open the pr. small ordered commits, evidence in the description.
 ```
 
-The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) works from a worktree, rebases the work into small ordered commits, cleans the diff, unslops the prose, and returns the PR link. Five narrow PRs beat one fat one, and stacked follow-ups beat a growing branch.
+The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) works from a worktree. It runs deslop, unslop, and no-comments, then a maintainability review. Ticket or spec work also gets a spec-conformance review. It commits in small ordered commits, opens a ready PR, and returns the link. Five narrow PRs beat one fat one, and stacked follow-ups beat a growing branch.
 
 ## Drive the PR to merge-ready with Babysit
 
@@ -64,7 +64,7 @@ An open PR starts collecting blockers immediately. Checks fail, reviewers commen
 /shelly-mode babysit this pr. get it green.
 ```
 
-Babysit watches the PR with a bundled watcher and takes blockers in order: conflicts, then review threads, then CI. Every known fix batches into one push, so the checks restart once instead of after every fix. The comment triage is skeptical, because humans and bots file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. When all you want is status, ask smaller and Babysit answers without starting the loop:
+Babysit watches the PR with a bundled watcher and takes blockers in order: conflicts, then review threads, then CI. It reports a conflict and names the branch to rebase, but does not resolve it. It fixes review threads and CI itself. Every known fix batches into one push, so the checks restart once instead of after every fix. The comment triage is skeptical, because humans and bots file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. When all you want is status, ask smaller and Babysit answers without starting the loop:
 
 ```text
 /shelly-mode check on pr 123. anything outstanding?

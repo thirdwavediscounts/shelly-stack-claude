@@ -32,7 +32,7 @@ A perf prompt states the measurement, not a vibe:
 
 Each of these routes to its playbook ([Bug fix](../../skills/shelly-mode/playbooks/bug-fix.md), [Feature](../../skills/shelly-mode/playbooks/feature.md), [Refactoring](../../skills/shelly-mode/playbooks/refactoring.md), [Perf issue](../../skills/shelly-mode/playbooks/perf-issue.md)), and the playbook supplies the steps you didn't type: reproduce before fixing, name the data shape before implementing, pin behavior before restructuring, profile before optimizing.
 
-For sustained improvement of one number, there's the [Hillclimb playbook](../../skills/shelly-mode/playbooks/hillclimb.md). Give it the metric, a target, and a floor on attempts, and it loops one hypothesis at a time with a frozen measurement harness. It keeps wins and reverts everything else.
+For sustained improvement of one number, there's the [Hillclimb playbook](../../skills/shelly-mode/playbooks/hillclimb.md). Give it the metric and a target. It loops one hypothesis at a time with a frozen measurement harness. It keeps wins and reverts everything else. It stops at the target or when only marginal ideas remain.
 
 ## Write the failing test first with `/tdd`
 
@@ -58,7 +58,7 @@ When a change needs keys from a vendor dashboard, [`/wizard`](../../skills/wizar
 
 ## Clean before you commit
 
-The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) runs `/shelly-stack:deslop` over the code diff and [`/unslop`](../../skills/unslop/SKILL.md) over prose and comments before each authorized commit, and applies it to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
+Before every push of a PR branch, the [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) calls `deslop` on the code diff, [`unslop`](../../skills/unslop/SKILL.md) on its prose and comments, and [`no-comments`](../../skills/no-comments/SKILL.md) on the diff. It runs all three in that order through the Skill tool, however small the diff. You don't run them by hand. It also applies `unslop` to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
 
 For prose, `/unslop` takes a target and any extra rules you have:
 
@@ -70,16 +70,16 @@ You'll develop your own shorthand. The skill reads intent fine from terse prompt
 
 ## Strip the comments with `/no-comments`
 
-Comments need their own pass, and not from the agent that wrote them. An author defends its comments the way you'd defend yours. So before review, hand them to fresh eyes:
+Comments need their own pass, and not from the agent that wrote them. An author defends its comments the way you'd defend yours. Opening a PR already runs `/no-comments` before the commit. Run it yourself only on a diff you are not shipping through a PR yet:
 
 ```text
 /no-comments the diff
 ```
 
-[`/no-comments`](../../skills/no-comments/SKILL.md) spawns [Comment Sicko](../../agents/comment-sicko.md), a read-only reviewer with a short keep list: license headers, doc comments on a public API, links that explain what code can't, behavior forced by an external dependency you can't reshape. Everything else goes. A surprise in your own code gets no such pass. The comment comes back as a refactor flag, and `/no-comments` fixes the flags it accepts at the root cause. When a comment claims a constraint, "do not remove", the skill offers to encode the claim as a type, test, or lint. Either way, the comment comes out.
+[`/no-comments`](../../skills/no-comments/SKILL.md) spawns [Comment Sicko](../../agents/comment-sicko.md), a separate agent with a short keep list: license headers, doc comments on a public API, links that explain what code can't, behavior forced by an external dependency you can't reshape. Everything else goes. A surprise in your own code gets no such pass. The comment comes back as a refactor flag, and `/no-comments` fixes the flags it accepts at the root cause. When a comment claims a constraint, "do not remove", the skill offers to encode the claim as a type, test, or lint. Either way, the comment comes out.
 
 The division of labor is worth keeping straight. `/unslop` cleans slop out of prose and out of the diff's comments, and `/no-comments` hands the comments to a reviewer who didn't write them.
 
-**Pitfall:** cleanup is not optional polish. A diff with narrating comments and defensive dead weight reads as unfinished to reviewers, and the extra code is where the next bug hides. If the diff feels padded, say `unslop the diff` before you commit, not after review calls it out.
+**Pitfall:** cleanup is not optional polish. A diff with narrating comments and defensive dead weight reads as unfinished to reviewers, and the extra code is where the next bug hides. Opening a PR runs the cleanup for you. For work not going through a PR yet, say `unslop the diff` before you commit, not after review calls it out.
 
 Next: [Verify and ship](./06-verify-and-ship.md).
