@@ -21,6 +21,7 @@ jobs:
       - run: python3 skills/create-skill/scripts/check_invoke_targets.py
       - name: wizard template
         run: |
+          sudo apt-get update -qq
           sudo apt-get install -y -qq expect
           bash -n skills/wizard/scripts/template.sh
           bash skills/wizard/scripts/test-template.sh
@@ -31,3 +32,9 @@ jobs:
           node --check check-plan.mjs
           bun install --frozen-lockfile
           bun test orch watch-pr
+          bun run typecheck
+      - name: cloud kit
+        run: |
+          bash -n cloud/install.sh
+          bash -n cloud/hooks/git-staleness-check.sh
+          node --test cloud/prod-db-guard.test.mjs

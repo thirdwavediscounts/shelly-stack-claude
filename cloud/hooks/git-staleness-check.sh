@@ -15,12 +15,16 @@ set -u
 git rev-parse --git-dir >/dev/null 2>&1 || exit 0
 git remote get-url origin >/dev/null 2>&1 || exit 0
 
-git fetch origin --quiet 2>/dev/null || exit 0
+fetch=(git fetch origin --quiet)
+command -v timeout >/dev/null && fetch=(timeout 15 "${fetch[@]}")
+"${fetch[@]}" 2>/dev/null || exit 0
 
 behind=$(git rev-list --count HEAD..origin/main 2>/dev/null) || exit 0
 [ "${behind:-0}" -gt 0 ] || exit 0
 
-branch=$(git branch --show-current 2>/dev/null || echo "detached")
+branch=$(git branch --show-current 2>/dev/null)
+[ -n "$branch" ] || branch=detached
+branch=${branch//\"/\\\"}
 
 printf '{"systemMessage":"%s commits behind origin/main (on %s) - rebase before editing or deploying","hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"This checkout is %s commits behind origin/main (current branch: %s). Per the team guidelines, rebase onto origin/main before editing or deploying - shipping a stale base reverts other people'"'"'s merged work. Tell the user before starting substantive work."}}' \
   "$behind" "$branch" "$behind" "$branch"

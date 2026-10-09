@@ -114,14 +114,24 @@ ask() {
 
 # ask_secret KEY "Prompt" is like ask, but input is hidden.
 ask_secret() {
-  local key="$1" prompt="$2" current input
+  local key="$1" prompt="$2" current input saved_trap
   current=$(_existing "$key" || true)
+  saved_trap=$(trap -p EXIT)
+  if [[ -t 0 ]]; then
+    trap 'stty echo' EXIT
+    stty -echo
+  fi
   if [[ -n "$current" ]]; then
     printf '  %s%s%s %s[Enter keeps current]%s ' "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
   else
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
   read -rs input || true
+  if [[ -t 0 ]]; then
+    stty echo
+    trap - EXIT
+    eval "$saved_trap"
+  fi
   printf '\n'
   [[ -z "$input" && -n "$current" ]] && input="$current"
   printf -v "$key" '%s' "$input"

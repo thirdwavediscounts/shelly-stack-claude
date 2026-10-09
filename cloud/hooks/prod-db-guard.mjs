@@ -5,7 +5,7 @@
 // matcher (cloud/register-hooks.mjs) sends every server's mutating Supabase tools here, and
 // the prod check below decides whether the call targets prod.
 //
-// Policy (see .claude/settings.json matcher — this hook only runs for prod-server tools):
+// Policy for calls that target prod:
 //   - Read-only tools / plain SELECTs .......... allow (prod diagnosis stays frictionless)
 //   - Additive SQL (CREATE, CREATE OR REPLACE, INSERT, COMMENT, GRANT to non-public roles)
 //                                              .. allow
@@ -13,7 +13,8 @@
 //   - Catastrophic SQL (DROP TABLE/SCHEMA/..., TRUNCATE, DELETE|UPDATE without WHERE)
 //                                              .. ASK with a CATASTROPHIC warning
 //   - Destructive SQL (DELETE, UPDATE, upsert DO UPDATE, MERGE, other DROPs, RENAME,
-//     column TYPE change, REVOKE, DISABLE RLS/triggers, GRANT to anon/public, DO, CALL)
+//     column TYPE change, REVOKE, DISABLE RLS/triggers, GRANT to anon/public, DO, CALL,
+//     SELECT of a function not on the read-only list, SET session_replication_role)
 //                                              .. ASK (forces your explicit approval prompt)
 //   - Any statement or tool it can't classify .. ASK
 //   - execute_sql .............................. rewritten to run under SET LOCAL
@@ -23,11 +24,6 @@
 // Deterministic, so prompt injection cannot talk the model past it. The human approval
 // is the real backstop; the SQL parsing below is best-effort (a tokenizer plus per-statement
 // regexes, not a full parser), so it errs toward ASK when unsure.
-//
-// Fail-closed: on any error, ASK (never allow). The settings.json command exits 2 (block)
-// when node is missing from PATH, so a broken toolchain cannot fail open. Staging
-// (`supabase-staging`) never reaches this hook, so agent-driven migrations there run
-// without a prompt.
 
 import { appendFileSync, readFileSync } from "node:fs";
 
@@ -67,6 +63,10 @@ function decide(permissionDecision, reason) {
 }
 
 let input;
+process.on("uncaughtException", (err) => {
+  decide("ask", `prod-db-guard: the guard crashed (${err?.message ?? err}). Review the call, then approve to run.`);
+});
+
 try {
   input = JSON.parse(readFileSync(0, "utf8"));
 } catch {
@@ -194,7 +194,33 @@ const catastrophic = CATASTROPHIC_SQL.some((re) => re.test(scan));
 const SAFE_START =
   /^(SELECT|WITH|EXPLAIN|SHOW|TABLE|VALUES|CREATE|INSERT|COMMENT|GRANT|REFRESH|ANALYZE|SET|RESET|BEGIN|START|COMMIT|END|NOTIFY)\b/i;
 const READ_START = /^(SELECT|WITH|EXPLAIN|SHOW|TABLE|VALUES|SET)\b/i;
+const words = (text) => new Set(text.trim().split(/\s+/));
+const READ_ONLY_FUNCTIONS = words(`
+  count sum avg min max now coalesce nullif greatest least lower upper length trim substring replace
+  split_part concat format md5 to_char date_trunc date_part round floor ceil abs array_agg string_agg
+  json_agg jsonb_agg json_build_object jsonb_build_object to_jsonb row_to_json jsonb_array_elements
+  jsonb_each jsonb_object_keys array_length cardinality generate_series unnest percentile_cont
+  row_number rank dense_rank lag lead first_value bool_and bool_or pg_typeof pg_size_pretty
+  pg_total_relation_size pg_relation_size current_setting version
+`);
+const SQL_KEYWORDS = words(`
+  select distinct all from where and or not in exists any some on using as join lateral over filter
+  within values row array cast extract position case when then else union intersect except explain
+  by having limit offset is like ilike between conflict
+  numeric decimal varchar char character timestamp timestamptz time interval bit
+`);
+const CALL = /(?:([A-Za-z_]\w*)\s*\.\s*)?([A-Za-z_]\w*)\s*\(/g;
+const RUNS_CALLS = /^(SELECT|WITH|VALUES|TABLE|EXPLAIN)\b/i;
+const INSERT_ROWS = /^INSERT\b[\s\S]*?\b((?:SELECT|VALUES)\b[\s\S]*)/i;
+const callSite = (s) => (RUNS_CALLS.test(s) ? s : (INSERT_ROWS.exec(s)?.[1] ?? ""));
+const callsWritableFunction = (s) =>
+  [...callSite(s).matchAll(CALL)].some(([, schema, name]) => {
+    const fn = name.toLowerCase();
+    if (!schema) return !READ_ONLY_FUNCTIONS.has(fn) && !SQL_KEYWORDS.has(fn);
+    return schema.toLowerCase() !== "pg_catalog" || !READ_ONLY_FUNCTIONS.has(fn);
+  });
 const DESTRUCTIVE_IN_STATEMENT = [
+  /^SET\s+(LOCAL\s+|SESSION\s+)?(session_replication_role|ident)\b/i,
   /^WITH\b[\s\S]*\b(DELETE\s+FROM|UPDATE\s+\S+\s+SET|MERGE\s+INTO|INSERT\b[\s\S]*\bDO\s+UPDATE)\b/i,
   /^INSERT\b[\s\S]*\bDO\s+UPDATE\b/i,
   /^GRANT\b[\s\S]*\bTO\s+([\s\S]*,\s*)?(anon|public)\b/i,
@@ -219,6 +245,7 @@ if (statements.length === 0) {
 const flagged = statements.filter(
   (s) =>
     DO_BLOCK.test(s) ||
+    callsWritableFunction(s) ||
     DESTRUCTIVE_IN_STATEMENT.some((re) => re.test(s)) ||
     !(SAFE_START.test(s) || ALTER_START.test(s)),
 );
