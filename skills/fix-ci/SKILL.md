@@ -1,6 +1,6 @@
 ---
 name: fix-ci
-description: Find the failing checks on the current PR, read their logs or check links, and apply one focused fix at a time until the PR is green. Use when a PR's CI is red. Pending checks that still need watching belong to loop-on-ci.
+description: Find the failing checks on the current PR, read their logs or check links, and apply one focused fix at a time until the PR is green. Use when a PR's CI is red. Pending checks that still need watching belong to the Babysit playbook's watcher.
 ---
 
 Read the [runtime contract](../../references/runtime.md) before using this skill.

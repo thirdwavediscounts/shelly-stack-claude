@@ -13,7 +13,7 @@ shelly-stack bundles this skill because Claude Code has no built-in. It sets the
 - Personal skill: `~/.claude/skills/<name>/SKILL.md`. Just you, every project.
 - Plugin skill: `<plugin>/skills/<name>/SKILL.md`. Ships with the plugin.
 
-`<name>` is kebab-case and is the slash command (`/<name>`). Supporting files sit beside `SKILL.md` in `references/`, `scripts/`, or `playbooks/` and are referenced by relative path. A plugin skill that needs an absolute path to its own files uses `${CLAUDE_PLUGIN_ROOT}/skills/<name>/...`.
+`<name>` is kebab-case and is the slash command (`/<name>`). Supporting files sit beside `SKILL.md` in `references/`, `scripts/`, or `playbooks/` and are referenced by relative path. A plugin skill that needs an absolute path to its own files uses `${CLAUDE_PLUGIN_ROOT}/skills/<name>/...`. `${CLAUDE_PLUGIN_ROOT}` expands only in a `SKILL.md` body and an agent body. It never expands in supporting files or in Bash commands, so supporting files use paths relative to the skill folder.
 
 ## Frontmatter
 
@@ -42,7 +42,7 @@ Write for an agent that will follow it under load, per the **technical-writing**
 
 - Lead with what the skill does and when. One paragraph.
 - Steps as a numbered list, each ending in a checkable state. Name the tool (`Agent`, `AskUserQuestion`, `Bash`) and the model role when a step delegates.
-- Reference sibling files by relative path. Reference other skills by bold name ("the **how** skill") so the reader knows to load them, and never paste their contents.
+- Reference sibling files by relative path. Reference other skills by bold name ("the **how** skill") so the reader knows to load them, and never paste their contents. The Skill tool cannot load a user-only skill (`disable-model-invocation: true`, such as shelly-mode and every `principle-*`). Name it by the relative path to its `SKILL.md` and say to Read it, as in "Read `../principle-prove-it-works/SKILL.md`".
 - Say what the reply must contain. A skill that ends without an output contract produces a different reply every run.
 - Cut anything the agent already knows. A skill is not a manual.
 

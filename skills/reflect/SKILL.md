@@ -16,13 +16,13 @@ Invoke when the user says "reflect" or "/reflect". Skip when the conversation is
 
 ### 1. Locate the active transcript
 
-The parent finds its own transcript file before fanning out. Run `scripts/find-transcript.sh "$PWD" "<opening words of this conversation's first user prompt>"`. It derives the workspace's transcript directory (`~/.claude/projects/<slug>/`, never another project's, since those hold private chats) and prints the newest session or subagent transcript whose first line contains that prompt. If it prints nothing, write a tight digest of the session and pass that instead.
+The parent finds its own transcript file before fanning out. Run `scripts/find-transcript.sh "$PWD" "<opening words of this conversation's first user prompt>"`. It derives the workspace's transcript directory (`~/.claude/projects/<slug>/`, never another project's, since those hold private chats) and prints the newest transcript whose first user message contains that prompt. It checks session transcripts before subagent transcripts. If it prints nothing, write a tight digest of the session and pass that instead.
 
 ### 2. Spawn three reviewers in parallel
 
 One message, three `Agent` calls, `subagent_type: general-purpose`, explicit `model:` on each (or `subagent_type` when the configured value is an agent name; see below). Reviewers use MCP tools for context lookups (tickets, chat threads, observability traces referenced in the transcript). The prompt forbids file writes; the parent applies edits.
 
-A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or the name of a user agent under `~/.claude/agents/` (shelly-agent's body with a pinned model and effort, named `shelly-<model>-<effort>`, for example `shelly-opus-high`). An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn.
+A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or a pinned agent name. The plugin ships pinned agents named `shelly-stack:shelly-<model>-<effort>`, for example `shelly-stack:shelly-opus-high`. Each is shelly-agent's body with a pinned model and effort. A user agent of the same shape under `~/.claude/agents/` also works. Use its bare name. An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn.
 
 | Lens | Value | Prompt template |
 |---|---|---|
@@ -38,7 +38,7 @@ One `Agent` call, `subagent_type: general-purpose`, using your configured reflec
 
 ### 4. Structural enforcement check
 
-Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. See the **encode-lessons-in-structure** principle skill.
+Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. See the **encode-lessons-in-structure** principle (Read `../principle-encode-lessons-in-structure/SKILL.md`).
 
 ### 5. Apply
 

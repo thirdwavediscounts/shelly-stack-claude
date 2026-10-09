@@ -26,7 +26,7 @@ Update mode changes the rest of the flow:
 
 ### 1. Mine their history
 
-Locate the active workspace's transcripts before fanning out. Derive the directory from the current working directory: `~/.claude/projects/<slug>/`, where `<slug>` is the workspace path with every `/` turned into `-`, including the leading one (`/Users/you/proj` → `-Users-you-proj`). Use only that path. Don't glob across `~/.claude/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.
+Locate the active workspace's transcripts before fanning out. Derive the directory from the current working directory: `~/.claude/projects/<slug>/`, where `<slug>` is the workspace path with every character that is not a letter, digit, or `-` turned into `-`. The leading `/` counts, so `/Users/you/my_proj.v2` becomes `-Users-you-my-proj-v2`. Use only that path. Don't glob across `~/.claude/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.
 
 Survey recent agent conversations within that scope for recurring patterns. Run multiple parallel subagents across slices of history (e.g. last 2-4 weeks, split into 3 slices so each has enough material). Each slice mining subagent reads transcripts from the workspace-scoped path the parent provides, looks for the signals below, and returns a short structured list of patterns it saw with evidence pointers. Default signals worth hunting:
 
@@ -60,7 +60,7 @@ Group the combined signals into sections. Common ones (use only what applies):
 - **Process**: git worktrees, commits, PRs, review/merge tooling.
 - **Skills**: skill-authoring habits, fix-the-skill-first, proposing new skills.
 
-The **shelly-mode** skill shows the shape. Read it for granularity. Don't copy its content. The user's rules are not the same as shelly-mode's.
+The **shelly-mode** skill shows the shape. Read `../shelly-mode/SKILL.md` with the Read tool for granularity. Do not call the Skill tool for it. Don't copy its content. The user's rules are not the same as shelly-mode's.
 
 ### 4. Draft the skill
 
@@ -104,6 +104,6 @@ Run a description-optimization loop only if the skill's trigger accuracy turns o
 
 ## Reference files
 
-- The **shelly-mode** skill: example of the output shape.
+- The **shelly-mode** skill (`../shelly-mode/SKILL.md`) is an example of the output shape.
 - The **unslop** skill: prose discipline for every line.
 - The **create-skill** skill: skill authoring process and writing guidelines.
