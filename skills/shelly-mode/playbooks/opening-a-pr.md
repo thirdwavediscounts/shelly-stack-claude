@@ -1,27 +1,27 @@
 ### Opening a PR
 
-Invoked at the end of every other playbook, and before every commit you will push for a PR, even outside a playbook. Add steps 1–8 to the todo list as written when you reach this playbook.
+Invoked at the end of every other playbook, and before every `git push` of a PR branch, even outside a playbook. Commit freely while building. Before each push, run steps 1 to 3 on the full branch diff and commit their fixes. Post steps 1 to 8 as a checklist when you reach this playbook.
 
 1. Call the Skill tool with `shelly-stack:deslop` on the scoped code diff.
 2. Call the Skill tool with `shelly-stack:unslop` on the diff's prose and comments.
 3. Call the Skill tool with `shelly-stack:no-comments` on the diff.
-4. For a nontrivial diff, spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on it. Fix or dismiss each finding with a reason.
-5. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent in the same message as step 4. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason.
+4. Spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on the diff. Skip it only when the diff changes no code file (docs or config only), and mark it `skip: no code files`. Fix or dismiss each finding with a reason.
+5. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent. If step 4 runs, spawn both in the same message. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason.
 6. Commit per **Commits**.
-7. Write the title and description per **Titles** and **Descriptions**. Open the PR per **Forge** and **Readiness**.
+7. Call the Skill tool with `shelly-stack:technical-writing`. Draft the title, description, and commit bodies per **Titles** and **Descriptions**. Call the Skill tool with `shelly-stack:unslop` on the draft. Then open the PR per **Forge** and **Readiness**. No skip.
 8. Before asking to merge, clear the list in **Before merge**.
 
-Steps 1–3 run on every PR, in order, before the commit. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff yourself does not replace a step, reading a skill's SKILL.md does not run it, and one step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
+Steps 1 to 3 run on every PR, in order, before the push. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff or the PR text yourself does not replace a step. Reading a skill's SKILL.md does not run it. One step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
 
 Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
 
 **Worktree.** Work from a git worktree off main. Subagents inherit it. Multiple `Agent` calls on the same branch each get their own worktree, or `git fetch && git reset --hard origin/<branch>` between them. Dirty branch with unrelated work: patch out, fresh worktree, apply. Snarled worktree: reset from main, redo minimally.
 
-**Commits.** Commit liberally. Rebase into small, ordered commits before opening PRs. Each commit is a future PR: landable, ordered to tell the story. Amend when the fix belongs in a just-made commit. New commit when separable.
+**Commits.** Commit freely. Rebase into small, ordered commits before opening PRs. Each commit is a future PR. Make each one landable on its own, and order them to tell the story. Amend when the fix belongs in a just-made commit. Make a new commit when the fix is separable.
 
-**PRs.** Write every PR title, PR description, and commit body with `/technical-writing`, then apply `/unslop`. Apply every technical-writing layer except Diátaxis. Use one word for each action, keep articles, and avoid `-ing` when a plain verb works.
+**PRs.** Step 7's two Skill calls cover every PR title, PR description, and commit body. Apply every technical-writing layer except Diátaxis. Use one word for each action, keep articles, and avoid `-ing` when a plain verb works.
 
-**Titles.** Use Conventional Commits in the form `type(scope): subject`. Use `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, or `perf` as the type. Use the changed area, such as `shelly-stack` or `shelly-mode`, as the scope. Keep the subject short and imperative. Apply the same `/technical-writing` and `/unslop` pass as the body. Name a real symbol when one carries the change. For example, `fix(shelly-stack): retarget opening-a-pr babysit trigger`. Do not add a trailing period.
+**Titles.** Use Conventional Commits in the form `type(scope): subject`. Use `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, or `perf` as the type. Use the changed area, such as `shelly-stack` or `shelly-mode`, as the scope. Keep the subject short and imperative. Name a real symbol when one carries the change. For example, `fix(shelly-stack): retarget opening-a-pr babysit trigger`. Do not add a trailing period.
 
 **Descriptions.** The PR body is a briefing, not the lab notebook. A reviewer who has the diff should learn why the change exists, what is out of scope, and how you proved the change works. The squash commit body is the PR body, so keep it short enough to read as one commit message.
 
@@ -45,4 +45,4 @@ After these sections, attach videos or screenshots when they prove a claim. Do n
 
 **Babysit.** Opening a PR does not start a babysit. Post the URL and keep building. Finish the phase or stack first. Run a separate babysit pass only when the user asks for one after the whole stack exists. A babysit for each new PR stalls the build and spends checks on commits that later waves restart. Push back when feedback drifts from intent.
 
-A subagent that opens a PR runs steps 1–3 and `interrogate`. It returns the URL and does not babysit. Return to the parent.
+A subagent that opens a PR runs steps 1 to 7. It returns the URL and does not babysit. Return to the parent.
