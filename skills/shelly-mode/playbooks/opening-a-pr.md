@@ -1,15 +1,17 @@
 ### Opening a PR
 
-Invoked at the end of every other playbook. Add these steps to the todo list when a playbook reaches this one.
+Invoked at the end of every other playbook, and before every commit you will push for a PR, even outside a playbook. Add steps 1–8 to the todo list as written when you reach this playbook.
 
-1. Run `/shelly-stack:deslop` on the scoped code diff.
-2. Run the **unslop** skill over the diff's prose and comments.
-3. For a nontrivial diff, spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on it. Fix or dismiss each finding with a reason.
-4. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent in the same message as step 3. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason.
-5. Commit per **Commits**.
-6. Run `/no-comments` before review.
+1. Call the Skill tool with `shelly-stack:deslop` on the scoped code diff.
+2. Call the Skill tool with `shelly-stack:unslop` on the diff's prose and comments.
+3. Call the Skill tool with `shelly-stack:no-comments` on the diff.
+4. For a nontrivial diff, spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on it. Fix or dismiss each finding with a reason.
+5. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent in the same message as step 4. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason.
+6. Commit per **Commits**.
 7. Write the title and description per **Titles** and **Descriptions**. Open the PR per **Forge** and **Readiness**.
 8. Before asking to merge, clear the list in **Before merge**.
+
+Steps 1–3 run on every PR, in order, before the commit. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff yourself does not replace a step, reading a skill's SKILL.md does not run it, and one step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
 
 Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
 
@@ -43,4 +45,4 @@ After these sections, attach videos or screenshots when they prove a claim. Do n
 
 **Babysit.** Opening a PR does not start a babysit. Post the URL and keep building. Finish the phase or stack first. Run a separate babysit pass only when the user asks for one after the whole stack exists. A babysit for each new PR stalls the build and spends checks on commits that later waves restart. Push back when feedback drifts from intent.
 
-A subagent that opens a PR runs `interrogate`, the **unslop** skill, and `/no-comments`. It returns the URL and does not babysit. Return to the parent.
+A subagent that opens a PR runs steps 1–3 and `interrogate`. It returns the URL and does not babysit. Return to the parent.

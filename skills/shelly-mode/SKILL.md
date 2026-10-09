@@ -30,7 +30,7 @@ Remaining triggers:
 - Any prose surface → invoke the **unslop** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill (the bundled skill for authoring SKILL.md files).
 - Docs, RFCs, readmes, PR descriptions, or commit messages → invoke the **technical-writing** skill.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
-- Before commit or review → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook.
+- Before a commit you will push for a PR → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Its steps 1–3 call `deslop`, `unslop`, and `no-comments` through the Skill tool on every PR, however small.
 - Typecheck or compile fails → invoke **check-compiler-errors** for the grouped report before fixing.
 - Shipping UI / IDE / CLI → the project's verification skill (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
@@ -104,7 +104,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 This plugin ships these companions. The playbooks name each one where it applies.
 
-- `deslop` before every commit.
+- `deslop`, `unslop`, and `no-comments` before every PR, per **Opening a PR** steps 1–3.
 - `control-ui` and `control-cli` to drive an app the project verification skill cannot.
 - `verify-this` for a claim that needs a baseline-versus-treatment proof.
 - `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
