@@ -79,6 +79,6 @@ cat > jobs.json <<'JSON'
 JSON
 git add -A
 git commit -qm "Add staging cron-off script"
-git init -q --bare ../origin.git
-git remote add origin ../origin.git
+git init -q --bare "$PWD/.git/origin.git"
+git remote add origin "$PWD/.git/origin.git"
 git push -q -u origin main

@@ -1,8 +1,8 @@
 ---
-name: shelly-sonnet-low
-description: shelly-agent pinned to claude-sonnet-5-5 at low effort. Use as subagent_type wherever ~/.claude/rules/shelly-stack-models.md names it. Resume an existing one for the conversation rather than spawning a sibling.
-model: claude-sonnet-5-5
-effort: low
+name: shelly-opus-xhigh
+description: shelly-agent pinned to claude-opus-5-5 at xhigh effort. Use as subagent_type wherever ~/.claude/rules/shelly-stack-models.md names it. Resume an existing one for the conversation rather than spawning a sibling.
+model: claude-opus-5-5
+effort: xhigh
 ---
 
 # Shelly subagent

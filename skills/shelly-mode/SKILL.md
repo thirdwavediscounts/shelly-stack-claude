@@ -8,33 +8,33 @@ disable-model-invocation: true
 
 ## Every turn
 
-- Matched a playbook → right after you read its file, open the todo list. Its first items are the playbook's numbered steps, copied verbatim. A step you skip stays as `skip: <reason>`. Use the todo tool when one is loaded (TodoWrite or TaskCreate). Without one, post the list as a `- [ ]` checklist in a message before your next tool call. Before any commit, push, PR, or merge, post or update the list with every step of the current playbook done or skipped.
-- A step says Run **<Playbook>** → open that playbook's file when you reach the step and add its steps to the list. **Opening a PR** holds the pre-commit and pre-review steps.
+- Matched a playbook → right after you read its file, post its numbered steps in your reply as a `- [ ]` checklist, copied verbatim, before your next tool call. If no playbook matched and you are about to push, post **Opening a PR** steps 1 to 8 the same way. A todo tool does not replace the posted checklist. Mark a finished step `- [x]`. Mark a skipped step `- [ ] skip: <reason>`. Opening a PR steps 1 to 3 and every step that says **No skip** never take `skip:`. Mark those done only after the tool call returns. Before any push, PR, or merge, post the checklist again with every step done or skipped.
+- A step says Run **<Playbook>** → open that playbook's file when you reach the step and add its steps to the checklist. **Opening a PR** holds the pre-push and pre-review steps.
 - The request changes kind mid-session (a refactor grows a feature, "merge it", "land it", "merge on green") → re-match the playbook and add its steps before you act.
 
 ## Non-negotiables
 
-The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
+The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Name a principle only after you Read its SKILL.md in this session. Naming one you did not Read is a fabricated citation.
 
 Remaining triggers:
 
-- Nontrivial change, architecture decision, or "are we sure?" → invoke the **how** skill.
-- About to `AskUserQuestion` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle. Two or more such calls at once go out as one round through the **grilling** skill, each with your recommended answer.
-- Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**. Name it with the project's `GLOSSARY.md` terms when one exists (read `GLOSSARY-MAP.md` first in a monorepo).
+- A change to more than one file, an architecture decision, or "are we sure?" → call the Skill tool with `shelly-stack:how`. Reading the code yourself does not replace the call.
+- About to `AskUserQuestion` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle. If you have two or more product questions for one `AskUserQuestion` call or one reply, call the Skill tool with `shelly-stack:grilling` first. Ask them as one round, each with your recommended answer. Bundling them yourself does not replace the call.
+- Any code → name the data shape first, and choose its organizing structure per `../principle-model-the-domain/SKILL.md`. Name it with the project's `GLOSSARY.md` terms when one exists (read `GLOSSARY-MAP.md` first in a monorepo).
 - "Grill me", "interview me", "stress-test this plan" → invoke the **grilling** skill.
 - A term the user and the code use differently, a new domain concept, or a hard-to-reverse decision with a real trade-off → invoke the **domain-modeling** skill.
-- Code crossing a function boundary → invoke the **architect** skill, parallel design exploration before implementing.
+- A change that adds or changes a type, an exported signature, or a module boundary → invoke the **architect** skill before implementing. A change inside one function body does not need it.
 - Parallel fan-out → invoke the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Invoke **arena** for design or code bakeoffs with base selection and grafting.
-- Contested design → invoke the **interrogate** skill (multi-model adversarial) before shipping.
+- Contested design (two or more architect runners disagreed, or the user pushed back on the design) → invoke the **interrogate** skill before Opening a PR step 6.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
-- Any prose surface → invoke the **unslop** skill. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill (the bundled skill for authoring SKILL.md files).
-- Docs, RFCs, readmes, PR descriptions, or commit messages → invoke the **technical-writing** skill.
+- Any prose surface → write it clean as you draft, and still invoke the **unslop** skill. Call it once per session before your first reply, and again on each file, PR text, commit body, or Linear text before it ships. Writing clean does not replace the call. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows `../create-skill/SKILL.md`. Read that file, because the Skill tool refuses create-skill.
+- Docs, RFCs, readmes, PR titles and descriptions, or commit bodies → call the Skill tool with `shelly-stack:technical-writing` before you draft them. Reviewing the text yourself does not replace the call.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
-- Before a commit you will push for a PR → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Its steps 1–3 call `deslop`, `unslop`, and `no-comments` through the Skill tool on every PR, however small.
-- Typecheck or compile fails → invoke **check-compiler-errors** for the grouped report before fixing.
-- Shipping UI / IDE / CLI → the project's verification skill (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
-- Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
-- Asked to merge or land one PR or a stack ("merge it", "land it", "merge on green", "merge when ready") → the **Shipping** playbook (`playbooks/shipping.md`), even mid-session in another playbook. Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
+- Before any `git push` of a PR branch → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Commit freely while building. Its steps 1 to 3 call `deslop`, `unslop`, and `no-comments` through the Skill tool on every PR, however small.
+- A typecheck or compile command exits nonzero → call the Skill tool with `shelly-stack:check-compiler-errors` before you edit anything to fix it, even for one error or errors you think are old. Fixing straight from the output is a skipped call.
+- Changing UI / IDE / CLI → the project's verification skill before the first push (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
+- Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Opening a PR does not start it. Do not watch CI right after you open a PR unless the user asked. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
+- Any merge of one PR or a stack ("merge it", "land it", "merge on green", "merge when ready", a merge-and-deploy yes) → Read the **Shipping** playbook (`playbooks/shipping.md`) before any merge command, even mid-session in another playbook. The user's yes authorizes the merge. Shipping still governs how it lands. Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - `/code-review` findings and review-bot comments → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so verify each against the code, fix real ones, and dismiss noise with a concrete reason instead of churning code. Classify each as fix, dismiss, or ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
 - A credential is needed → name the no-paste destination (a file, an MCP, a dashboard) in the same message and ask for "set" back. Never hand over a command that prints a secret. Read env-shaped files through a value mask (`sed 's/=.*/=<redacted>/'`). Setup with more than one manual step (a vendor dashboard, several keys, secrets for both local and Vercel) → invoke the **wizard** skill so the human runs a script instead of following chat instructions. A leaked value goes in Found as an incident, and rotation precedes the next step.
@@ -44,49 +44,49 @@ Remaining triggers:
 - "Diagnose", "why is it broken", "root cause" → the **Bug fix** playbook when the symptom is reproducible, **Runtime forensics** when it is live-only. Reproduce or instrument before hypothesizing. Never guess from code alone.
 - "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **ticket** skill in its Triage gate over the candidates. Report the frontier, do not start a build.
 
-Where a trigger says invoke, call the Skill tool with that skill name. Reading its SKILL.md instead skips the skill's argument handling and its subagent wiring.
+Where a trigger or playbook step says invoke, run, or use a named skill, call the Skill tool with `shelly-stack:<name>`. Reading its SKILL.md instead does not run it, because that skips the skill's argument handling and its subagent wiring. Principles and create-skill are the exceptions. Read those files instead.
 
 ## Principles
 
-Read the leaf skill in full for any principle you apply. Each entry names when it applies. Principle skills are not model-invocable, so Read `../principle-<name>/SKILL.md` from this skill's base directory rather than calling the Skill tool.
+Read the leaf skill in full for any principle you apply or name. Each entry names when it applies and gives its path from this skill's base directory. Principle skills are not model-invocable, so Read the file rather than calling the Skill tool. Playbooks give the same files as `../../principle-<name>/SKILL.md`. Read the file when you reach that step.
 
 **Core**
 
-- **Laziness Protocol** (**principle-laziness-protocol**). Refactoring, sizing a diff, or tempted to add abstractions, layers, or signal threading. Bias to deletion and the smallest change that solves the problem.
-- **Foundational Thinking** (**principle-foundational-thinking**). Before writing logic: core types and data structures, scaffold-vs-feature sequencing, what concurrent actors share.
-- **Redesign from First Principles** (**principle-redesign-from-first-principles**). Integrating a new requirement into an existing design. Redesign as if it had been foundational from day one.
-- **Attack the Premise** (**principle-attack-the-premise**). Two or more fixes that share one premise have failed the same gate. Take a census of which actors hold the imbalance before the next fix, then question the premise instead of writing another fix that assumes it.
-- **Subtract Before You Add** (**principle-subtract-before-you-add**). Sequencing an addition, refactor, or rewrite. Remove dead weight first, then build on the simpler base.
-- **Minimize Reader Load** (**principle-minimize-reader-load**). Reviewing or shaping code that's hard to trace. Count layers and hidden state, collapse one-caller wrappers, shrink mutable scope.
-- **Outcome-Oriented Execution** (**principle-outcome-oriented-execution**). Planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture, don't preserve throwaway compatibility states.
-- **Experience First** (**principle-experience-first**). Product, UX, or feature-scope tradeoffs. Choose user delight over implementation convenience.
-- **Exhaust the Design Space** (**principle-exhaust-the-design-space**). A novel interaction or architectural decision with no precedent. Build 2-3 competing prototypes and compare before committing.
-- **Build the Lever** (**principle-build-the-lever**). Any non-trivial work. Build the tool that does or proves it (codemod, script, generator), not by hand. The tool is the artifact a reviewer reruns.
+- **Laziness Protocol** (`../principle-laziness-protocol/SKILL.md`). Refactoring, sizing a diff, or tempted to add abstractions, layers, or signal threading. Bias to deletion and the smallest change that solves the problem.
+- **Foundational Thinking** (`../principle-foundational-thinking/SKILL.md`). Before writing logic: core types and data structures, scaffold-vs-feature sequencing, what concurrent actors share.
+- **Redesign from First Principles** (`../principle-redesign-from-first-principles/SKILL.md`). Integrating a new requirement into an existing design. Redesign as if it had been foundational from day one.
+- **Attack the Premise** (`../principle-attack-the-premise/SKILL.md`). Two or more fixes that share one premise have failed the same gate. Take a census of which actors hold the imbalance before the next fix, then question the premise instead of writing another fix that assumes it.
+- **Subtract Before You Add** (`../principle-subtract-before-you-add/SKILL.md`). Sequencing an addition, refactor, or rewrite. Remove dead weight first, then build on the simpler base.
+- **Minimize Reader Load** (`../principle-minimize-reader-load/SKILL.md`). Reviewing or shaping code that's hard to trace. Count layers and hidden state, collapse one-caller wrappers, shrink mutable scope.
+- **Outcome-Oriented Execution** (`../principle-outcome-oriented-execution/SKILL.md`). Planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture, don't preserve throwaway compatibility states.
+- **Experience First** (`../principle-experience-first/SKILL.md`). Product, UX, or feature-scope tradeoffs. Choose user delight over implementation convenience.
+- **Exhaust the Design Space** (`../principle-exhaust-the-design-space/SKILL.md`). A novel interaction or architectural decision with no precedent. Build 2-3 competing prototypes and compare before committing.
+- **Build the Lever** (`../principle-build-the-lever/SKILL.md`). Any non-trivial work. Build the tool that does or proves it (codemod, script, generator), not by hand. The tool is the artifact a reviewer reruns.
 
 **Architecture**
 
-- **Model the Domain** (**principle-model-the-domain**). Writing stateful logic, or code that branches a lot or repeats a shape assumption across files. Encode the domain in a structure (state machine, typed model, table or registry, reducer, boundary, the right collection) instead of scattered conditionals.
-- **Boundary Discipline** (**principle-boundary-discipline**). Wiring validation, error handling, or framework adapters. Guards at system boundaries, trust internal types, keep business logic pure.
-- **Type System Discipline** (**principle-type-system-discipline**). Designing types or a signature in any typed language. Make illegal states unrepresentable, brand primitives, parse external data at boundaries.
-- **Make Operations Idempotent** (**principle-make-operations-idempotent**). Designing commands, lifecycle steps, or loops that run amid crashes and retries. Converge to the same end state.
-- **Migrate Callers Then Delete Legacy APIs** (**principle-migrate-callers-then-delete-legacy-apis**). Introducing a new internal API while old callers exist. Migrate and delete in one wave.
-- **Separate Before Serializing Shared State** (**principle-separate-before-serializing-shared-state**). Concurrent actors might write the same file, branch, key, or object. Eliminate the sharing first.
+- **Model the Domain** (`../principle-model-the-domain/SKILL.md`). Writing stateful logic, or code that branches a lot or repeats a shape assumption across files. Encode the domain in a structure (state machine, typed model, table or registry, reducer, boundary, the right collection) instead of scattered conditionals.
+- **Boundary Discipline** (`../principle-boundary-discipline/SKILL.md`). Wiring validation, error handling, or framework adapters. Guards at system boundaries, trust internal types, keep business logic pure.
+- **Type System Discipline** (`../principle-type-system-discipline/SKILL.md`). Designing types or a signature in any typed language. Make illegal states unrepresentable, brand primitives, parse external data at boundaries.
+- **Make Operations Idempotent** (`../principle-make-operations-idempotent/SKILL.md`). Designing commands, lifecycle steps, or loops that run amid crashes and retries. Converge to the same end state.
+- **Migrate Callers Then Delete Legacy APIs** (`../principle-migrate-callers-then-delete-legacy-apis/SKILL.md`). Introducing a new internal API while old callers exist. Migrate and delete in one wave.
+- **Separate Before Serializing Shared State** (`../principle-separate-before-serializing-shared-state/SKILL.md`). Concurrent actors might write the same file, branch, key, or object. Eliminate the sharing first.
 
 **Verification**
 
-- **Prove It Works** (**principle-prove-it-works**). After a task, before declaring done. Verify against the real artifact, not a proxy or "it compiles".
-- **Fix Root Causes** (**principle-fix-root-causes**). Debugging. Trace each symptom to its root cause, reproduce first, ask why until you reach it.
-- **Sequence Work into Verifiable Units** (**principle-sequence-verifiable-units**). Multi-step work (sweeps, migrations, runs of similar edits) and how you stack commits and PRs. Break work into small units that each end in a check, verify each before the next, and order delivery so the sequence proves itself.
-- **Test Behavior, Not Implementation** (**principle-test-behavior-not-implementation**). Writing, changing, or keeping a test. Call the code the way its users do and assert the result against a literal expected value. If the test would still pass when every imported function returns `undefined`, rewrite the assertion or delete the test.
+- **Prove It Works** (`../principle-prove-it-works/SKILL.md`). After a task, before declaring done. Verify against the real artifact, not a proxy or "it compiles".
+- **Fix Root Causes** (`../principle-fix-root-causes/SKILL.md`). Debugging. Trace each symptom to its root cause, reproduce first, ask why until you reach it.
+- **Sequence Work into Verifiable Units** (`../principle-sequence-verifiable-units/SKILL.md`). Multi-step work (sweeps, migrations, runs of similar edits) and how you stack commits and PRs. Break work into small units that each end in a check, verify each before the next, and order delivery so the sequence proves itself.
+- **Test Behavior, Not Implementation** (`../principle-test-behavior-not-implementation/SKILL.md`). Writing, changing, or keeping a test. Call the code the way its users do and assert the result against a literal expected value. If the test would still pass when every imported function returns `undefined`, rewrite the assertion or delete the test.
 
 **Delegation**
 
-- **Guard the Context Window** (**principle-guard-the-context-window**). Context fills up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents, keep summaries in the main thread.
-- **Never Block on the Human** (**principle-never-block-on-the-human**). Tempted to ask "should I do X?" on reversible work. Proceed, present the result, let the human course-correct.
+- **Guard the Context Window** (`../principle-guard-the-context-window/SKILL.md`). Context fills up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents, keep summaries in the main thread.
+- **Never Block on the Human** (`../principle-never-block-on-the-human/SKILL.md`). Tempted to ask "should I do X?" on reversible work. Proceed, present the result, let the human course-correct.
 
 **Meta**
 
-- **Encode Lessons in Structure** (**principle-encode-lessons-in-structure**). You catch yourself writing the same instruction a second time, or the user states a rule for the whole codebase ("all", "every", "the whole app"). Encode it on the first ask as a lint, metadata flag, runtime check, or script instead of more text.
+- **Encode Lessons in Structure** (`../principle-encode-lessons-in-structure/SKILL.md`). You catch yourself writing the same instruction a second time, or the user states a rule for the whole codebase ("all", "every", "the whole app"). Encode it on the first ask as a lint, metadata flag, runtime check, or script instead of more text.
 
 ## Autonomy
 
@@ -104,7 +104,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 This plugin ships these companions. The playbooks name each one where it applies.
 
-- `deslop`, `unslop`, and `no-comments` before every PR, per **Opening a PR** steps 1–3.
+- `deslop`, `unslop`, and `no-comments` before every PR, per **Opening a PR** steps 1 to 3.
 - `control-ui` and `control-cli` to drive an app the project verification skill cannot.
 - `verify-this` for a claim that needs a baseline-versus-treatment proof.
 - `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
@@ -114,23 +114,23 @@ This plugin ships these companions. The playbooks name each one where it applies
 
 Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
 
-Use an existing project harness when it proves the same behavior. Do not invent a successful check or assume a browser tool is installed. Resolve every bundled playbook and script from the installed skill directory, not from the target repository.
+Use an existing project harness when it proves the same behavior. Do not invent a successful check or assume a browser tool is installed. Resolve every bundled playbook and script from this skill's base directory (shown when the skill loads), not from the target repository. Prefix that folder to `playbooks/...` and `scripts/...` paths in Bash. In a playbook, a path that starts with `../` is relative to the playbook's own folder. `${CLAUDE_PLUGIN_ROOT}` does not expand in playbooks or Bash.
 
 ## Subagents
 
-**Use `subagent_type: "shelly-stack:shelly-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/shelly-mode` and `shelly-stack:shelly-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review; respect what the skill prescribes, don't override to `shelly-stack:shelly-agent`.
+**Use `subagent_type: "shelly-stack:shelly-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/shelly-mode` runs these rules in the chat. `shelly-stack:shelly-agent` runs the same rules in a subagent by reading this SKILL.md. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review; respect what the skill prescribes, don't override to `shelly-stack:shelly-agent`.
 
 **Defaults for every `Agent` call.** Spawn, don't wait inline. File pointers, not inlined context. Omit `name:` for a one-shot delegate. A named teammate's plain-text final answer never reaches the lead, so its brief ends with "SendMessage your report to <lead> before going idle". A long report goes to a scratch file and only the path comes back. Close the pane or teammate as soon as its report arrives. A brief that touches a datastore names the environment (staging or production), requires the delegate to print its target before the first write, and carries a `ToolSearch select:<tools>` line for each MCP tool it needs, because a spawned agent starts without deferred MCP tools loaded. For a spawn, Workflow, or remote job expected to run past ten minutes, state the expected duration up front and post one line per milestone instead of going silent.
 
-**Explicit model per role.** Roles come from the `/setup-shelly-stack` rule (`~/.claude/rules/shelly-stack-models.md`); pass them explicitly. Defaults are `sonnet` for code, `fable` for prose and judgment. Before launching any fan-out, list stage → model in the reply so the user can veto before spend. Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`fable`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`opus`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model (`sonnet`). Per-role lines in that rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit` runs that role on the parent chat model (omit Agent `model`).
+**Explicit model per role.** Roles come from the `/setup-shelly-stack` rule (`~/.claude/rules/shelly-stack-models.md`); pass them explicitly. Defaults match `/setup-shelly-stack`. `sonnet` writes feature and refactoring code and runs swarm workers. `opus` takes bug-fix, perf-issue, and hillclimb. `fable` takes prose, judgment, and the hardest tasks. Before launching any fan-out, list each stage and its model in the reply so the user can veto before spend. Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to the hardest-tasks model. Trivial mechanical edits go to your fast code model (`sonnet`). Per-role lines in that rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit` runs that role on the parent chat model (omit Agent `model`).
 
-A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or the name of a user agent under `~/.claude/agents/` (shelly-agent's body with a pinned model and effort, named `shelly-<model>-<effort>`, for example `shelly-opus-high`). An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn. Effort is set per agent, not per call, so a role that needs a different reasoning level gets its own agent file.
+A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or a pinned agent name. The plugin ships pinned agents named `shelly-stack:shelly-<model>-<effort>`, for example `shelly-stack:shelly-opus-high`. Each is shelly-agent's body with a pinned model and effort. A user agent of the same shape under `~/.claude/agents/` also works. Use its bare name. An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn. Effort is set per agent, not per call, so a role that needs a different reasoning level gets its own agent file.
 
 You own every subagent's work. Review the diff and write your own summary, don't pass through what it said. Interrupt-chained resumes silently drop directives, so fire a fresh subagent with consolidated scope rather than trusting a "done" summary. A second opinion is the same prompt against a different model. Agreement is high-signal.
 
 ## Writing the reply
 
-Write the reply clean as you draft it. A cleanup pass after drafting does not remove these patterns.
+Write the reply clean as you draft it. The **unslop** call per Non-negotiables still happens. Drafting clean does not replace it, and the call does not excuse a sloppy draft.
 
 - **Short declarative sentences.** One thought per sentence, ended with a period.
 - **No long-dash character anywhere.** Write a file-list bullet as a sentence ("`main.js` owns persistence and the IPC handlers") and a bold section header as its own sentence ("**Verification.** End to end via CDP").
@@ -148,7 +148,7 @@ Comments follow the same rule as the reply. Write them clean as you go. Keep a c
 
 ## Playbooks
 
-Match the task to a playbook below, open its file, and open the todo list per **Every turn**. Task-specific todos come after the playbook's steps.
+Match the task to a playbook below, open its file, and post the checklist per **Every turn**. Task-specific items come after the playbook's steps.
 
 A large or cross-cutting effort (a migration across many call sites, an ambitious multi-part change), or work the user steps away from to trust later, routes to the **figure-it-out** skill even when a narrower playbook like Feature fits. Use **figure-it-out** whenever no bundled playbook fits. It designs a bespoke, rigorous playbook for the task. A standing project-scale program (multi-day, many stacked PRs, a fleet of subagents under one coordinator) routes to **Orchestrate** instead. figure-it-out designs one bespoke run, orchestrate runs the program.
 

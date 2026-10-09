@@ -11,7 +11,7 @@ In a Claude Code session, run:
 /plugin install shelly-stack@shelly-stack
 ```
 
-Claude Code confirms the plugin is installed. For Codex, install the separate Codex plugin described in `plugins/shelly-stack-codex/README.md`.
+Claude Code confirms the plugin is installed. For Codex, install the separate Codex plugin from the `shelly-stack-codex` repository.
 
 ## Pick your models
 
@@ -25,7 +25,7 @@ Run:
 
 You only override what you care about. A role with no line in the rule keeps the skill's default. To restore a default later, delete that role's line, or just run `/setup-shelly-stack` again.
 
-You might be wondering how to keep a role on whatever you're already running. Set a role to `inherit` and shelly-stack omits the subagent `model` field, so the subagent inherits your parent session's model. `inherit` is not a model value. For a panel role the value is a list, and one subagent runs per entry, so the list length sets the panel size. Setup also configures `swarm workers`, the default model for every `/swarm` worker unless a race names a model for each arm.
+To keep a role on the model your session already runs, set the role to `inherit`. shelly-stack then omits the subagent `model` field, so the subagent uses your parent session's model. `inherit` is not a model value. For a panel role the value is a list, and one subagent runs per entry, so the list length sets the panel size. A role can also name a pinned agent that ships with the plugin, such as `shelly-stack:shelly-opus-high`. That is how you pin a full model ID or an effort level. The plugin ships opus at low, medium, high, and xhigh, fable at low, medium, high, and xhigh, and sonnet at low, medium, and high. Setup also configures `swarm workers`, the default model for every `/swarm` worker unless a race names a model for each arm.
 
 ## Accept the verification offer, or don't
 
@@ -45,6 +45,6 @@ Pick something real but small, and describe it the way you'd describe it to a co
 
 Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/shelly-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
 
-From here you can type normal follow-ups. `/shelly-mode` applies to the turn where you invoke it, so invoke it on each turn where you want it applied.
+From here you can type normal follow-ups. `/shelly-mode` stays in effect for the rest of the session. When you switch subjects, say "new task" so it re-matches the playbook. If a long session drifts, invoke it again.
 
 Next: [Route work through `/shelly-mode`](./02-shelly-mode.md).

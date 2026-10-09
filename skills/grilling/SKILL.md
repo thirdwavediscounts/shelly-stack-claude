@@ -19,7 +19,7 @@ Adapted from Matt Pocock's `grilling` skill (MIT, see `LICENSE.mattpocock-skills
 Before a question goes to the user, classify it.
 
 - A fact you can read from code, a database, a log, or a connected tool is yours. Dispatch a subagent to find it, or look it up yourself. Never ask the user for it.
-- A fact you can observe by running something (timing, layout, output) is also yours. Settle it with the Prototype playbook in shelly-mode.
+- A fact you can observe by running something (timing, layout, output) is also yours. Settle it with the Prototype playbook. Read `../shelly-mode/playbooks/prototype.md` with the Read tool. Do not call the Skill tool for shelly-mode.
 - A product, scope, or preference call is the user's. Only these go in a round.
 
 A lookup that is still running holds back only the questions that depend on it. Ask the rest now.

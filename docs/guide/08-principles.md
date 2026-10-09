@@ -2,7 +2,7 @@
 
 shelly-stack ships 23 principles as individual skills. `/shelly-mode` applies the ones the task triggers after reading each matching leaf, and names each applied principle in its reply along with the decision it changed. Cite only principles whose leaf SKILL.md you read this session.
 
-You don't invoke principles. You use their names to steer. Each name points at a complete rule the agent has already read, so one phrase redirects the work more precisely than a paragraph of instructions.
+You don't invoke principles. You use their names to steer. Each name points at a complete rule. Naming it makes the agent read that rule and apply it, so one phrase redirects the work more precisely than a paragraph of instructions.
 
 ## Steering in practice
 

@@ -95,7 +95,7 @@ Append new candidate learnings here during or after babysitting when they look t
 - Example signal: "masks do not affect hit-testing", "overlay blocks wheel scroll", "ignores deltaMode", "runs in the IntersectionObserver callback before React applies state".
 - Source: one sticky-occlusion PR: six Bugbot passes, roughly eighteen findings, every one fixed rather than dismissed.
 
-### Contract-test drift claims are cheaply verifiable — run the test first
+### Contract-test drift claims are cheap to verify, so run the test first
 
 - Confidence: candidate
 - Skip when: Never skip the verification itself; it costs one command. When a PR

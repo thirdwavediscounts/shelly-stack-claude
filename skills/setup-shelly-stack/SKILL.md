@@ -11,7 +11,7 @@ Write `~/.claude/rules/shelly-stack-models.md`, a user-level rule loaded every s
 
 ### 1. Detect available models
 
-Enumerate the values you can pass as an `Agent` subagent's `model` in this session — `fable`, `opus`, `sonnet`, `haiku` — that is the dependable source; check the valid values in the Agent tool's error message if one is rejected. If you cannot detect any, ask the user to paste the values they have access to. Never write a real value you have not confirmed is available. The alias `inherit` is always valid even though it is not a detected value. Also list the user agents under `~/.claude/agents/` whose frontmatter pins `model` and `effort` (convention `shelly-<model>-<effort>.md`, body copied from `agents/shelly-agent.md` with `${CLAUDE_PLUGIN_ROOT}` replaced by the plugin's absolute install path, which is this skill's base directory two levels up; a user agent is not part of the plugin, so the variable does not expand there); their names are valid role values too, and they are the only way to pin a full model ID (for example `claude-opus-5-5`) or a per-role effort (`low`, `medium`, `high`, `xhigh`, `max`), since the Agent call's `model` accepts aliases only. Offer to create a missing agent file when the user wants a model or effort no existing agent provides.
+Enumerate the values you can pass as an `Agent` subagent's `model` in this session, which are `fable`, `opus`, `sonnet`, and `haiku`. That list is the dependable source. If the Agent tool rejects one, check the valid values in its error message. If you cannot detect any, ask the user to paste the values they have access to. Never write a real value you have not confirmed is available. The alias `inherit` is always valid even though it is not a detected value. Also list the plugin's pinned agents. They are the `shelly-*-*.md` files in the plugin's `agents/` folder, two levels up from this skill's base directory. Each pins a full model ID and an effort. Its role value is `shelly-stack:` plus the file name without `.md`, for example `shelly-stack:shelly-opus-high`. Pinned agents are the only way to pin a full model ID (for example `claude-opus-5-5`) or a per-role effort, because the Agent call's `model` accepts aliases only. A user agent under `~/.claude/agents/` whose frontmatter pins `model` and `effort` is also a valid value. Use its bare name. Do not create user agents. A user agent that points at the plugin by absolute path goes stale, because the install path is a per-session or per-version copy. When the user wants a model and effort that no plugin agent provides, say which one is missing. It belongs as a new file in the plugin's `agents/` folder.
 
 ### 2. Load current state
 
@@ -19,11 +19,11 @@ The default role-to-model mapping is the rule shape shown in step 5 below. If `~
 
 ### 3. Map and confirm
 
-Show every role with its current model, marking any real value not in the detected set as needing a choice. Ask whether to accept as-is or change specific roles, offering the detected models, the detected agent names, and `inherit` (this role runs on the parent chat model) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it different from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+Show every role with its current model, marking any real value not in the detected set as needing a choice. Ask whether to accept as-is or change specific roles, offering the detected models, the detected agent names (plugin agents first), and `inherit` (this role runs on the parent chat model) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it different from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Validate
 
-Every real value written must be in the detected set, either a model alias or an agent file that exists under `~/.claude/agents/`; `inherit` always passes. If a chosen real value is not available, stop and ask again. A rule pointing at a model the user cannot use breaks every delegation that reads it.
+Every real value written must be in the detected set, either a model alias, a `shelly-stack:` agent whose file exists in the plugin's `agents/` folder, or an agent file that exists under `~/.claude/agents/`; `inherit` always passes. If a chosen real value is not available, stop and ask again. A rule pointing at a model the user cannot use breaks every delegation that reads it.
 
 ### 5. Write the rule
 
@@ -32,7 +32,7 @@ Write `~/.claude/rules/shelly-stack-models.md` with no frontmatter and one line 
 ```
 # shelly-stack model configuration. One line per role. Delete a line to fall back to the skill default.
 # `inherit` as a value: the role runs on the parent chat model (omit Agent `model`). Alias entries in a panel list still count toward its fan-out.
-# A value naming a user agent under ~/.claude/agents (shelly-<model>-<effort>) goes in `subagent_type` with `model` omitted; it pins that agent's model and effort.
+# A value naming an agent (shelly-stack:shelly-<model>-<effort>) goes in `subagent_type` with `model` omitted. It pins that agent's model and effort.
 feature, refactoring: sonnet
 bug-fix: opus
 perf-issue: opus
