@@ -23,6 +23,8 @@ Build a real mental model of every system the new code touches. Run the **how** 
 
 Naming a file isn't grounding. Produce the traced model `how` prescribes. If the design redefines ownership or layering, also run the **why** skill on the existing shape so the rationale becomes a constraint, not a guess.
 
+Write the runner brief from the user's own words. Quote the user's rule word for word under "User's rule". Put anything you add (extra guards, edge cases, protections) under a separate "Agent proposals, not approved" heading, each with the real event it covers. Never file your own guesses as approved rules. Spec review checks the diff against the user's quote, not against your brief.
+
 Skip Phase A only when the work is genuinely greenfield with no surrounding system to integrate.
 
 ## Phase B: Sketch
@@ -31,7 +33,7 @@ Run the **arena** skill with the design-sketch task and the Phase A grounding ar
 
 Use your configured architect runners (defaults `fable`, `opus`, `sonnet`). A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or a pinned agent name. The plugin ships pinned agents named `shelly-stack:shelly-<model>-<effort>`, for example `shelly-stack:shelly-opus-high`. Each is shelly-agent's body with a pinned model and effort. A user agent of the same shape under `~/.claude/agents/` also works. Use its bare name. An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn.
 
-Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle (Read `../principle-exhaust-the-design-space/SKILL.md`) made concrete. Whole-shape alternatives, not point fixes inside one shape.
+Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. One candidate is always the baseline: the smallest change that reuses the existing pattern. A bigger candidate wins only by naming what the baseline gets wrong. Pass the user's domain facts (schedules, windows, what upstream already filters) to every runner, not only the code. This is the **exhaust-the-design-space** principle (Read `../principle-exhaust-the-design-space/SKILL.md`) made concrete. Whole-shape alternatives, not point fixes inside one shape.
 
 Screen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Reject or revise shallow modules, information leakage, temporal decomposition, and pass-through methods.
 

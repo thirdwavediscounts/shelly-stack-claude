@@ -80,6 +80,8 @@ Categorize every finding using these buckets:
 - **Noted**. Technically valid but not actionable. Context-dependent, premature optimization, or low-impact given the current stage.
 - **Dismissed**. Wrong, nitpicky, or missing context. Brief explanation why.
 
+A finding that proposes a new guard or edge-case check goes in **Act on** only when it shows the event can happen under the system's real schedule and data. Otherwise it goes in **Noted**. Several reviewers raising the same edge case is not proof when they all lack the same fact.
+
 For each finding, include:
 - Which model(s) raised it
 - The category (act on / consider / noted / dismissed)

@@ -55,6 +55,8 @@ Walk each losing candidate once more and identify what is worth porting into the
 
 Fold each graft in by hand, per the **redesign-from-first-principles** principle (Read `../principle-redesign-from-first-principles/SKILL.md`). Don't paste mechanically. The result has to remain coherent under one mental model.
 
+A graft that only adds a guard, check, or edge-case branch must name the real event it stops under the system's actual schedule and data. Reject it otherwise. Grafting adds by default, so every added guard must earn its place with a named event.
+
 Record what was grafted, from which candidate, and what was rejected and why.
 
 When N candidates converge on the same shape, that is a strong agreement signal. Note the convergence in the record and ship the consensus shape. No graft is needed. When N candidates wildly diverge, Phase A was under-specified. Reframe and re-run rather than averaging the divergence.
