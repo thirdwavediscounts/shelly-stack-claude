@@ -54,7 +54,7 @@ Apps change and feature maps rot. When yours drifts, run:
 /shelly-mode open the pr. small ordered commits, evidence in the description.
 ```
 
-The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) works from a worktree. It runs deslop, unslop, and no-comments, then a maintainability review. Ticket or spec work also gets a spec-conformance review. It commits in small ordered commits, opens a ready PR, and returns the link. Five narrow PRs beat one fat one, and stacked follow-ups beat a growing branch.
+The [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) works from a worktree. It runs deslop, unslop, and no-comments, then a maintainability review. Ticket or spec work also gets a spec-conformance review. It makes one commit per improvement, opens one ready PR for the round of work, and returns the link. Open items go into that PR, or the user says "leave it" for each one before the merge question.
 
 ## Drive the PR to merge-ready with Babysit
 
