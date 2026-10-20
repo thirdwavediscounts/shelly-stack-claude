@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # Append a well-formed row to a show-me-your-work decision log (TSV).
-# Usage: log.sh <logfile> <phase> <decision> <why> <evidence> <result>
 set -euo pipefail
 
-if [ "$#" -ne 6 ]; then
-	printf 'usage: log.sh <logfile> <phase> <decision> <why> <evidence> <result>\n' >&2
+if [ "$#" -ne 7 ]; then
+	printf 'usage: log.sh <logfile> <phase> <decision> <by> <why> <evidence> <result>\n' >&2
 	exit 1
 fi
 
@@ -17,7 +16,7 @@ if [ -n "$logdir" ] && [ "$logdir" != "." ] && [ ! -d "$logdir" ]; then
 fi
 
 if [ ! -f "$logfile" ]; then
-	printf 'ts\tphase\tdecision\twhy\tevidence\tresult\n' > "$logfile"
+	printf 'ts\tphase\tdecision\tby\twhy\tevidence\tresult\n' > "$logfile"
 fi
 
 ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -35,6 +34,6 @@ clean() {
 		*) printf '%s' "$v" ;;
 	esac
 }
-printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
-	"$ts" "$(clean "$1")" "$(clean "$2")" "$(clean "$3")" "$(clean "$4")" "$(clean "$5")" \
+printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+	"$ts" "$(clean "$1")" "$(clean "$2")" "$(clean "$3")" "$(clean "$4")" "$(clean "$5")" "$(clean "$6")" \
 	>> "$logfile"
