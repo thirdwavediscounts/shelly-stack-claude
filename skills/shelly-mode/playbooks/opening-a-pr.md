@@ -1,6 +1,6 @@
 ### Opening a PR
 
-Invoked at the end of every other playbook, and before every `git push` of a PR branch, even outside a playbook. Commit freely while building. Before each push, run steps 1 to 3 on the full branch diff and commit their fixes. Post steps 1 to 8 as a checklist when you reach this playbook.
+Invoked at the end of every other playbook, and before every `git push` of a PR branch, even outside a playbook. Commit freely while building. Before the first push, run steps 1 to 3 on the full branch diff and commit their fixes. Later pushes to the same PR skip them. Before asking to merge, run step 3 again on the full branch diff. Put steps 1 to 8 in the task list when you reach this playbook.
 
 1. Call the Skill tool with `shelly-stack:deslop` on the scoped code diff.
 2. Call the Skill tool with `shelly-stack:unslop` on the diff's prose and comments.
@@ -11,7 +11,7 @@ Invoked at the end of every other playbook, and before every `git push` of a PR 
 7. Call the Skill tool with `shelly-stack:technical-writing`. Draft the title, description, and commit bodies per **Titles** and **Descriptions**. Call the Skill tool with `shelly-stack:unslop` on the draft. Then open the PR per **Forge** and **Readiness**. No skip.
 8. Before asking to merge, clear the list in **Before merge**.
 
-Steps 1 to 3 run on every PR, in order, before the push. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff or the PR text yourself does not replace a step. Reading a skill's SKILL.md does not run it. One step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
+Steps 1 to 3 run on every PR, in order, before the first push. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff or the PR text yourself does not replace a step. Reading a skill's SKILL.md does not run it. One step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
 
 Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
 
@@ -41,7 +41,7 @@ After these sections, attach videos or screenshots when they prove a claim. Do n
 
 **Readiness.** Open every PR ready, never as a draft. With Origin, pass `--status open`; with `gh`, omit `--draft`. Some PR tools default to draft, so set `draft: false` on every PR creation call. If a PR still opens as a draft, run `origin pr ready <number>` or `gh pr ready <number>` according to the resolved forge. Run `origin pr view <number>` or `gh pr view <number>` before you refer to PR status.
 
-**Before merge.** Before step 6 and again before asking to merge, list every open item you know of: follow-ups, review findings, deferred fixes, untried ideas, checks that only run at deploy time, side sessions you started, and jobs still running. Also list every env var or config the deploy needs. The default for each item is to fold it into this PR now. An item stays out only with the user's own "leave it" for that item. Naming items in the merge question ("not part of this PR", "separate follow-up", "for later") is not asking and does not count as a "leave it". Ask about open items first, as their own question, and ask to merge only when the list is empty or every item has its answer. The user reads "merge on green" as "nothing left", so an item still open at that point is a surprise, not a follow-up.
+**Before merge.** Before step 6 and again before asking to merge, list every open item you know of: follow-ups, review findings, deferred fixes, untried ideas, checks that only run at deploy time, side sessions you started, and jobs still running. Also list every env var or config the deploy needs. Recommend folding an item into this PR only when the ask needs it. Recommend leaving the rest. An item stays out only with the user's own "leave it" for that item. Naming items in the merge question ("not part of this PR", "separate follow-up", "for later") is not asking and does not count as a "leave it". Ask about open items first, as their own question, and ask to merge only when the list is empty or every item has its answer. The user reads "merge on green" as "nothing left", so an item still open at that point is a surprise, not a follow-up.
 
 **Babysit.** Opening a PR does not start a babysit. Post the URL and keep building. Finish the phase or stack first. Run a separate babysit pass only when the user asks for one after the whole stack exists. A babysit for each new PR stalls the build and spends checks on commits that later waves restart. Push back when feedback drifts from intent.
 
