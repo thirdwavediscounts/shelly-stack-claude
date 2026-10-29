@@ -19,6 +19,7 @@ jobs:
           bun-version: "1.4.0"
       - run: python3 skills/ticket/scripts/test_lint_linear_text.py
       - run: python3 skills/create-skill/scripts/check_invoke_targets.py
+      - run: python3 hooks/test_hooks.py
       - name: wizard template
         run: |
           sudo apt-get update -qq
