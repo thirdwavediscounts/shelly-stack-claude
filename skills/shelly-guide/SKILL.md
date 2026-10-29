@@ -47,7 +47,7 @@ Each entry: page, the skills in the order the guide presents them, when each ear
 
 **Steer.** `08-principles.md`. Mid-run redirects are one line naming a principle: "apply prove it works, show me the real output". `/bro` when a reply is thorough and you still don't know what it said.
 
-**Make it yours.** `09-make-it-yours.md`. `/automate-me` drafts your own `-mode` from your transcripts; `/reflect` after a run that taught you something; the Eval playbook to test a skill change blind.
+**Make it yours.** `09-make-it-yours.md`. `/reflect` after a run that taught you something; the Eval playbook to test a skill change blind.
 
 ## 3. Reply
 
@@ -59,7 +59,7 @@ Short. In this order:
 4. **Then.** The next stage and its page, one line.
 5. **Pitfall.** The one from the page, one line.
 
-End by offering to run the first prompt now. If they say yes, invoke that skill with the prompt you wrote. Some skills are user-only (`disable-model-invocation: true`), so the Skill tool refuses them. These are `shelly-mode`, `maintain-verification-skill`, `automate-me`, and `reflect`. For a `/shelly-mode` prompt, spawn a `shelly-stack:shelly-agent` subagent with it, because that agent loads the shelly-mode rules on its own. For the other user-only skills, give the user the slash command to type. If the task is bigger than a stage, say so and spawn a `shelly-stack:shelly-agent` subagent with it, because the playbooks already sequence these stages.
+End by offering to run the first prompt now. If they say yes, invoke that skill with the prompt you wrote. Some skills are user-only (`disable-model-invocation: true`), so the Skill tool refuses them. These are `shelly-mode`, `maintain-verification-skill`, and `reflect`. For a `/shelly-mode` prompt, spawn a `shelly-stack:shelly-agent` subagent with it, because that agent loads the shelly-mode rules on its own. For the other user-only skills, give the user the slash command to type. If the task is bigger than a stage, say so and spawn a `shelly-stack:shelly-agent` subagent with it, because the playbooks already sequence these stages.
 
 ## Don'ts
 

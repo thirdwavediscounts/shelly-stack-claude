@@ -8,7 +8,7 @@ Invoke companion skills as `/shelly-stack:<name>`. Resolve files relative to the
 
 ## Authorization
 
-An explicit `review-and-ship` or `new-branch-and-pr` request includes focused commits, pushes, and opening or updating the PR. A review, test run, or local fix alone does not. CI repair may push when the current request authorizes bringing the PR to green. Honor existing authorization without asking again. Merge, deploy, send messages, or rewrite published history only when separately authorized. Never bypass required checks. Preserve unrelated changes and follow the repository's branch, commit, and PR conventions.
+An explicit request to open or ship a PR includes focused commits, pushes, and opening or updating the PR. A review, test run, or local fix alone does not. CI repair may push when the current request authorizes bringing the PR to green. Honor existing authorization without asking again. Merge, deploy, send messages, or rewrite published history only when separately authorized. Never bypass required checks. Preserve unrelated changes and follow the repository's branch, commit, and PR conventions.
 
 ## Reviewers
 

@@ -1,22 +1,6 @@
 # Make it yours
 
-shelly-mode is one person's style. The machinery underneath, playbooks, routing, model roles, works just as well wearing yours. This page covers generating a personal mode, capturing lessons from a session, authoring a focused skill, and testing a skill change before you trust it.
-
-## Generate your own mode with `/automate-me`
-
-```text
-/automate-me
-```
-
-You don't describe your style, because [`/automate-me`](../../skills/automate-me/SKILL.md) reads it out of your history. It mines your recent transcripts in the active workspace for repeated preferences, in how you like replies, delegation, verification, code, prose, and process, then asks you which patterns are really you. It drafts `.claude/skills/<your-name>-mode/SKILL.md` through the **create-skill** skill, runs the draft through [`/unslop`](../../skills/unslop/SKILL.md), and opens a PR from a worktree so you review it like any other change.
-
-Run it again whenever your habits drift:
-
-```text
-/automate-me update my mode skill with everything since its last edit
-```
-
-Update mode mines only the history since the skill last changed. It keeps rules you haven't contradicted, revises the ones with new evidence, and adds sections only for genuinely new patterns.
+shelly-mode is one person's style. Its playbooks, routing, and model roles work the same with your own style. This page shows how to capture lessons from a session, write a focused skill, and test a skill change before you trust it.
 
 ## Capture a session's lessons with `/reflect`
 

@@ -25,15 +25,14 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 ## cleanup, verification, CI, and PR workflows
 
-shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest are user-only. Type them by name, for example `/shelly-stack:review-and-ship`. Existing project verification skills remain the first choice.
+shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest are user-only. Type them by name, for example `/shelly-stack:maintain-verification-skill`. Existing project verification skills remain the first choice.
 
 | Work | Skills |
 |---|---|
 | Code cleanup and review | `deslop`, `thermo-nuclear-code-quality-review`, `typescript-conventions` |
 | Evidence and app control | `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors` |
-| CI and conflicts | `fix-ci`, `loop-on-ci`, `fix-merge-conflicts` |
-| PR preparation | `review-and-ship`, `new-branch-and-pr`, `make-pr-easy-to-review`, `get-pr-comments`, `pr-review-canvas` |
-| Work history | `weekly-review`, `what-did-i-get-done`, `workflow-from-chats` |
+| CI and conflicts | `fix-ci`, `fix-merge-conflicts` |
+| PR preparation | `get-pr-comments` |
 
 ## get started
 
@@ -141,7 +140,6 @@ For long work, use `/loop`.
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want several different models to try to break it, including a strict code-quality lens. |
-| [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) | you want to pick which models shelly-stack uses per role. detects your models and writes a config rule. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
@@ -203,7 +201,6 @@ unslop:            can we unslop and tighten the new changes?
 reflect:           /reflect that took too long. capture what we learned so the next run doesn't
                    repeat it.
 show-me-your-work: /show-me-your-work keep a decision trail i can review when i'm back.
-automate-me:       /automate-me
 ```
 
 </details>
@@ -267,7 +264,7 @@ Claude Code has plan support that works with shelly-stack. but personally, i don
 
 `shelly-mode` is my style. you may not want exactly that.
 
-type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through shelly-stack underneath. you keep shelly-stack as the base and end up with your own routing skill alongside `shelly-mode`.
+after a task that taught you something, type [`/reflect`](./skills/reflect/SKILL.md). it reviews the transcript and proposes edits to the skills.
 
 models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md). it writes `~/.claude/rules/shelly-stack-models.md`.
 

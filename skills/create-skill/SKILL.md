@@ -1,6 +1,6 @@
 ---
 name: create-skill
-description: Author or edit a Claude Code SKILL.md. Use for "create a skill", "write a skill for X", "turn this into a skill", or when another shelly-stack skill (automate-me, reflect, the authoring-a-skill playbook) says to use create-skill. Covers frontmatter, placement, triggering, and the writing rules agents actually follow.
+description: Author or edit a Claude Code SKILL.md. Use for "create a skill", "write a skill for X", "turn this into a skill", or when another shelly-stack skill (reflect, the authoring-a-skill playbook) says to use create-skill. Covers frontmatter, placement, triggering, and the writing rules agents actually follow.
 ---
 
 # Create skill
