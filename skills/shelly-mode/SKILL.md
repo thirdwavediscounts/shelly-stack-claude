@@ -115,6 +115,7 @@ This plugin ships these companions. The playbooks name each one where it applies
 
 - `deslop`, `unslop`, and `no-comments` before every PR, per **Opening a PR** steps 1 to 3.
 - `control-ui` and `control-cli` to drive an app the project verification skill cannot.
+- `maintain-verification-skill` when a drive through the project verification skill shows its feature map no longer matches the app.
 - `verify-this` for a claim that needs a baseline-versus-treatment proof.
 - `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
 - `check-compiler-errors` when typecheck or compile fails.

@@ -1,7 +1,6 @@
 ---
 name: thermo-nuclear-code-quality-review
 description: Run a strict maintainability audit of a diff for structural regressions, unnecessary layers, branching, and unclear type boundaries. Use for an explicitly requested thermonuclear or deep code quality review.
-disable-model-invocation: true
 ---
 
 # Review maintainability

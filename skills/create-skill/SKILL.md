@@ -21,8 +21,7 @@ shelly-stack bundles this skill because Claude Code has no built-in. It sets the
 ---
 name: <kebab-case, matches the directory>
 description: <one YAML scalar; when to use it, in the user's words, trigger phrases included>
-disable-model-invocation: true   # optional; only /name or an explicit request loads it
-user-invocable: false            # optional; hides it from the / menu, model-only
+user-invocable: false            # principle-* only; hides it from the / menu and the Skill list
 argument-hint: "<what to pass after /name>"   # optional; shown in autocomplete
 allowed-tools: Read, Grep, Glob  # optional; pre-approves these tools for the invoking turn, it restricts nothing
 disallowed-tools: AskUserQuestion  # optional; removes tools while the skill is active
@@ -32,7 +31,7 @@ disallowed-tools: AskUserQuestion  # optional; removes tools while the skill is 
 Rules:
 
 - `description` is the only text Claude sees before deciding to load the skill. Put the triggers there ("Use for X, Y, or when the user says Z"), not a summary of the body. Quote it or use `description: >-` when punctuation or wrapping needs it. The skill listing truncates `description` plus `when_to_use` at 1,536 characters, so put the key use case first.
-- `disable-model-invocation: true` for mode skills and user-only workflows. Description matching would otherwise fire it on casual turns. The flag also makes the Skill tool refuse the skill, so never set it on a skill that another skill or agent invokes; `scripts/check_invoke_targets.py` fails CI when one does. For a heavy skill that agents invoke, narrow its description to explicit requests and the skills that call it.
+- Never set `disable-model-invocation`. It makes the Skill tool refuse the skill, so the agent can never run it; `skills/shelly-mode/scripts/check_routing.py` fails CI when a skill sets it. To keep a heavy skill from firing on casual turns, narrow its description to explicit requests and the skills that call it.
 - Claude Code ignores a key it does not recognize without an error, so a misspelled key is a silent no-op. Other documented keys (`when_to_use`, `arguments`, `model`, `effort`, `context: fork` with `agent`, `hooks`, `paths`) are for special cases; the full table is at https://code.claude.com/docs/en/skills (checked 2026-09-23).
 - `$ARGUMENTS` in the body is replaced with whatever the user typed after `/name`.
 
@@ -42,7 +41,7 @@ Write for an agent that will follow it under load, per the **technical-writing**
 
 - Lead with what the skill does and when. One paragraph.
 - Steps as a numbered list, each ending in a checkable state. Name the tool (`Agent`, `AskUserQuestion`, `Bash`) and the model role when a step delegates.
-- Reference sibling files by relative path. Reference other skills by bold name ("the **how** skill") so the reader knows to load them, and never paste their contents. The Skill tool cannot load a user-only skill (`disable-model-invocation: true`, such as shelly-mode and every `principle-*`). Name it by the relative path to its `SKILL.md` and say to Read it, as in "Read `../principle-prove-it-works/SKILL.md`".
+- Reference sibling files by relative path. Reference other skills by bold name ("the **how** skill") so the reader knows to load them, and never paste their contents. A `principle-*` skill sets `user-invocable: false`, so the Skill tool does not list it. Name it by the relative path to its `SKILL.md` and say to Read it, as in "Read `../principle-prove-it-works/SKILL.md`".
 - Say what the reply must contain. A skill that ends without an output contract produces a different reply every run.
 - Cut anything the agent already knows. A skill is not a manual.
 

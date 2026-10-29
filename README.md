@@ -25,7 +25,7 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 ## cleanup, verification, CI, and PR workflows
 
-shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest are user-only. Type them by name, for example `/shelly-stack:maintain-verification-skill`. Existing project verification skills remain the first choice.
+shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest run when shelly-mode or a playbook calls for them, or when you type them by name, for example `/shelly-stack:maintain-verification-skill`. Existing project verification skills remain the first choice.
 
 | Work | Skills |
 |---|---|
