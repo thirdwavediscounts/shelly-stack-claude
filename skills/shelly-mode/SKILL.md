@@ -33,6 +33,7 @@ Remaining triggers:
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
 - Before any `git push` of a PR branch → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Commit freely while building. Its steps 1 to 3 call `deslop`, `unslop`, and `no-comments` through the Skill tool on every PR, however small, once before the first push.
 - A typecheck or compile command exits nonzero → call the Skill tool with `shelly-stack:check-compiler-errors` before you edit anything to fix it, even for one error or errors you think are old. Fixing straight from the output is a skipped call.
+- A CI check failed, in `gh` output you read or a log the user pasted → call the Skill tool with `shelly-stack:fix-ci` before you edit anything to fix it, even inside Babysit. Fixing straight from the log is a skipped call.
 - Changing UI / IDE / CLI → the project's verification skill before the first push (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Opening a PR does not start it. Do not watch CI right after you open a PR unless the user asked. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
 - Any merge of one PR or a stack ("merge it", "land it", "merge on green", "merge when ready", a merge-and-deploy yes) → Read the **Shipping** playbook (`playbooks/shipping.md`) before any merge command, even mid-session in another playbook. The user's yes authorizes the merge. Shipping still governs how it lands. Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
@@ -116,7 +117,11 @@ This plugin ships these companions. The playbooks name each one where it applies
 - `verify-this` for a claim that needs a baseline-versus-treatment proof.
 - `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
 - `check-compiler-errors` when typecheck or compile fails.
-- `fix-ci` for a real CI failure and `get-pr-comments` to collect review threads, both inside Babysit.
+- `fix-ci` for a real CI failure, inside Babysit or whenever a check you read has failed, and `get-pr-comments` to collect review threads inside Babysit.
+- `fix-merge-conflicts` when a merge, rebase, or cherry-pick stops on conflicts, before you edit the conflicted files.
+- `blast-radius` before you push or apply a change that drops, renames, alters, grants, or replaces a database object, and for "what could this break".
+- `typescript-best-practices` and `typescript-conventions` the first time a session edits a `.ts` or `.tsx` file.
+- `bro` when the user is confused or asks for plain words ("eli5", "wdym", "explain it again"), and `teach` when they ask to really understand a body of work.
 - The `shelly-stack:thermo-nuclear-code-quality-review` agent for the maintainability review in Opening a PR, and the `shelly-stack:spec-conformance-review` agent beside it when the work came from a ticket or spec.
 
 Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
@@ -177,7 +182,7 @@ A large or cross-cutting effort (a migration across many call sites, an ambitiou
 - **Eval.** Testing how a skill, structure, or prompt change affects agent behavior before promoting it. `playbooks/eval.md`.
 - **Babysit.** Driving a PR or a stack to merge-ready: conflicts, review threads, CI. `playbooks/babysit.md`.
 - **Shipping.** The half after Babysit. Independently verifying a green stack, then landing the contiguous verified run with gh merge-when-ready. `playbooks/shipping.md`.
-- **Autonomous run.** A long task to drive to completion without stopping ("run until done", "/loop until X"). `playbooks/autonomous-run.md`.
+- **Autonomous run.** A long task to drive to completion without stopping ("run until done", "/loop until X", `/goal`). `playbooks/autonomous-run.md`.
 - **Orchestrate.** A standing project handed to one coordinator chat: multi-day, many stacked PRs, dozens to hundreds of subagents, minimal human turns ("run this whole project", "own this migration until it lands"). Distinct from Autonomous run, which drives one task to a predicate. Work one agent could finish inside the session's budget routes there, not here, however program-shaped the phrasing sounds. `playbooks/orchestrate.md`.
 - **Autopilot-full.** A queue of independent PRs run to merged with full autonomy. One owner per PR carries build through merge, and the root swarm-verifies each merge-ready head before its owner merges ("autopilot this queue", "full autopilot", one-owner-per-PR programs). `playbooks/autopilot-full.md`.
 - **Autopilot-stack.** A queue of changes built and verified with full autonomy, delivered as one linear reviewed stack of PRs the operator lands herself ("autopilot-stack", "stack them, don't ship", "build the stack, I'll land it"). `playbooks/autopilot-stack.md`.
