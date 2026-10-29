@@ -47,6 +47,8 @@ By default the log is a working artifact, not committed. Keep it at `decisions.t
 
 Commit it only when the work is ambitious enough that a reviewer needs the trail to trust the result.
 
+A log that holds only the user's decisions for one session (shelly-mode's decision trigger) skips the transcript audit and the cross-model review below.
+
 ## Rules
 
 - One row is one decision or checkpoint.
