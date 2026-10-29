@@ -156,6 +156,7 @@ For long work, use `/loop`.
 | [`/unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
+| [`/pr`](./skills/pr/SKILL.md) | you're writing a PR body. one summary view, before-and-after evidence, and merge danger. opening a pr runs it on every PR. |
 
 </details>
 
@@ -270,4 +271,4 @@ models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-s
 
 ## license
 
-MIT. `grilling`, `domain-modeling`, `wizard`, the spec reviewer, and parts of the Bug fix playbook are adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT, see [LICENSE.mattpocock-skills](LICENSE.mattpocock-skills)).
+MIT. `grilling`, `domain-modeling`, `wizard`, `pr`, the spec reviewer, and parts of the Bug fix playbook are adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT, see [LICENSE.mattpocock-skills](LICENSE.mattpocock-skills)).

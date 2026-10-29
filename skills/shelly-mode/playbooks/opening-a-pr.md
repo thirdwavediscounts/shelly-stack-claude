@@ -8,7 +8,7 @@ Invoked at the end of every other playbook, and before every `git push` of a PR 
 4. Spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on the diff. Skip it only when the diff changes no code file (docs or config only), and mark it `skip: no code files`. Fix or dismiss each finding with a reason.
 5. When the work came from a Linear ticket, a spec, or a grilling session, spawn the `shelly-stack:spec-conformance-review` agent. If step 4 runs, spawn both in the same message. Fetch the spec in the parent (the issue body and comments through the Linear MCP) and pass it with the diff. Keep its findings separate from the maintainability findings. A diff can pass one review and fail the other. Fix a missing requirement, drop unrequested behavior or record it as a scope change in the ticket, and fix or dismiss each wrong implementation with a reason.
 6. Clear the open-items list in **Before merge** with the user, then commit per **Commits**.
-7. Call the Skill tool with `shelly-stack:technical-writing`. Draft the title, description, and commit bodies per **Titles** and **Descriptions**. Call the Skill tool with `shelly-stack:unslop` on the draft. Then open the PR per **Forge** and **Readiness**. No skip.
+7. Call the Skill tool with `shelly-stack:technical-writing`, then draft the title and commit bodies per **Titles**. Call the Skill tool with `shelly-stack:pr` and write the description with it. Call the Skill tool with `shelly-stack:unslop` on the draft. Then open the PR per **Forge** and **Readiness**. No skip.
 8. Before asking to merge, clear the list in **Before merge**.
 
 Steps 1 to 3 run on every PR, in order, before the first push. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff or the PR text yourself does not replace a step. Reading a skill's SKILL.md does not run it. One step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
@@ -19,21 +19,11 @@ Use the companion control skills only when the project verification skill lacks 
 
 **Commits.** Commit freely. Rebase into small, ordered commits before opening the PR, one commit per improvement. Make each one build on its own, and order them to tell the story. Amend when the fix belongs in a just-made commit. Make a new commit when the fix is separable.
 
-**PRs.** Step 7's two Skill calls cover every PR title, PR description, and commit body. Apply every technical-writing layer except Diátaxis. Use one word for each action, keep articles, and avoid `-ing` when a plain verb works.
+**PRs.** Step 7's Skill calls cover every PR title, PR description, and commit body. Apply every technical-writing layer except Diátaxis. Use one word for each action, keep articles, and avoid `-ing` when a plain verb works.
 
 **Titles.** Use Conventional Commits in the form `type(scope): subject`. Use `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, or `perf` as the type. Use the changed area, such as `shelly-stack` or `shelly-mode`, as the scope. Keep the subject short and imperative. Name a real symbol when one carries the change. For example, `fix(shelly-stack): retarget opening-a-pr babysit trigger`. Do not add a trailing period.
 
-**Descriptions.** The PR body is a briefing, not the lab notebook. A reviewer who has the diff should learn why the change exists, what is out of scope, and how you proved the change works. The squash commit body is the PR body, so keep it short enough to read as one commit message.
-
-Use these sections in order. Drop a section when it has nothing to say.
-
-- `## Why`. State the intent and approach in one or two short paragraphs. Do not list SHAs or rebase genealogy. Do not add a "based on main" preamble.
-- `## Scope`. Use bullets to list real symbols and paths. Name both sides of a rename or retarget. State what is in and out only when the boundary matters. Do not write a file-by-file essay.
-- `## Tradeoffs`. Name only rejected alternatives that a reviewer would otherwise ask about. Skip this section when there was no real choice.
-- `## Blast Radius`. In one to three sentences, name who or what the change touches and why the change is safe or risky. State the continuing cost if main stays red without the fix.
-- `## Verification`. Name each real run path and its outcome. For a performance change, report one primary number with its unit in `before → after` form. Link the arena or swarm directory for the remaining evidence. Do not include sample-size methodology, swarm recitals, or metric tables.
-
-After these sections, attach videos or screenshots when they prove a claim. Do not paste full SHAs, swarm or arena lane recitals, lever-correction essays, file-by-file checklists, or "CLEAN" verdicts. Put these details in a linked artifact. Do not use `## Summary` or `## Test plan` boilerplate. A commit body does not restate its subject.
+**Descriptions.** The **pr** skill owns the PR body: its sections, evidence, and merge danger. The squash commit body is the PR body, so keep it short enough to read as one commit message. Do not paste full SHAs, swarm or arena lane recitals, file-by-file checklists, or "CLEAN" verdicts. Put these details in a linked artifact. A commit body does not restate its subject.
 
 **Forge.** Resolve the forge before the first PR operation and keep that choice for create, edit, view, watch, and merge. GitHub CLI (`gh`) is the default. If `command -v origin` succeeds and Origin can resolve the repository, prefer `origin pr ...`; if Origin is absent or cannot resolve the repository, stay on `gh` and record the fallback. Do not require Graphite (`gt`).
 
