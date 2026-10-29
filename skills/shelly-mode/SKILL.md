@@ -1,7 +1,6 @@
 ---
 name: shelly-mode
-description: Sean's shelly agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for shelly, /shelly-mode, or requests to work in this style.
-disable-model-invocation: true
+description: Sean's shelly agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use when the user's message names /shelly-mode or shelly-stack:shelly-mode, including inside a /goal, or asks to work in this style.
 ---
 
 # Shelly mode
