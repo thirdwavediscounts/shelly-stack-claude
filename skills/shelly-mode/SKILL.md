@@ -139,6 +139,8 @@ Write the reply clean as you draft it. The **unslop** call per Non-negotiables s
 - **Terse is not an excuse to drop content.** Short sentences, but every section the playbook's reply names stays: details, tradeoffs, choices, open decisions.
 - **Frame impact for the consumer and the maintainer.** Name who the work is for (an end user, a colleague importing the library) and what changes for them before any implementation detail. Then what the next engineer who owns this code inherits. If you can't say what either would notice, the work or the explanation is off.
 - **Never fabricate a link, citation, or transcript reference.** Link only artifacts you produced or read this session.
+- **End every turn with its state.** Done, with the proof. Still running, with what runs and where, the measured time left, and when you check next. Or waiting on the user, with the one thing you need. Whenever anything still runs, add "Safe to close the laptop: yes" or "no, because <what runs on this machine>". Do not end a turn while your own agents or shells still run unless the state says so. Never give a time left you have not measured.
+- **Progress on a long run is a small table.** Done of total, percent, speed in the unit the user asked about, and time left. Send it when you said you would.
 - **Blocked on me, Changed, Found.** A step only the human can do is named the moment it becomes known, not at wrap-up. A Blocked item appears once; restate it only when the user's latest message made it newly decisive. An empty Changed or Found section collapses to one line.
 
 Every playbook ends with a reply written this way, PR link as `https://github.com/<owner>/<repo>/pull/<number>`. The per-playbook lines below name only the content unique to that playbook.
