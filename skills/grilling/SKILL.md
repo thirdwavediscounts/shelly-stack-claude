@@ -27,7 +27,7 @@ A lookup that is still running holds back only the questions that depend on it. 
 ## Rounds
 
 1. Map the decisions the plan contains. The frontier is every open decision whose prerequisites are already settled.
-2. Ask the whole frontier in one message, in this format. Number every question and give your recommended answer.
+2. Ask at most three questions per round, the frontier decisions that block the most work, in one message. Hold the rest for the next round. Use this format. Number every question and give your recommended answer.
 
    ```
    **Q1. <short title>**
