@@ -1,7 +1,6 @@
 ---
 name: shelly-mode
-description: Sean's shelly agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for shelly, /shelly-mode, or requests to work in this style.
-disable-model-invocation: true
+description: Sean's shelly agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use when the user's message names /shelly-mode or shelly-stack:shelly-mode, including inside a /goal, or asks to work in this style.
 ---
 
 # Shelly mode
@@ -29,20 +28,23 @@ Remaining triggers:
 - The user asks for parallel coverage, a bakeoff, or a challenge to the design → invoke the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions, **arena** for design or code bakeoffs with base selection and grafting, and **interrogate** for a multi-model challenge. Do not start these on your own.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
 - Any prose surface → write it clean as you draft, and still invoke the **unslop** skill. Call it once per session before your first reply, and once on each prose file, PR text, commit body, or Linear text before it ships. Do not call it again on each push or each reply. Writing clean does not replace the call. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows `../create-skill/SKILL.md`. Read that file, because the Skill tool refuses create-skill.
-- Docs, RFCs, readmes, PR titles and descriptions, or commit bodies → call the Skill tool with `shelly-stack:technical-writing` before you draft them. Reviewing the text yourself does not replace the call.
+- Docs, RFCs, readmes, PR titles and descriptions, or commit bodies → call the Skill tool with `shelly-stack:technical-writing` before you draft them. A PR description also gets `shelly-stack:pr`. Reviewing the text yourself does not replace the call.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
 - Before any `git push` of a PR branch → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Commit freely while building. Its steps 1 to 3 call `deslop`, `unslop`, and `no-comments` through the Skill tool on every PR, however small, once before the first push.
 - A typecheck or compile command exits nonzero → call the Skill tool with `shelly-stack:check-compiler-errors` before you edit anything to fix it, even for one error or errors you think are old. Fixing straight from the output is a skipped call.
+- A CI check failed, in `gh` output you read or a log the user pasted → call the Skill tool with `shelly-stack:fix-ci` before you edit anything to fix it, even inside Babysit. Fixing straight from the log is a skipped call.
 - Changing UI / IDE / CLI → the project's verification skill before the first push (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
+- A UI, UX, or product-scope change ("make the ui/ux better", a new column, when a button shows) → Read `../principle-experience-first/SKILL.md` before you design it.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Opening a PR does not start it. Do not watch CI right after you open a PR unless the user asked. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
 - Any merge of one PR or a stack ("merge it", "land it", "merge on green", "merge when ready", a merge-and-deploy yes) → Read the **Shipping** playbook (`playbooks/shipping.md`) before any merge command, even mid-session in another playbook. The user's yes authorizes the merge. Shipping still governs how it lands. Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - `/code-review` findings and review-bot comments → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so verify each against the code, fix real ones, and dismiss noise with a concrete reason instead of churning code. Classify each as fix, dismiss, or ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
 - A credential is needed → it lives in 1Password. Pass it to the command with `op run` or `op read` so the value never prints, and use the password manager's credential request for a browser sign-in. When the item is missing, name the vault and item for the user to add and ask for "set" back. Never ask for a secret in chat, and never hand over a command that prints one. Read env-shaped files through a value mask (`sed 's/=.*/=<redacted>/'`). Setup with more than one manual step (a vendor dashboard, several keys, secrets for both local and Vercel) → invoke the **wizard** skill so the human runs a script instead of following chat instructions. A leaked value goes in Found as an incident, and rotation precedes the next step.
-- The user states a rule or decision for this work ("we're not using X anymore", "only pull auctions that end tomorrow", "use all 600 proxies") → add it to the work's decision log as a show-me-your-work row with `by` set to the user's quote, and say it back in one line. Check each later step against the log. After the context is summarized ("This session is being continued"), read the log before the next step.
+- The user states a rule or decision for this work ("we're not using X anymore", "only pull auctions that end tomorrow", "use all 600 proxies") → add it to the work's decision log as a show-me-your-work row with `by` set to the user's quote, and say it back in one line. When the rule covers the whole codebase ("all", "every", "the whole app"), Read `../principle-encode-lessons-in-structure/SKILL.md` and encode the rule as a check. Check each later step against the log. After the context is summarized ("This session is being continued"), read the log before the next step.
 - Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X") → invoke the **show-me-your-work** skill for the decision trail. Commit it when stakes need an auditable record. Keep it local otherwise.
 - About to plan or write "wait until", "after the next run", "check back", "overnight", or any proof that needs hours to pass → call the Skill tool with `shelly-stack:compress-the-clock` first.
 - "Give me a handoff prompt", "prompt for the next session", "before I clear context" → the **Pause safely** playbook. Write the checkpoint, then reply with the resume prompt.
+- "Which skill should I use", "how do I use shelly-stack" → call the Skill tool with `shelly-stack:shelly-guide`.
 - "Catch me up", "where did I leave off", "did we already do X", "what have I been working on" → invoke the **recall** skill before doing anything else.
 - "Diagnose", "why is it broken", "root cause" → the **Bug fix** playbook when the symptom is reproducible, **Runtime forensics** when it is live-only. Reproduce or instrument before hypothesizing. Never guess from code alone.
 - "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **ticket** skill in its Triage gate over the candidates. Report the frontier, do not start a build.
@@ -51,7 +53,7 @@ Where a trigger or playbook step says invoke, run, or use a named skill, call th
 
 ## Principles
 
-Read the leaf skill in full for any principle you apply or name. Each entry names when it applies and gives its path from this skill's base directory. Principle skills are not model-invocable, so Read the file rather than calling the Skill tool. Playbooks give the same files as `../../principle-<name>/SKILL.md`. Read the file when you reach that step.
+Read the leaf skill in full for any principle you apply or name. Each entry names when it applies and gives its path from this skill's base directory. Principle skills are not model-invocable, so Read the file rather than calling the Skill tool. Playbooks give the same files as `../../principle-<name>/SKILL.md`. When you put a playbook's steps in the task list, add each principle a step names as its own "Read <principle>" item before that step, and Read the file when you reach it.
 
 **Core**
 
@@ -116,7 +118,11 @@ This plugin ships these companions. The playbooks name each one where it applies
 - `verify-this` for a claim that needs a baseline-versus-treatment proof.
 - `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
 - `check-compiler-errors` when typecheck or compile fails.
-- `fix-ci` for a real CI failure and `get-pr-comments` to collect review threads, both inside Babysit.
+- `fix-ci` for a real CI failure, inside Babysit or whenever a check you read has failed, and `get-pr-comments` to collect review threads inside Babysit.
+- `fix-merge-conflicts` when a merge, rebase, or cherry-pick stops on conflicts, before you edit the conflicted files.
+- `blast-radius` before you push or apply a change that drops, renames, alters, grants, or replaces a database object, and for "what could this break".
+- `typescript-best-practices` and `typescript-conventions` the first time a session edits a `.ts` or `.tsx` file.
+- `bro` when the user is confused or asks for plain words ("eli5", "wdym", "explain it again"), and `teach` when they ask to really understand a body of work.
 - The `shelly-stack:thermo-nuclear-code-quality-review` agent for the maintainability review in Opening a PR, and the `shelly-stack:spec-conformance-review` agent beside it when the work came from a ticket or spec.
 
 Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
@@ -125,7 +131,7 @@ Use an existing project harness when it proves the same behavior. Do not invent 
 
 ## Subagents
 
-**Use `subagent_type: "shelly-stack:shelly-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/shelly-mode` runs these rules in the chat. `shelly-stack:shelly-agent` runs the same rules in a subagent by reading this SKILL.md. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review; respect what the skill prescribes, don't override to `shelly-stack:shelly-agent`.
+**Use `subagent_type: "shelly-stack:shelly-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/shelly-mode` runs these rules in the chat. `shelly-stack:shelly-agent` runs the same rules in a subagent by reading this SKILL.md. A subagent that only reads (search code, explain a flow, check one fact) uses `shelly-stack:shelly-reader` instead. It does not read this file, so it starts with less context. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review; respect what the skill prescribes, don't override to `shelly-stack:shelly-agent`.
 
 **Defaults for every `Agent` call.** Spawn, don't wait inline. File pointers, not inlined context. Omit `name:` for a one-shot delegate. A named teammate's plain-text final answer never reaches the lead, so its brief ends with "SendMessage your report to <lead> before going idle". A long report goes to a scratch file and only the path comes back. Close the pane or teammate as soon as its report arrives. A brief that touches a datastore names the environment (staging or production), requires the delegate to print its target before the first write, and carries a `ToolSearch select:<tools>` line for each MCP tool it needs, because a spawned agent starts without deferred MCP tools loaded. For a spawn, Workflow, or remote job expected to run past ten minutes, state the expected duration up front and post one line per milestone instead of going silent.
 
@@ -177,7 +183,7 @@ A large or cross-cutting effort (a migration across many call sites, an ambitiou
 - **Eval.** Testing how a skill, structure, or prompt change affects agent behavior before promoting it. `playbooks/eval.md`.
 - **Babysit.** Driving a PR or a stack to merge-ready: conflicts, review threads, CI. `playbooks/babysit.md`.
 - **Shipping.** The half after Babysit. Independently verifying a green stack, then landing the contiguous verified run with gh merge-when-ready. `playbooks/shipping.md`.
-- **Autonomous run.** A long task to drive to completion without stopping ("run until done", "/loop until X"). `playbooks/autonomous-run.md`.
+- **Autonomous run.** A long task to drive to completion without stopping ("run until done", "/loop until X", `/goal`). `playbooks/autonomous-run.md`.
 - **Orchestrate.** A standing project handed to one coordinator chat: multi-day, many stacked PRs, dozens to hundreds of subagents, minimal human turns ("run this whole project", "own this migration until it lands"). Distinct from Autonomous run, which drives one task to a predicate. Work one agent could finish inside the session's budget routes there, not here, however program-shaped the phrasing sounds. `playbooks/orchestrate.md`.
 - **Autopilot-full.** A queue of independent PRs run to merged with full autonomy. One owner per PR carries build through merge, and the root swarm-verifies each merge-ready head before its owner merges ("autopilot this queue", "full autopilot", one-owner-per-PR programs). `playbooks/autopilot-full.md`.
 - **Autopilot-stack.** A queue of changes built and verified with full autonomy, delivered as one linear reviewed stack of PRs the operator lands herself ("autopilot-stack", "stack them, don't ship", "build the stack, I'll land it"). `playbooks/autopilot-stack.md`.

@@ -25,15 +25,14 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 ## cleanup, verification, CI, and PR workflows
 
-shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest are user-only. Type them by name, for example `/shelly-stack:review-and-ship`. Existing project verification skills remain the first choice.
+shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest are user-only. Type them by name, for example `/shelly-stack:maintain-verification-skill`. Existing project verification skills remain the first choice.
 
 | Work | Skills |
 |---|---|
 | Code cleanup and review | `deslop`, `thermo-nuclear-code-quality-review`, `typescript-conventions` |
 | Evidence and app control | `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors` |
-| CI and conflicts | `fix-ci`, `loop-on-ci`, `fix-merge-conflicts` |
-| PR preparation | `review-and-ship`, `new-branch-and-pr`, `make-pr-easy-to-review`, `get-pr-comments`, `pr-review-canvas` |
-| Work history | `weekly-review`, `what-did-i-get-done`, `workflow-from-chats` |
+| CI and conflicts | `fix-ci`, `fix-merge-conflicts` |
+| PR preparation | `get-pr-comments` |
 
 ## get started
 
@@ -141,7 +140,6 @@ For long work, use `/loop`.
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want several different models to try to break it, including a strict code-quality lens. |
-| [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) | you want to pick which models shelly-stack uses per role. detects your models and writes a config rule. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
@@ -158,6 +156,7 @@ For long work, use `/loop`.
 | [`/unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
+| [`/pr`](./skills/pr/SKILL.md) | you're writing a PR body. one summary view, before-and-after evidence, and merge danger. opening a pr runs it on every PR. |
 
 </details>
 
@@ -203,7 +202,6 @@ unslop:            can we unslop and tighten the new changes?
 reflect:           /reflect that took too long. capture what we learned so the next run doesn't
                    repeat it.
 show-me-your-work: /show-me-your-work keep a decision trail i can review when i'm back.
-automate-me:       /automate-me
 ```
 
 </details>
@@ -219,6 +217,7 @@ shelly-stack also ships [Comment Sicko](./agents/comment-sicko.md). usually invo
 it also ships these agents:
 
 - pinned shelly agents. each is `shelly-agent` with a fixed model and effort: `shelly-opus-{low,medium,high,xhigh}`, `shelly-fable-{low,medium,high,xhigh}`, and `shelly-sonnet-{low,medium,high}`. a role in `~/.claude/rules/shelly-stack-models.md` can name one, for example `shelly-stack:shelly-opus-medium`.
+- [`shelly-reader`](./agents/shelly-reader.md) answers one read-only question: search code, explain a flow, or check one fact. it does not read the shelly-mode SKILL.md, so a lookup starts with less context.
 - [`thermo-nuclear-code-quality-review`](./agents/thermo-nuclear-code-quality-review.md) reviews a diff for maintainability. opening a pr runs it on every diff that changes code.
 - [`spec-conformance-review`](./agents/spec-conformance-review.md) checks a diff against its ticket or spec. opening a pr runs it beside the maintainability review.
 - [`ci-watcher`](./agents/ci-watcher.md) returns a short, read-only snapshot of a PR's checks when a parent agent asks for one.
@@ -266,10 +265,10 @@ Claude Code has plan support that works with shelly-stack. but personally, i don
 
 `shelly-mode` is my style. you may not want exactly that.
 
-type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through shelly-stack underneath. you keep shelly-stack as the base and end up with your own routing skill alongside `shelly-mode`.
+after a task that taught you something, type [`/reflect`](./skills/reflect/SKILL.md). it reviews the transcript and proposes edits to the skills.
 
 models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md). it writes `~/.claude/rules/shelly-stack-models.md`.
 
 ## license
 
-MIT. `grilling`, `domain-modeling`, `wizard`, the spec reviewer, and parts of the Bug fix playbook are adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT, see [LICENSE.mattpocock-skills](LICENSE.mattpocock-skills)).
+MIT. `grilling`, `domain-modeling`, `wizard`, `pr`, the spec reviewer, and parts of the Bug fix playbook are adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT, see [LICENSE.mattpocock-skills](LICENSE.mattpocock-skills)).
