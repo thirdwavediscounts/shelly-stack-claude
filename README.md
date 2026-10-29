@@ -219,6 +219,7 @@ shelly-stack also ships [Comment Sicko](./agents/comment-sicko.md). usually invo
 it also ships these agents:
 
 - pinned shelly agents. each is `shelly-agent` with a fixed model and effort: `shelly-opus-{low,medium,high,xhigh}`, `shelly-fable-{low,medium,high,xhigh}`, and `shelly-sonnet-{low,medium,high}`. a role in `~/.claude/rules/shelly-stack-models.md` can name one, for example `shelly-stack:shelly-opus-medium`.
+- [`shelly-reader`](./agents/shelly-reader.md) answers one read-only question: search code, explain a flow, or check one fact. it does not read the shelly-mode SKILL.md, so a lookup starts with less context.
 - [`thermo-nuclear-code-quality-review`](./agents/thermo-nuclear-code-quality-review.md) reviews a diff for maintainability. opening a pr runs it on every diff that changes code.
 - [`spec-conformance-review`](./agents/spec-conformance-review.md) checks a diff against its ticket or spec. opening a pr runs it beside the maintainability review.
 - [`ci-watcher`](./agents/ci-watcher.md) returns a short, read-only snapshot of a PR's checks when a parent agent asks for one.
