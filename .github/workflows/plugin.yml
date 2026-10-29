@@ -40,3 +40,8 @@ jobs:
           bash -n cloud/install.sh
           bash -n cloud/hooks/git-staleness-check.sh
           node --test cloud/prod-db-guard.test.mjs
+      - uses: jdx/mise-action@v5
+        with:
+          install: false
+      - name: statechart
+        run: skills/statechart/ci/check.sh
