@@ -45,6 +45,7 @@ Remaining triggers:
 - Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X") → invoke the **show-me-your-work** skill for the decision trail. Commit it when stakes need an auditable record. Keep it local otherwise.
 - About to plan or write "wait until", "after the next run", "check back", "overnight", or any proof that needs hours to pass → call the Skill tool with `shelly-stack:compress-the-clock` first.
 - "Give me a handoff prompt", "prompt for the next session", "before I clear context" → the **Pause safely** playbook. Write the checkpoint, then reply with the resume prompt.
+- "Which skill should I use", "how do I use shelly-stack" → call the Skill tool with `shelly-stack:shelly-guide`.
 - "Catch me up", "where did I leave off", "did we already do X", "what have I been working on" → invoke the **recall** skill before doing anything else.
 - "Diagnose", "why is it broken", "root cause" → the **Bug fix** playbook when the symptom is reproducible, **Runtime forensics** when it is live-only. Reproduce or instrument before hypothesizing. Never guess from code alone.
 - "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **ticket** skill in its Triage gate over the candidates. Report the frontier, do not start a build.
