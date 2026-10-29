@@ -6,6 +6,7 @@ import sys
 
 ALLOWED_NAMES = {"claude.md", "agents.md", "claude.local.md", "agents.local.md"}
 ALLOWED_DIRS = ("/skills/", "/agents/", "/evals/")
+CAN_WRITE = re.compile(r"(?:>|\b(?:touch|tee|cp|mv|install)\b|\bopen\s*\(|\.write(?:_text|_bytes)?\s*\()")
 UNKNOWN = "\0"
 
 
@@ -32,9 +33,7 @@ def paths(event: dict, cwd: str) -> list[str]:
     if event.get("tool_name") != "Bash":
         return []
     patches = re.findall(r"^\*\*\* (?:Add|Update) File: (.+)$", command, re.M)
-    # Shells and embedded scripts have no shared write API. Inspect literal paths
-    # only in commands that can write; this is a guardrail, not a shell sandbox.
-    if not re.search(r"(?:>|\b(?:touch|tee|cp|mv|install)\b|\bopen\s*\(|\.write(?:_text|_bytes)?\s*\()", command):
+    if not CAN_WRITE.search(command):
         return patches
     names = dict(os.environ, **dict(re.findall(r"(?:^|[\s;&|])([A-Za-z_]\w*)=([^\s;&|]+)", command)))
     command = re.sub(r"\$\{?([A-Za-z_]\w*)\}?", lambda m: names.get(m.group(1), UNKNOWN), command)
