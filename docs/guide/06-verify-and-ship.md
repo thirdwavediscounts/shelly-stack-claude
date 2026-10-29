@@ -48,6 +48,16 @@ Apps change and feature maps rot. When yours drifts, run:
 
 [`/maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) audits the generated skill: one read-only source reader per feature in parallel, then one live pass that drives every mapped feature. It ends in exactly one of three outcomes. `clean` means full coverage and nothing to ship. `changed` means one PR of proven corrections, confined to the verification skill's own directory. `blocked` names the blocker. It never edits product code. If the live pass catches a product regression, it reports the regression instead of papering over it in docs.
 
+## Formally verify the riskiest promise
+
+Tests check the cases someone wrote. For a race, a retry loop, or a state machine, run:
+
+```text
+/create-formal-verification-skill
+```
+
+[`/create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) picks the promise where a bug costs the most and tests reach the least. It checks that promise with the cheapest tool that fits, which is TLA+ by default for event order. It shows the check failing on a broken copy of the code, then writes a project-local skill named for the area. [`/statechart`](../../skills/statechart/SKILL.md) reads each TLA+ result as a Mermaid chart with the shortest path to every broken rule. When verified code changes without a recheck, [`/maintain-formal-verification-skill`](../../skills/maintain-formal-verification-skill/SKILL.md) brings the model back in line and says whether each failure is drift in the model or a bug in the code.
+
 ## Open the PR
 
 ```text

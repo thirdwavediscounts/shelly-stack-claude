@@ -120,6 +120,7 @@ This plugin ships these companions. The playbooks name each one where it applies
 - `check-compiler-errors` when typecheck or compile fails.
 - `fix-ci` for a real CI failure, inside Babysit or whenever a check you read has failed, and `get-pr-comments` to collect review threads inside Babysit.
 - `fix-merge-conflicts` when a merge, rebase, or cherry-pick stops on conflicts, before you edit the conflicted files.
+- `create-formal-verification-skill` when a race, retry, or state machine needs a guarantee tests cannot reach, and `statechart` to check a TLA+ model and show a bug as a path through states. Run `maintain-formal-verification-skill` when a change touches code that a project formal verification skill covers and that skill was not rerun.
 - `blast-radius` before you push or apply a change that drops, renames, alters, grants, or replaces a database object, and for "what could this break".
 - `typescript-best-practices` and `typescript-conventions` the first time a session edits a `.ts` or `.tsx` file.
 - `bro` when the user is confused or asks for plain words ("eli5", "wdym", "explain it again"), and `teach` when they ask to really understand a body of work.
