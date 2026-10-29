@@ -21,7 +21,7 @@ The library in [`scripts/template.sh`](scripts/template.sh) handles the UX: prog
 2. **Map each stage.** Write the exact path a human follows, for example "developer.ebay.com/my/keys, Production keyset, copy the Cert ID". When you do not know the current UI, check the vendor's docs or ask. Never invent a step. Done when a stranger could follow every stage.
 3. **Author the script.** Copy `scripts/template.sh` from this skill's directory to `scripts/wizards/<name>.sh` in the target repository, or to a scratch path for a one-time run. Replace the example stage with one `stage` per step in dependency order and set `TOTAL_STAGES`. Use `open_url` before asking for a value from that page, `ask_secret` for every secret, `write_env` for every value the app reads locally, `set_secret` only for values CI reads, `set_vercel_env` for deployed apps, and `confirm` before any irreversible action. Set `ENV_FILE` to the file the app actually loads (`apps/<app>/.env.local`, for example). Add each new key to the matching `.env.example` with a placeholder. Leave the library above the `STAGES` marker unchanged.
 4. **Check it statically.** Run `bash -n <script>` and `shellcheck <script>` when installed, then `chmod +x`. Do not run it yourself, since it opens a browser and waits for a human. Trace instead: every value from step 1 is captured and lands where step 1 said, every `set_secret` name matches a `secrets.*` reference in CI, and every `set_vercel_env` name matches the variable the app reads.
-5. **Hand off.** Tell the user the command to run and ask for "done" back. Then verify the result yourself without reading the values. Check that the keys exist in the env file with `sed 's/=.*/=<redacted>/'`, list Vercel env names, or run the app's health check.
+5. **Hand off.** Tell the user the command to run and ask for "done" back. Then verify the result yourself without reading the values. Check that the keys exist in the env file with `grep -oE '^[A-Z_][A-Z0-9_]*=' FILE`, list Vercel env names, or run the app's health check. The `grep` prints key names only. Do not use `sed`, `cut`, or `awk` here, because they print the lines of a multi-line PEM key.
 
 Commit the script only when the procedure will repeat. A one-time cutover wizard stays out of the repository.
 
@@ -30,4 +30,4 @@ Commit the script only when the procedure will repeat. A one-time cutover wizard
 - The script path and the exact command to run.
 - The stages in order, one line each, with where each value lands.
 - Anything the script cannot do and the human must still do by hand.
-- After "done", the check you ran and its redacted output.
+- After "done", the check you ran and its output, which shows key names only.
