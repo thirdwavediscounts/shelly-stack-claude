@@ -4,7 +4,7 @@
 
 Investigation requests are read-only. They produce a cited explanation or a recommendation, not a code change.
 
-1. Call the Skill tool with `shelly-stack:how`. For motivation questions, also call it with `shelly-stack:why`. No skip. Reading the code yourself does not replace either call. For a question about live behavior, check the diagnosis sources in Bug fix step 1 (`playbooks/bug-fix.md`) before answering from code.
+1. For a question about live behavior (what runs, when, how long, how many), check the sources in Bug fix step 1 (`playbooks/bug-fix.md`) before you read any code. For how a subsystem works, call the Skill tool with `shelly-stack:how`. For why it was built that way, call it with `shelly-stack:why`. A question that one or two files answer needs neither call. Read them and cite `file:line`.
 2. Throughput checkpoint stays one line: `throughput checkpoint: n/a, read-only investigation`.
 3. Produce the `how`-shaped output (Overview / Key Concepts / How It Works / Where Things Live / Gotchas), or a recommendation with a tradeoffs table if the request is a decision between alternatives.
 4. Call the Skill tool with `shelly-stack:unslop` before you post the reply.
