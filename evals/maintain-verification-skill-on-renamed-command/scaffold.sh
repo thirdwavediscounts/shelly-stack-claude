@@ -44,8 +44,8 @@ JS
 chmod +x bin/todo.mjs
 git add -A && git commit -qm "add todo CLI"
 
-mkdir -p .claude/skills/verify-todo/features
-cat > .claude/skills/verify-todo/SKILL.md <<'TXT'
+mkdir -p skills/verify-todo/features
+cat > skills/verify-todo/SKILL.md <<'TXT'
 ---
 name: verify-todo
 description: Drive the todo CLI to prove a change works. Use after changing bin/todo.mjs, or for "verify it yourself".
@@ -68,12 +68,12 @@ Save each command's output to `$TODO_FILE.log`, and keep the data file.
 ## Cleanup
 Delete the temp dir only after copying the evidence to `/tmp/verify-todo-evidence/`.
 TXT
-cat > .claude/skills/verify-todo/features/README.md <<'TXT'
+cat > skills/verify-todo/features/README.md <<'TXT'
 # Features
 - add.md: add a todo
 - complete.md: mark a todo complete
 TXT
-cat > .claude/skills/verify-todo/features/add.md <<'TXT'
+cat > skills/verify-todo/features/add.md <<'TXT'
 # Add a todo
 ## Sub-features
 Adds an item with the next id.
@@ -84,7 +84,7 @@ Adds an item with the next id.
 ## Gotchas
 None.
 TXT
-cat > .claude/skills/verify-todo/features/complete.md <<'TXT'
+cat > skills/verify-todo/features/complete.md <<'TXT'
 # Complete a todo
 ## Sub-features
 Marks an item done.

@@ -41,3 +41,14 @@ export function formatPrice(amount) {
 }
 JS
 git commit -qam "simplify formatPrice"
+
+git checkout -qb fix-price
+git checkout -q HEAD~1 -- src/price.mjs
+git commit -qam "fix: restore two-decimal prices"
+cat >> test/price.test.mjs <<'JS'
+
+test("formats zero", () => {
+  assert.equal(formatPrice(0), "$0.00");
+});
+JS
+git commit -qam "test: format zero"

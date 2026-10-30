@@ -65,7 +65,9 @@ if (found.length) {
 }
 console.log("PASS: at most one worker holds the lease");
 JS
-cat > .claude/skills/lease-race/SKILL.md <<TXT
+sync=$(git rev-parse HEAD)
+{
+  cat <<'TXT'
 ---
 name: lease-race
 description: Model-check the lease in src/lease.mjs for two workers holding it at once. Use when a change touches src/lease.mjs or src/store.mjs.
@@ -77,10 +79,13 @@ Covers acquire() in src/lease.mjs. The model in check/lease-model.mjs treats eac
 
 Run: node check/lease-model.mjs
 
-Synced at commit $(git rev-parse HEAD). Move this forward only after you confirm the model describes the code at the new commit.
+TXT
+  echo "Synced at commit $sync. Move this forward only after you confirm the model describes the code at the new commit."
+  cat <<'TXT'
 
 Known finding at the sync commit: two workers can both read an empty lease and both write it.
 TXT
+} > .claude/skills/lease-race/SKILL.md
 git add -A && git commit -qm "add lease model check"
 cat > src/lease.mjs <<'JS'
 export async function acquire(store, worker) {

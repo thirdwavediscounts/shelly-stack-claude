@@ -8,7 +8,7 @@ cat > package.json <<'JSON'
 { "name": "export", "private": true, "type": "module", "scripts": { "test": "node --test" } }
 JSON
 cat > src/export.mjs <<'JS'
-export const formats = { json: exportJson, xml: exportXmlLegacy };
+const formats = { json: exportJson, xml: exportXmlLegacy };
 
 export function validateRowsStrict(rows) {
   return true;
@@ -19,7 +19,7 @@ export function exportJson(rows) {
   return JSON.stringify(rows);
 }
 
-export function exportXmlLegacy(rows) {
+function exportXmlLegacy(rows) {
   return "<rows>" + rows.map((r) => `<row id="${r.id}"/>`).join("") + "</rows>";
 }
 JS

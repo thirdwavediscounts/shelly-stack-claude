@@ -1,5 +1,6 @@
 ---
 type: llm
+focus: { source: file, path: src/payments.ts }
 weight: 1
 ---
-Pass if order ids and user ids get distinct types (branded or wrapped) so they cannot be swapped, the JSON order row is parsed into a typed value at the boundary instead of used as any, and refund uses those types. Fail if refund takes plain string ids and trusts the any row.
+Pass if refund takes order ids and user ids as distinct types (branded or wrapped, possibly imported from another module) so they cannot be swapped, and works on an order row that was parsed into a typed value instead of the raw any from getOrderRow. Fail if refund takes plain string ids and reads fields off the any row.
