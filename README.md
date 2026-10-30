@@ -25,7 +25,7 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 ## code review
 
-shelly-stack includes `thermo-nuclear-code-quality-review` and `typescript-conventions`, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke `typescript-conventions` on its own. Opening a PR spawns the `thermo-nuclear-code-quality-review` agent, which reviews with that skill's rubric.
+shelly-stack includes `thermo-nuclear-code-quality-review`, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). Opening a PR spawns the `thermo-nuclear-code-quality-review` agent, which reviews with that skill's rubric.
 
 ## get started
 

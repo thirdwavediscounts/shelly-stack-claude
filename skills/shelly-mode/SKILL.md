@@ -115,7 +115,7 @@ This plugin ships these companions. The playbooks name each one where it applies
 - `maintain-verification-skill` when a drive through the project verification skill shows its feature map no longer matches the app.
 - `create-formal-verification-skill` when a race, retry, or state machine needs a guarantee tests cannot reach, and `statechart` to check a TLA+ model and show a bug as a path through states. Run `maintain-formal-verification-skill` when a change touches code that a project formal verification skill covers and that skill was not rerun.
 - `blast-radius` before you push or apply a change that drops, renames, alters, grants, or replaces a database object, and for "what could this break".
-- `typescript-best-practices` and `typescript-conventions` the first time a session edits a `.ts` or `.tsx` file.
+- `typescript-best-practices` the first time a session edits a `.ts` or `.tsx` file.
 - `bro` when the user is confused or asks for plain words ("eli5", "wdym", "explain it again"), and `teach` when they ask to really understand a body of work.
 - The `shelly-stack:thermo-nuclear-code-quality-review` agent for the maintainability review in Opening a PR, and the `shelly-stack:spec-conformance-review` agent beside it when the work came from a ticket or spec.
 
