@@ -21,14 +21,10 @@ class HooksTest(unittest.TestCase):
         if codex:
             event.update(turn_id="test-turn", session_id="test-session")
         event.update(fields)
-        result = subprocess.run(
-            ["python3", str(ROOT / "hooks" / script)],
-            input=json.dumps(event), text=True, capture_output=True, check=True,
-            cwd=self.cwd, env=dict(os.environ, PLUGIN_DATA=str(self.cwd / "data")),
-        )
+        stdout = self.run_hook(script, event)
         if script == "sql_approval.py":
-            return result.stdout.strip()
-        return json.loads(result.stdout)["hookSpecificOutput"] if result.stdout else None
+            return stdout.strip()
+        return json.loads(stdout)["hookSpecificOutput"] if stdout else None
 
     def test_new_markdown_writes_are_blocked(self):
         cases = [
@@ -212,6 +208,117 @@ class HooksTest(unittest.TestCase):
 
     def test_claude_prompt_hook_does_nothing(self):
         self.assertEqual(self.hook("sql_approval.py", "", {}, prompt="approve SQL 000000000000"), "")
+
+    def transcript(self, *events):
+        path = self.cwd / "transcript.jsonl"
+        path.write_text("".join(json.dumps(e) + "\n" for e in events))
+        return str(path)
+
+    def run_hook(self, script, event):
+        stdin = event if isinstance(event, str) else json.dumps(event)
+        return subprocess.run(
+            ["python3", str(ROOT / "hooks" / script)], input=stdin, text=True, capture_output=True, check=True,
+            cwd=self.cwd, env=dict(os.environ, PLUGIN_DATA=str(self.cwd / "data")),
+        ).stdout
+
+    def stop(self, *events, **fields):
+        out = self.run_hook("status-line.py", dict(transcript_path=self.transcript(*events), **fields))
+        return json.loads(out) if out else None
+
+    def test_stop_hook_requires_a_status_line_after_tool_turns(self):
+        tool = assistant({"type": "tool_use", "id": "t1", "name": "Bash", "input": {}})
+        blocked = self.stop(user("fix the test"), tool, tool_result(), assistant(text("I fixed it.")))
+        self.assertEqual(blocked["decision"], "block")
+        self.assertIn("Done:", blocked["reason"])
+        for reply in ["Fixed.\n\nDone: tests pass, 12 of 12.", "**Done:** pushed", "- Running: CI on PR 4",
+                      "**Waiting on you**: the merge yes\n"]:
+            with self.subTest(reply=reply):
+                self.assertIsNone(self.stop(user("fix it"), tool, tool_result(), assistant(text(reply))))
+        self.assertIsNone(self.stop(user("fix it"), tool, tool_result(), assistant(text("I fixed it.")),
+                                    stop_hook_active=True))
+        self.assertEqual(self.stop(user("fix it"), tool, tool_result(),
+                                   last_assistant_message="All good.")["decision"], "block")
+
+    def test_stop_hook_skips_question_turns(self):
+        tool = assistant({"type": "tool_use", "id": "t1", "name": "Bash", "input": {}})
+        for prompt in [user("what does that flag do?"),
+                       user("<pasted_content>log</pasted_content> why?", origin={"kind": "human"}),
+                       user("<command-name>/btw</command-name><command-args></command-args>")]:
+            with self.subTest(prompt=prompt):
+                self.assertIsNone(self.stop(user("fix it"), tool, tool_result(), assistant(text("Done: fixed")),
+                                            prompt, last_assistant_message="It skips the cache."))
+
+    def test_stop_hook_blocks_offers(self):
+        tool = assistant({"type": "tool_use", "id": "t1", "name": "Bash", "input": {}})
+        for reply in ["Done: found the bug.\n\nWant me to fix it?", "Running: the build. I'll check back later.",
+                      "Done: drafted it. LET ME KNOW IF you want changes."]:
+            with self.subTest(reply=reply):
+                blocked = self.stop(user("fix it"), tool, tool_result(), assistant(text(reply)))
+                self.assertIn("offering", blocked["reason"])
+        self.assertIsNone(self.stop(user("pay him"), tool, tool_result(),
+                                    last_assistant_message="Done: paid Marshall in full."))
+
+    def test_stop_hook_allows_on_bad_input(self):
+        self.assertEqual(self.run_hook("status-line.py", "not json"), "")
+        self.assertEqual(self.run_hook("status-line.py", {"transcript_path": str(self.cwd / "missing")}), "")
+        path = self.cwd / "broken.jsonl"
+        path.write_text("{broken\n")
+        self.assertEqual(self.run_hook("status-line.py", {"transcript_path": str(path)}), "")
+
+    def compact(self, *events):
+        return self.run_hook("compact-prompts.py", {"transcript_path": self.transcript(*events), "source": "compact"})
+
+    def test_compact_hook_restores_only_typed_prompts(self):
+        out = self.compact(
+            user("use all 600 proxies"),
+            assistant({"type": "tool_use", "id": "t1", "name": "Bash", "input": {}}),
+            tool_result(),
+            user("<system-reminder>\nfile changed\n</system-reminder>"),
+            user("<task-notification>agent done</task-notification>", origin={"kind": "task-notification"}),
+            user("Base directory for this skill", isMeta=True),
+            user("This session is being continued", isCompactSummary=True),
+            user("<command-name>/shelly-mode</command-name><command-args>only pull auctions ending tomorrow</command-args>"),
+            user("<bash-input>git status</bash-input>", origin={"kind": "human"}),
+            user("<pasted_content>stack trace</pasted_content> fix this crash", origin={"kind": "human"}),
+            user([{"type": "text", "text": "<system-reminder>hook output</system-reminder>"},
+                  {"type": "text", "text": "skip the Walmart step"}], origin={"kind": "human"}),
+        )
+        self.assertEqual(out.splitlines(), [
+            "These are the user's earlier prompts in this session, oldest first. The decisions in them still stand.",
+            "- use all 600 proxies",
+            "- only pull auctions ending tomorrow",
+            "- <pasted_content>stack trace</pasted_content> fix this crash",
+            "- skip the Walmart step",
+        ])
+
+    def test_compact_hook_caps_count_and_length(self):
+        out = self.compact(*[user(f"prompt {i} " + "x" * 700) for i in range(50)]).splitlines()
+        self.assertTrue(out[-1].startswith("- prompt 49 "))
+        self.assertTrue(all(len(line) == 602 for line in out[1:]))
+        self.assertLessEqual(len("\n".join(out)), 10_000)
+        out = self.compact(*[user(f"prompt {i}") for i in range(50)]).splitlines()
+        self.assertEqual(len(out), 41)
+        self.assertEqual(out[1], "- prompt 10")
+
+    def test_compact_hook_prints_nothing_without_prompts(self):
+        self.assertEqual(self.compact(tool_result()), "")
+        self.assertEqual(self.run_hook("compact-prompts.py", "not json"), "")
+
+
+def user(content, **fields):
+    return {"type": "user", "message": {"role": "user", "content": content}, **fields}
+
+
+def assistant(*content):
+    return {"type": "assistant", "message": {"role": "assistant", "content": list(content)}}
+
+
+def text(value):
+    return {"type": "text", "text": value}
+
+
+def tool_result():
+    return user([{"type": "tool_result", "tool_use_id": "t1", "content": "ok"}], toolUseResult={"stdout": "ok"})
 
 
 if __name__ == "__main__":
