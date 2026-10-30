@@ -32,7 +32,7 @@ jobs:
           bash -n worktree-audit.sh
           node --check check-plan.mjs
           bun install --frozen-lockfile
-          bun test orch watch-pr
+          bun test watch-pr check-plan.test.ts
           bun run typecheck
       - name: cloud kit
         run: |
