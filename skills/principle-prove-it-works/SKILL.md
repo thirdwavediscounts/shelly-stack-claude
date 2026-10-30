@@ -10,24 +10,13 @@ Verify every task output by checking the real thing directly. Do not infer from 
 
 **Why:** Unverified work has unknown correctness. Indirect verification (file mtimes, output freshness, agent self-reports, cached screenshots) feels cheaper than direct observation. Acting on a wrong inference costs far more than checking the source.
 
-**Pattern:** After completing any task, ask: "how do I prove this actually works?"
-
 Check the real thing, not a proxy:
 - Check process liveness directly, not indirectly through derived state
 - Read the actual value, not a cached or derived representation
 - When verification fails, suspect the observation method before suspecting the system
 - A "no difference" result proves safety only after you confirm the change reached the system (the server echoes the version or build it used). Otherwise report it as inconclusive
 - A check proves only the build it ran against. After you move, rewrite, or reconfigure the thing, run the check again
-
-Code and features:
-1. Build it (necessary but not sufficient)
-2. Run it and exercise the actual feature path
-3. Check the full chain: does data flow from input to output?
-4. For integrations, test the full communication path end-to-end
-5. For a claim that needs a before-and-after proof, run the same check before and after the change and compare the outputs
-
-Delegation: trust artifacts, not self-reports.
-When verifying delegated work, inspect the actual output artifact (git diff, file contents, runtime behavior), not the delegate's summary.
+- For a claim that needs a before-and-after proof, run the same check before and after the change and compare the outputs
 
 Waiting is not verification. A cron tick, a timer, or a "bake" window proves nothing on its own. Trigger the path yourself on staging. When the check seems to need hours or days, invoke **compress-the-clock** and force or replay it before you put anything on a date.
 
