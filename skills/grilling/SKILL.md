@@ -10,7 +10,7 @@ argument-hint: "[the plan, idea, or ticket to grill]"
 
 # Grilling
 
-Interview the user until you both agree on every decision the plan depends on. Treat the plan as a tree of decisions. Each decision can open further decisions that depend on its answer. In a repository, also invoke the **domain-modeling** skill so terms the interview settles get written down.
+Interview the user until you both agree on every decision the plan depends on. Treat the plan as a tree of decisions. Each decision can open further decisions that depend on its answer.
 
 Adapted from Matt Pocock's `grilling` skill (MIT, see `LICENSE.mattpocock-skills`).
 
@@ -53,4 +53,3 @@ Each round is the numbered questions only. After the last round, reply with:
 
 - The settled decisions, one line each.
 - What you will do next with them (the playbook, the ticket update, or the spec).
-- Any glossary entries or ADRs the **domain-modeling** skill wrote or proposed.

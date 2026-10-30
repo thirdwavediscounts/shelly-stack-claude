@@ -62,8 +62,7 @@ class HooksTest(unittest.TestCase):
         cases = [
             ("Write", {"file_path": name})
             for name in ["existing.md", "AGENTS.md", "CLAUDE.local.md", "skills/demo/SKILL.md", "agents/demo.md", "evals/demo/prompt.md", "notes.txt",
-                         "GLOSSARY.md", "apps/demo/GLOSSARY.md", "GLOSSARY-MAP.md", "docs/adr/0001-pick-x.md",
-                         "apps/demo/docs/adr/0002-pick-y.md", ".claude/rules/demo.md"]
+                         "GLOSSARY.md", "apps/demo/GLOSSARY.md", ".claude/rules/demo.md"]
         ] + [
             ("Bash", {"command": "cat notes.md"}),
             ("Bash", {"command": "python3 -c \"print(open('notes.md').read()); print('world')\""}),

@@ -142,7 +142,6 @@ For long work, use `/loop`.
 | [`/correct`](./skills/correct/SKILL.md) | you keep correcting agents for the same mistakes. mines history for mistake classes, fixes each at the highest level that works (architecture, then types, lint, and ci, then tests, with docs last), and keeps a table pairing each rule with what enforces it. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
 | [`/grilling`](./skills/grilling/SKILL.md) | you want to be interviewed about a plan before anyone builds it. asks in numbered rounds with a recommended answer each, looks up facts itself. |
-| [`/domain-modeling`](./skills/domain-modeling/SKILL.md) | a word means different things to you and the code. settles it in `GLOSSARY.md` and records hard-to-reverse decisions as ADRs. |
 | [`/wizard`](./skills/wizard/SKILL.md) | setup needs keys or clicks only you can do. writes a bash script that walks you through it and stores each value without the agent seeing it. |
 | [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
 | [`/benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression. vets the number (limiter, tuning, errors, repeat runs, end-to-end relevance) before you report or act on it. |
@@ -280,9 +279,9 @@ models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-s
 
 the plugin registers these hooks in [`hooks/hooks.json`](./hooks/hooks.json):
 
-- `no-new-md` blocks writing a new `.md` or `.mdx` file. editing an existing file is fine. it allows `CLAUDE.md`, `AGENTS.md`, their `.local.md` copies, `GLOSSARY.md`, `GLOSSARY-MAP.md`, and files under `skills/`, `agents/`, `evals/`, `docs/adr/`, `.claude/rules/`, and `~/.claude/`.
+- `no-new-md` blocks writing a new `.md` or `.mdx` file. editing an existing file is fine. it allows `CLAUDE.md`, `AGENTS.md`, their `.local.md` copies, `GLOSSARY.md`, and files under `skills/`, `agents/`, `evals/`, `.claude/rules/`, and `~/.claude/`.
 - `destructive-sql` stops destructive SQL, such as `DROP TABLE`, until you approve it.
 
 ## license
 
-MIT. `grilling`, `domain-modeling`, `wizard`, `pr`, the spec reviewer, and parts of the Bug fix playbook are adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT, see [LICENSE.mattpocock-skills](LICENSE.mattpocock-skills)).
+MIT. `grilling`, `wizard`, `pr`, the spec reviewer, and parts of the Bug fix playbook are adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT, see [LICENSE.mattpocock-skills](LICENSE.mattpocock-skills)).

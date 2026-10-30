@@ -19,7 +19,7 @@ Reach for:
 - A queue, cache, index, graph, tree, or normalized collection where the access pattern calls for it.
 - Any other structure that fits. When none fits, work out what the code must never allow and how the data gets read, then find the structure that encodes exactly that.
 
-**Name it in the project's words.** When the repository has a `GLOSSARY.md` (or a `GLOSSARY-MAP.md` pointing to one per app), name types, modules, and functions with its terms and avoid the synonyms it rejects. A concept the structure needs that the glossary lacks goes through the **domain-modeling** skill before it gets a name in code. Code, conversation, and tickets that share one word for one concept stay easier to search and to read.
+**Name it in the project's words.** When the repository or app has a `GLOSSARY.md`, name types, modules, and functions with its terms and avoid the synonyms it rejects. A concept the structure needs that the glossary lacks gets a one-line entry there before it gets a name in code. Code, conversation, and tickets that share one word for one concept stay easier to search and to read.
 
 Do not force an abstraction. Prefer boring code if the current shape is already clear, local, and unlikely to grow. Be skeptical of an abstraction that adds indirection without removing branches, duplicated rules, invalid states, or lifecycle risk.
 
