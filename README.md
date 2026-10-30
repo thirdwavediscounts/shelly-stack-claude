@@ -34,7 +34,7 @@ two steps:
 1. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md), then choose your models.
 2. use [`/shelly-mode`](./skills/shelly-mode/SKILL.md) whenever the task requires rigor.
 
-new here? use `/shelly-guide <what you're trying to do>`. it hands you the skills for that stage. the [Claude guide](./docs/guide/README.md) walks through a first real task.
+new here? the [shelly-stack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs. stuck, or unsure which skill fits? ask [`/shelly-help`](./skills/shelly-help/SKILL.md).
 
 that's it. the other skills are situational; the mode skill uses them as needed. unconfigured roles keep their Anthropic defaults.
 
@@ -122,24 +122,30 @@ For long work, use `/loop`.
 | skill | use it when |
 |---|---|
 | [`/shelly-mode`](./skills/shelly-mode/SKILL.md) | default entry point for any non-trivial task. |
-| [`/shelly-guide`](./skills/shelly-guide/SKILL.md) | you don't know shelly-stack yet. names the skills for the stage you're at (understand, design, build, clean, verify, ship, overnight) with a prompt for your task, then runs the first one. |
+| [`/shelly-help`](./skills/shelly-help/SKILL.md) | you're new to shelly-stack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. runs only when you type `/shelly-help`. |
+| [`/in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `/in-your-own-words`. |
+| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt and leaves your choices open. doesn't do the task. runs only when you type `/sharpen`. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/ticket`](./skills/ticket/SKILL.md) | you have a Linear Dev ticket id. it reads and triages the ticket, routes the build to the right playbook, and keeps Linear current until the PR merges. |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
+| [`/ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
+| [`/ketchup-video`](./skills/ketchup-video/SKILL.md) | you want the `/ketchup` catch-up as a short subtitled video of slides, with the calls waiting on you as text under it. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/compress-the-clock`](./skills/compress-the-clock/SKILL.md) | a check would mean waiting hours or days. forces the expiry on a copy, replays past events, or forces time at the scheduler, and dates only what that can't reach. |
 | [`/architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
-| [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want several different models to try to break it, including a strict code-quality lens. |
+| [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want different models to try to break it, keeping only findings a run proves. |
 | [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md) | you want to pick which models shelly-stack uses per role. detects your models and writes a config rule. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
+| [`/correct`](./skills/correct/SKILL.md) | you keep correcting agents for the same mistakes. mines history for mistake classes, fixes each at the highest level that works (architecture, then types, lint, and ci, then tests, with docs last), and keeps a table pairing each rule with what enforces it. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
 | [`/grilling`](./skills/grilling/SKILL.md) | you want to be interviewed about a plan before anyone builds it. asks in numbered rounds with a recommended answer each, looks up facts itself. |
 | [`/domain-modeling`](./skills/domain-modeling/SKILL.md) | a word means different things to you and the code. settles it in `GLOSSARY.md` and records hard-to-reverse decisions as ADRs. |
 | [`/wizard`](./skills/wizard/SKILL.md) | setup needs keys or clicks only you can do. writes a bash script that walks you through it and stores each value without the agent seeing it. |
 | [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
+| [`/benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression. vets the number (limiter, tuning, errors, repeat runs, end-to-end relevance) before you report or act on it. |
 | [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments from a diff. spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. opening a pr runs it on every PR, so run it yourself only on work not yet going through a PR. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
 | [`/figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
@@ -197,7 +203,9 @@ tdd:               /tdd implement
 unslop:            can we unslop and tighten the new changes?
 reflect:           /reflect that took too long. capture what we learned so the next run doesn't
                    repeat it.
+correct:           /correct
 show-me-your-work: /show-me-your-work keep a decision trail i can review when i'm back.
+help:              /shelly-help which skill should i use to review this branch?
 ```
 
 </details>
@@ -220,17 +228,17 @@ it also ships these agents:
 
 ## principles
 
-twenty-three short skills, one principle each. `shelly-mode` indexes them inline and reads that index at task start. the standalone files are there so other skills can reference a principle by name, and so the index can point at the full rule for each.
+twenty-four short skills, one principle each. `shelly-mode` indexes them inline and reads that index at task start. the standalone files are there so other skills can reference a principle by name, and so the index can point at the full rule for each.
 
 <details>
-<summary>all twenty-three principles</summary>
+<summary>all twenty-four principles</summary>
 
 | principle | group | rule |
 |---|---|---|
 | [laziness-protocol](./skills/principle-laziness-protocol/SKILL.md) | core | Bias toward deletion and the smallest change that solves the problem. |
 | [foundational-thinking](./skills/principle-foundational-thinking/SKILL.md) | core | Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious. |
 | [redesign-from-first-principles](./skills/principle-redesign-from-first-principles/SKILL.md) | core | Redesign as if the requirement had been a foundational assumption from day one, instead of bolting it on. |
-| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | After two or more fixes that share one premise fail, count which actors hold the imbalance, then question the premise. |
+| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | Apply when two or more fixes that share one premise have failed the same gate. Write the premise down and test it directly before you write another fix that assumes it. |
 | [subtract-before-you-add](./skills/principle-subtract-before-you-add/SKILL.md) | core | Remove dead weight, redundant validators, and stub references first, then build on the simpler base. |
 | [minimize-reader-load](./skills/principle-minimize-reader-load/SKILL.md) | core | Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope. |
 | [outcome-oriented-execution](./skills/principle-outcome-oriented-execution/SKILL.md) | core | Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code. |
@@ -239,14 +247,15 @@ twenty-three short skills, one principle each. `shelly-mode` indexes them inline
 | [build-the-lever](./skills/principle-build-the-lever/SKILL.md) | core | Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the artifact a reviewer can rerun. |
 | [model-the-domain](./skills/principle-model-the-domain/SKILL.md) | architecture | Encode the domain in a structure instead of scattered conditionals. |
 | [boundary-discipline](./skills/principle-boundary-discipline/SKILL.md) | architecture | Concentrate guards at system boundaries (CLI, config, network, external APIs); trust internal types and keep business logic in pure functions. |
-| [type-system-discipline](./skills/principle-type-system-discipline/SKILL.md) | architecture | Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, refuse to lie to the compiler, exhaust variants, derive from authoritative schemas. |
+| [type-system-discipline](./skills/principle-type-system-discipline/SKILL.md) | architecture | Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, exhaust variants, derive from authoritative schemas. |
 | [make-operations-idempotent](./skills/principle-make-operations-idempotent/SKILL.md) | architecture | Converge to the same end state regardless of partial prior runs. |
 | [migrate-callers-then-delete-legacy-apis](./skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md) | architecture | Migrate callers and delete the old API in the same wave instead of preserving compatibility layers. |
 | [separate-before-serializing-shared-state](./skills/principle-separate-before-serializing-shared-state/SKILL.md) | architecture | Eliminate the sharing first; serialize structurally only when one shared writer is a real invariant. |
 | [prove-it-works](./skills/principle-prove-it-works/SKILL.md) | verification | Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'. |
-| [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom to its root cause and fix it there; reproduce first, ask why until you reach it, resist nil-check guards that silence crashes. |
+| [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate. |
 | [sequence-verifiable-units](./skills/principle-sequence-verifiable-units/SKILL.md) | verification | Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer. |
-| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Call the code the way its users do and assert a literal expected value. |
+| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Apply when you write, change, or keep a test. Assert what the code's users can observe, so the test fails when that behavior breaks and keeps passing when only the internals change. |
+| [explain-the-number](./skills/principle-explain-the-number/SKILL.md) | verification | Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think. |
 | [guard-the-context-window](./skills/principle-guard-the-context-window/SKILL.md) | delegation | Route bulk to subagents; keep summaries in the main thread, not raw payloads. |
 | [never-block-on-the-human](./skills/principle-never-block-on-the-human/SKILL.md) | delegation | Proceed, present the result, let the human course-correct after the fact; reserve confirmation for irreversible actions. |
 | [encode-lessons-in-structure](./skills/principle-encode-lessons-in-structure/SKILL.md) | meta | Encode the rule as a lint, metadata flag, runtime check, or script instead of more text. |
@@ -263,7 +272,16 @@ Claude Code has plan support that works with shelly-stack. but personally, i don
 
 after a task that taught you something, type [`/reflect`](./skills/reflect/SKILL.md). it reviews the transcript and proposes edits to the skills.
 
+when agents keep making the same mistake, type [`/correct`](./skills/correct/SKILL.md). it fixes the repo so the mistake can't come back.
+
 models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-stack/SKILL.md). it writes `~/.claude/rules/shelly-stack-models.md`.
+
+## hooks
+
+the plugin registers these hooks in [`hooks/hooks.json`](./hooks/hooks.json):
+
+- `no-new-md` blocks writing a new `.md` or `.mdx` file. editing an existing file is fine. it allows `CLAUDE.md`, `AGENTS.md`, their `.local.md` copies, `GLOSSARY.md`, `GLOSSARY-MAP.md`, and files under `skills/`, `agents/`, `evals/`, `docs/adr/`, `.claude/rules/`, and `~/.claude/`.
+- `destructive-sql` stops destructive SQL, such as `DROP TABLE`, until you approve it.
 
 ## license
 
