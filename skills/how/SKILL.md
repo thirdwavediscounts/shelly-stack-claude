@@ -7,51 +7,29 @@ description: "Use for \"how does X work\", code walkthroughs before changing som
 
 Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
 
-A configured role value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or a pinned agent name. The plugin ships pinned agents named `shelly-stack:shelly-<model>-<effort>`, for example `shelly-stack:shelly-opus-high`. Each is shelly-agent's body with a pinned model and effort. A user agent of the same shape under `~/.claude/agents/` also works. Use its bare name. An alias goes in `model`. An agent name goes in `subagent_type` with `model` omitted; it already carries the shelly-agent body, so it replaces `shelly-stack:shelly-agent` and `general-purpose` for that spawn.
+Every spawn is an Agent subagent with `subagent_type: general-purpose` and a read-only posture stated in its prompt. Explorers use the `how explorer` line in `~/.claude/rules/shelly-stack-models.md` (default `sonnet`), and every explainer uses the `how explainer` line (default `fable`). Set `model` to that line's value, or to the default if the rule or the line is missing. Omit `model` when the value is `inherit`. If a value fails to resolve, use the default and say so. A configured value is either an Agent `model` alias (`fable`, `opus`, `sonnet`, `haiku`) or a pinned agent name such as `shelly-stack:shelly-opus-high`. An agent name goes in `subagent_type` with `model` omitted, in place of `general-purpose`.
 
-## Step 1. Assess Complexity
+## 1. Assess complexity
 
 If the scope is ambiguous, state your interpretation and explore. The user can redirect.
 
-- **Simple** (a single module, a small utility, a narrow question such as "how does function X work"): no explorers. One explainer explores and explains in a single pass. Go to Step 2b.
-- **Complex** (a subsystem spanning multiple files or services, a cross-cutting feature, a full architectural overview): spawn parallel explorers first, then hand off to the explainer. Go to Step 2a.
+- **Simple** (a single module, a small utility, a narrow question such as "how does function X work"): no explorers. Spawn one explainer that explores and explains in one pass, built from `references/explainer-prompt.md` without the explorer-findings section. Go to step 4.
+- **Complex** (a subsystem spanning multiple files or services, a cross-cutting feature, a full architectural overview): go to step 2.
 
 When in doubt, take the simple path.
 
-## Step 2a. Explore (complex questions only)
+## 2. Explore (complex only)
 
-Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Spawn all explorers in a single message:
+Decompose the question into 2 to 4 angles, each a distinct slice of the subsystem. Spawn all explorers in a single message, each with `references/explorer-prompt.md` and its angle filled in.
 
-- `subagent_type`: `general-purpose`
-- `model`: your configured how-explorer model (default `sonnet`)
-- Read-only posture stated in the prompt.
+## 3. Synthesize (complex only)
 
-Each explorer gets the prompt in `references/explorer-prompt.md` with its angle filled in. Then go to Step 3.
+Once all explorers have returned, spawn one explainer with `references/explainer-prompt.md` and every explorer's findings filled in.
 
-## Step 2b. Direct Explain (simple questions)
+## 4. Present
 
-Spawn one Agent subagent that explores and explains in one pass:
+Present the explainer's output. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.
 
-- `subagent_type`: `general-purpose`
-- `model`: your configured how-explainer model (default `fable`)
-- Read-only posture stated in the prompt.
-
-Build its prompt from `references/explainer-prompt.md` without the explorer-findings section. Go to Step 4.
-
-## Step 3. Synthesize (complex questions only)
-
-Once all explorers have returned, spawn one Agent subagent to synthesize their findings into one explanation:
-
-- `subagent_type`: `general-purpose`
-- `model`: your configured how-explainer model (default `fable`)
-- Read-only posture stated in the prompt.
-
-Build its prompt from `references/explainer-prompt.md` with every explorer's findings filled in.
-
-## Step 4. Present
-
-Present the explainer's output to the user. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.
-
-## Output Format
+## Output format
 
 The explanation uses the sections defined in `references/explainer-prompt.md`, dropping any that do not apply: Overview, Key Concepts, How It Works, Where Things Live, Gotchas.

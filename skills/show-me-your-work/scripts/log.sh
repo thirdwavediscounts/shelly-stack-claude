@@ -15,8 +15,8 @@ if [ -n "$logdir" ] && [ "$logdir" != "." ] && [ ! -d "$logdir" ]; then
 	mkdir -p "$logdir"
 fi
 
-if [ ! -f "$logfile" ]; then
-	printf 'ts\tphase\tdecision\tby\twhy\tevidence\tresult\n' > "$logfile"
+if [ ! -s "$logfile" ]; then
+	printf 'ts\tphase\tdecision\tby\twhy\tevidence\tresult\n' >> "$logfile"
 fi
 
 ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

@@ -1,6 +1,6 @@
 # Build the change and clean the diff
 
-The build playbooks share one discipline. Say what you observed, let the playbook demand the evidence. This page shows what to put in the prompt for each common build task, then the cleanup habit that keeps diffs reviewable.
+The build playbooks share one discipline. Say what you observed, and let the playbook demand the evidence. This page shows what to put in the prompt for each common build task, then the cleanup habit that keeps diffs reviewable.
 
 ## Prompt each build playbook with what you know
 
@@ -24,7 +24,7 @@ A refactoring prompt pins behavior before structure moves:
 /shelly-mode move parsing into one module, zero behavior change. record the current output first and prove it's unchanged after.
 ```
 
-A perf prompt states the measurement, not a vibe:
+A perf prompt states the measurement, not an impression:
 
 ```text
 /shelly-mode startup takes 1.8s on this fixture. trace it, fix the measured cause, show me before and after.
@@ -33,6 +33,14 @@ A perf prompt states the measurement, not a vibe:
 Each of these routes to its playbook ([Bug fix](../../skills/shelly-mode/playbooks/bug-fix.md), [Feature](../../skills/shelly-mode/playbooks/feature.md), [Refactoring](../../skills/shelly-mode/playbooks/refactoring.md), [Perf issue](../../skills/shelly-mode/playbooks/perf-issue.md)), and the playbook supplies the steps you didn't type: reproduce before fixing, name the data shape before implementing, pin behavior before restructuring, profile before optimizing.
 
 For sustained improvement of one number, there's the [Hillclimb playbook](../../skills/shelly-mode/playbooks/hillclimb.md). Give it the metric and a target. It loops one hypothesis at a time with a frozen measurement harness. It keeps wins and reverts everything else. It stops at the target or when only marginal ideas remain.
+
+Both perf playbooks run [`/benchmark-checklist`](../../skills/benchmark-checklist/SKILL.md) on their numbers. Perf issue vets its baseline and every number after it, and Hillclimb vets its harness before freezing it. [Verify and ship](./06-verify-and-ship.md#vet-a-measured-number-with-benchmark-checklist) shows when to type it yourself.
+
+Sometimes you want the cause before any fix. For a live symptom, such as a leak, an idle CPU spin, or a visual glitch, the [Runtime forensics playbook](../../skills/shelly-mode/playbooks/runtime-forensics.md) instruments the running process. For a profile you already captured, the [Trace forensics playbook](../../skills/shelly-mode/playbooks/trace-forensics.md) reads the artifact and maps the hot frame to source. Both return a diagnosis, not a fix:
+
+```text
+/shelly-mode here's a cpuprofile from the slow startup. tell me where the time goes and which source lines own it. no fix yet.
+```
 
 ## Write the failing test first with `/tdd`
 
@@ -46,7 +54,7 @@ In context, that's enough. [`/tdd`](../../skills/tdd/SKILL.md) writes the smalle
 
 ## Let the TypeScript rules load themselves
 
-[`typescript-best-practices`](../../skills/typescript-best-practices/SKILL.md) has no slash command in your workflow. It loads whenever the agent touches a `.ts` or `.tsx` file and turns the type-system principles into concrete rules: discriminated unions, `unknown` at boundaries, exhaustive variants, schema-derived types.
+[`typescript-best-practices`](../../skills/typescript-best-practices/SKILL.md) has no slash command in your workflow. Its `paths` frontmatter loads it whenever the agent touches a `.ts` or `.tsx` file and turns the type-system principles into concrete rules: discriminated unions, `unknown` at boundaries, exhaustive variants, schema-derived types.
 
 ## Script the steps only you can do with `/wizard`
 
@@ -58,7 +66,7 @@ When a change needs keys from a vendor dashboard, [`/wizard`](../../skills/wizar
 
 ## Clean before you commit
 
-Before every push of a PR branch, the [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) calls `deslop` on the code diff, [`unslop`](../../skills/unslop/SKILL.md) on its prose and comments, and [`no-comments`](../../skills/no-comments/SKILL.md) on the diff. It runs all three in that order through the Skill tool, however small the diff. You don't run them by hand. It also applies `unslop` to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
+Before every push of a PR branch, the [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) cuts slop from the code diff, then calls [`unslop`](../../skills/unslop/SKILL.md) on its prose and comments and [`no-comments`](../../skills/no-comments/SKILL.md) on the diff, through the Skill tool, however small the diff. You don't run them by hand. It also applies `unslop` to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
 
 For prose, `/unslop` takes a target and any extra rules you have:
 

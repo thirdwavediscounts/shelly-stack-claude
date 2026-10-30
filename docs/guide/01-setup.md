@@ -11,7 +11,7 @@ In a Claude Code session, run:
 /plugin install shelly-stack@shelly-stack
 ```
 
-Claude Code confirms the plugin is installed. For Codex, install the separate Codex plugin from the `shelly-stack-codex` repository.
+Claude Code confirms the plugin is installed.
 
 ## Pick your models
 
@@ -21,7 +21,7 @@ Run:
 /setup-shelly-stack
 ```
 
-[`/setup-shelly-stack`](../../skills/setup-shelly-stack/SKILL.md) detects the models you have access to, shows you each role (code delegates, judgment, the review panels), and asks what you want. It writes `~/.claude/rules/shelly-stack-models.md`.
+[`/setup-shelly-stack`](../../skills/setup-shelly-stack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. It writes `~/.claude/rules/shelly-stack-models.md`.
 
 You only override what you care about. A role with no line in the rule keeps the skill's default. To restore a default later, delete that role's line, or just run `/setup-shelly-stack` again.
 
@@ -31,9 +31,22 @@ To keep a role on the model your session already runs, set the role to `inherit`
 
 At the end of setup, `/setup-shelly-stack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`/create-verification-skill`](../../skills/create-verification-skill/SKILL.md).
 
-Say yes and it writes a project-local verification skill: `.claude/skills/verify-<app>/`. It teaches agents to drive your app the way a user does and proves the skill works once before handoff. Say no and setup moves on. You can run the create-verification skill yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers when it earns its place.
+Say yes and it writes a project-local verification skill: `.claude/skills/verify-<app>/`. It teaches agents to drive your app the way a user does and proves the skill works once before handoff. Say no and setup moves on. You can run `/create-verification-skill` yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers it in depth.
+
+If you're new to shelly-stack, say yes. An agent that can check its own work keeps going until the check passes. An agent that can't hands every result back to you to check by hand. Of everything in this guide, the verification skill pays off the most.
+
+Then setup offers once to generate a formal verification skill with [`/create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md), unless the project already has one. Tests check the cases someone thought to write. A formal verification skill checks one key property of your code, such as "a job never runs twice at once", in every case within a stated scope. Say yes when your code has concurrency, retries, a state machine, or a parser, where a bug is costly and tests rarely reach the case that breaks. Otherwise say no, and run it later if that changes. [Verify and ship](./06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill) covers it.
 
 After setup, start a new chat. The model rule applies to new sessions.
+
+## Keep the cost in check
+
+shelly-stack spends extra tokens on subagents and review panels. That's the price of the rigor. To spend fewer:
+
+- Rerun `/setup-shelly-stack` and pick a smaller reasoning budget or cheaper models. A strong model in the main chat with cheaper, faster models in the code roles is a good split.
+- Set a role to `inherit` so it runs on the session's own model.
+- Shorten a panel list. Each entry runs one subagent.
+- Save `/shelly-mode` for work that needs rigor. A small, obvious edit doesn't.
 
 ## Run your first task
 

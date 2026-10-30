@@ -61,7 +61,8 @@ class HooksTest(unittest.TestCase):
         (self.cwd / "repo/README.md").write_text("readme")
         cases = [
             ("Write", {"file_path": name})
-            for name in ["existing.md", "AGENTS.md", "CLAUDE.local.md", "skills/demo/SKILL.md", "agents/demo.md", "evals/demo/prompt.md", "notes.txt"]
+            for name in ["existing.md", "AGENTS.md", "CLAUDE.local.md", "skills/demo/SKILL.md", "agents/demo.md", "evals/demo/prompt.md", "notes.txt",
+                         ".claude/rules/demo.md"]
         ] + [
             ("Bash", {"command": "cat notes.md"}),
             ("Bash", {"command": "python3 -c \"print(open('notes.md').read()); print('world')\""}),

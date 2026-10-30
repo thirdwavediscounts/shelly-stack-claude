@@ -1,6 +1,7 @@
 ---
 name: typescript-best-practices
 description: TypeScript best practices. Use when reading or editing any .ts or .tsx file.
+paths: ["**/*.ts", "**/*.tsx"]
 ---
 
 # TypeScript best practices
@@ -10,11 +11,11 @@ First, Read `../principle-type-system-discipline/SKILL.md` and apply the **type-
 | Rule | Summary |
 |------|---------|
 | Discriminated unions | Model variants with a `kind` literal discriminant so impossible states can't be represented. No optional-field bags. |
-| Branded types | Brand primitives with `& { readonly __brand: "X" }` so they can't be mixed up. Validate once at the boundary. |
+| Branded types | Brand primitives with `& { readonly __brand: "X" }` so they can't be mixed up. Validate once at the boundary. A brand comes from a verifying type guard (`input is AgentId`), never from `as`. |
 | Constructive modeling | Build the shape so the illegal value can't be constructed. `[T, ...T[]]` for non-empty, `[T, T][]` for even length, `start` plus `duration` for a range. Not a runtime guard, not a wish for refinement types. |
 | Simplest total type | Keep `T[]` while every operation on it stays total. Strengthen to `NonEmpty<T>` only where the loose type forces `!`, a cast, or a "should never happen" throw. |
 | `unknown` over `any` | External data is `unknown`. |
-| Schemas before guards | Reuse the repository's runtime schema library before writing property-by-property guards. Derive the type from the schema. Do not add a dependency for one guard. |
+| Schemas before guards | Before hand-writing a property-by-property type guard, use the repository's runtime schema library and infer the type from the schema, such as `z.infer`. Do not add a dependency for one guard. |
 | No `as` casts | Every `as` is a runtime crash waiting. Cast only after validation. |
 | Narrowing hierarchy | Discriminant switch > `in` operator > `typeof`/`instanceof` > user-defined type guard > `as`. |
 | Type guards | Must verify the claim. A lying guard is worse than `as` because the bug hides behind a name that says it's safe. Name them `isX` or `hasX`. |
