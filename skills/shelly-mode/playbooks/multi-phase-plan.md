@@ -1,7 +1,5 @@
 ### Multi-phase or multi-PR plan
 
-Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
-
 **You own the plan, not the code. The plan is a checklist an owner runs box by box and the operator audits from the evidence.** The plan is the deliverable. Do not implement.
 
 1. When the user did not ask for a plan and the change is one or two files with an obvious approach, skip the plan. Say so and stop.
@@ -59,7 +57,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] Resolve the forge once. Default to `gh`; if `command -v origin` succeeds and Origin can resolve the repository, use `origin pr` for every PR operation. Record any fallback to `gh`. Never require `gt`.
 - [ ] Open the PR ready, never draft, with `origin pr create --status open --base <base-branch>` or `gh pr create --base <base-branch>` according to the resolved forge, and `draft: false`. A stack child targets its parent branch.
 - [ ] Run the repo's lint and typecheck once before the PR-facing push. Push with hooks on.
-- [ ] Run **Opening a PR** steps 1 to 5 before each push. Steps 1 to 3 are Skill tool calls to `deslop`, `unslop`, and `no-comments`.
+- [ ] Run **Opening a PR** steps 1 to 5 before each push. Steps 2 and 3 are Skill tool calls to `unslop` and `no-comments`.
 - [ ] Run `/code-review medium` on the PR branch. Triage every finding and every security-reviewer comment per `../references/bugbot-triage.md`.
 - [ ] Rebase onto current trunk before babysit and again before the merge-ready report.
 

@@ -1,7 +1,6 @@
 ### Autopilot-full
 
-Every owner runs **Opening a PR** steps 1 to 5 before its first push and before each later push. Steps 1 to 3 are Skill tool calls to `shelly-stack:deslop`, `shelly-stack:unslop`, and `shelly-stack:no-comments`. Put these two sentences verbatim in every owner brief. Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
-
+Every owner runs **Opening a PR** steps 1 to 5 before its first push and before each later push. Steps 2 and 3 are Skill tool calls to `shelly-stack:unslop` and `shelly-stack:no-comments`. Put these two sentences verbatim in every owner brief.
 **You own the verdicts, never the PRs. One owner runs each PR from build to merge, and nothing merges without your clean swarm verdict.** For "autopilot this queue", "full autopilot", and one-owner-per-PR programs. Orchestrate runs a standing program whose coordinator lands verified work itself and whose workers never merge. Here each PR's owner carries the whole lifecycle through the merge, and the root keeps only verification, countersigns, and audits.
 
 1. **Mark the operator's items and honor state-then-wait.** Items the operator names stay hers. She reviews and she clicks, and no owner merges one. When she asks for the protocol or the plan to be stated, deliver the statement and stop. Execution starts only on her explicit go. On that go, arm a `/goal` with the full program objective. The goal continues across turns until the queue is done.

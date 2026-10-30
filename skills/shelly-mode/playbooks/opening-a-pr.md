@@ -2,7 +2,7 @@
 
 Invoked at the end of every other playbook, and before every `git push` of a PR branch, even outside a playbook. Commit freely while building. Before the first push, run steps 1 to 3 on the full branch diff and commit their fixes. Later pushes to the same PR skip them. Before asking to merge, run step 3 again on the full branch diff. Put steps 1 to 8 in the task list when you reach this playbook.
 
-1. Read `../../principle-laziness-protocol/SKILL.md` and `../../principle-minimize-reader-load/SKILL.md`. Then call the Skill tool with `shelly-stack:deslop` on the scoped code diff.
+1. Read `../../principle-laziness-protocol/SKILL.md` and `../../principle-minimize-reader-load/SKILL.md`. Then cut AI slop from the scoped code diff yourself: extra comments, defensive checks abnormal for trusted paths, casts to `any`, deep nesting an early return removes, and anything else out of style with the file. Keep behavior unchanged.
 2. Call the Skill tool with `shelly-stack:unslop` on the diff's prose and comments.
 3. Call the Skill tool with `shelly-stack:no-comments` on the diff.
 4. Spawn the `shelly-stack:thermo-nuclear-code-quality-review` agent on the diff. Skip it only when the diff changes no code file (docs or config only), and mark it `skip: no code files`. Fix or dismiss each finding with a reason.
@@ -11,9 +11,7 @@ Invoked at the end of every other playbook, and before every `git push` of a PR 
 7. Call the Skill tool with `shelly-stack:technical-writing`, then draft the title and commit bodies per **Titles**. Call the Skill tool with `shelly-stack:pr` and write the description with it. Call the Skill tool with `shelly-stack:unslop` on the draft. Then open the PR per **Forge** and **Readiness**. No skip.
 8. Before asking to merge, clear the list in **Before merge**.
 
-Steps 1 to 3 run on every PR, in order, before the first push. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff or the PR text yourself does not replace a step. Reading a skill's SKILL.md does not run it. One step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
-
-Use the companion control skills only when the project verification skill lacks a suitable harness, following Shelly Mode's Companion skills section.
+Steps 1 to 3 run on every PR, in order, before the first push. A one-line diff, a verbatim move, or a diff with no comments still gets all three. Steps 2 and 3 are Skill tool calls, and each skill decides whether there is anything to fix. You do not decide it for them. Reviewing the diff or the PR text yourself does not replace a step. Reading a skill's SKILL.md does not run it. One step's result does not cover another. "Nothing to change" is a valid result. A skipped call is not.
 
 **Worktree.** Work from a git worktree off main. Subagents inherit it. Multiple `Agent` calls on the same branch each get their own worktree, or `git fetch && git reset --hard origin/<branch>` between them. Dirty branch with unrelated work: patch out, fresh worktree, apply. Snarled worktree: reset from main, redo minimally.
 

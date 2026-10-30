@@ -58,7 +58,7 @@ When a change needs keys from a vendor dashboard, [`/wizard`](../../skills/wizar
 
 ## Clean before you commit
 
-Before every push of a PR branch, the [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) calls `deslop` on the code diff, [`unslop`](../../skills/unslop/SKILL.md) on its prose and comments, and [`no-comments`](../../skills/no-comments/SKILL.md) on the diff. It runs all three in that order through the Skill tool, however small the diff. You don't run them by hand. It also applies `unslop` to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
+Before every push of a PR branch, the [Opening a PR playbook](../../skills/shelly-mode/playbooks/opening-a-pr.md) cuts slop from the code diff, then calls [`unslop`](../../skills/unslop/SKILL.md) on its prose and comments and [`no-comments`](../../skills/no-comments/SKILL.md) on the diff, through the Skill tool, however small the diff. You don't run them by hand. It also applies `unslop` to the PR description and commit bodies. You can also ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
 
 For prose, `/unslop` takes a target and any extra rules you have:
 

@@ -23,16 +23,9 @@ fork it. improve it. make it yours. PRs are welcome!
 
 For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stack-claude` instead.
 
-## cleanup, verification, CI, and PR workflows
+## code review
 
-shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest run when shelly-mode or a playbook calls for them, or when you type them by name, for example `/shelly-stack:maintain-verification-skill`. Existing project verification skills remain the first choice.
-
-| Work | Skills |
-|---|---|
-| Code cleanup and review | `deslop`, `thermo-nuclear-code-quality-review`, `typescript-conventions` |
-| Evidence and app control | `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors` |
-| CI and conflicts | `fix-ci`, `fix-merge-conflicts` |
-| PR preparation | `get-pr-comments` |
+shelly-stack includes `thermo-nuclear-code-quality-review` and `typescript-conventions`, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke `typescript-conventions` on its own. Opening a PR spawns the `thermo-nuclear-code-quality-review` agent, which reviews with that skill's rubric.
 
 ## get started
 
@@ -100,7 +93,7 @@ when invoked it:
 
 1. matches your task to a [playbook](./skills/shelly-mode/playbooks/) and posts its steps as a checklist in the reply, copied verbatim. a skipped step stays as `skip: <reason>`.
 2. routes to the other skills as the steps fire.
-3. before every PR, runs `deslop`, `unslop`, and `no-comments` in that order through the [opening a pr](./skills/shelly-mode/playbooks/opening-a-pr.md) playbook. you don't run them by hand.
+3. before every PR, cuts code slop, then runs `unslop` and `no-comments` in that order through the [opening a pr](./skills/shelly-mode/playbooks/opening-a-pr.md) playbook. you don't run them by hand.
 4. writes unslopped replies framed for the consumer and the maintainer.
 
 the full rules and playbooks live in [`skills/shelly-mode/SKILL.md`](./skills/shelly-mode/SKILL.md).

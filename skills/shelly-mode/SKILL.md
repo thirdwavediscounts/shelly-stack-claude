@@ -30,9 +30,7 @@ Remaining triggers:
 - Any prose surface → write it clean as you draft, and still invoke the **unslop** skill. Call it once per session before your first reply, and once on each prose file, PR text, commit body, or Linear text before it ships. Do not call it again on each push or each reply. Writing clean does not replace the call. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows `../create-skill/SKILL.md`. Read that file, because the Skill tool refuses create-skill.
 - Docs, RFCs, readmes, PR titles and descriptions, or commit bodies → call the Skill tool with `shelly-stack:technical-writing` before you draft them. A PR description also gets `shelly-stack:pr`. Reviewing the text yourself does not replace the call.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
-- Before any `git push` of a PR branch → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Commit freely while building. Its steps 1 to 3 call `deslop`, `unslop`, and `no-comments` through the Skill tool on every PR, however small, once before the first push.
-- A typecheck or compile command exits nonzero → call the Skill tool with `shelly-stack:check-compiler-errors` before you edit anything to fix it, even for one error or errors you think are old. Fixing straight from the output is a skipped call.
-- A CI check failed, in `gh` output you read or a log the user pasted → call the Skill tool with `shelly-stack:fix-ci` before you edit anything to fix it, even inside Babysit. Fixing straight from the log is a skipped call.
+- Before any `git push` of a PR branch → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Commit freely while building. Its steps 1 to 3 cut code slop, then call `unslop` and `no-comments` through the Skill tool, on every PR, however small, once before the first push.
 - Changing UI / IDE / CLI → the project's verification skill before the first push (generate one with `/create-verification-skill`). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - A UI, UX, or product-scope change ("make the ui/ux better", a new column, when a button shows) → Read `../principle-experience-first/SKILL.md` before you design it.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the review comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Opening a PR does not start it. Do not watch CI right after you open a PR unless the user asked. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping.
@@ -113,21 +111,13 @@ Read the leaf skill in full for any principle you apply or name. Each entry name
 
 This plugin ships these companions. The playbooks name each one where it applies.
 
-- `deslop`, `unslop`, and `no-comments` before every PR, per **Opening a PR** steps 1 to 3.
-- `control-ui` and `control-cli` to drive an app the project verification skill cannot.
+- `unslop` and `no-comments` before every PR, per **Opening a PR** steps 2 and 3.
 - `maintain-verification-skill` when a drive through the project verification skill shows its feature map no longer matches the app.
-- `verify-this` for a claim that needs a baseline-versus-treatment proof.
-- `run-smoke-tests` when the repo has an end-to-end suite covering the changed surface.
-- `check-compiler-errors` when typecheck or compile fails.
-- `fix-ci` for a real CI failure, inside Babysit or whenever a check you read has failed, and `get-pr-comments` to collect review threads inside Babysit.
-- `fix-merge-conflicts` when a merge, rebase, or cherry-pick stops on conflicts, before you edit the conflicted files.
 - `create-formal-verification-skill` when a race, retry, or state machine needs a guarantee tests cannot reach, and `statechart` to check a TLA+ model and show a bug as a path through states. Run `maintain-formal-verification-skill` when a change touches code that a project formal verification skill covers and that skill was not rerun.
 - `blast-radius` before you push or apply a change that drops, renames, alters, grants, or replaces a database object, and for "what could this break".
 - `typescript-best-practices` and `typescript-conventions` the first time a session edits a `.ts` or `.tsx` file.
 - `bro` when the user is confused or asks for plain words ("eli5", "wdym", "explain it again"), and `teach` when they ask to really understand a body of work.
 - The `shelly-stack:thermo-nuclear-code-quality-review` agent for the maintainability review in Opening a PR, and the `shelly-stack:spec-conformance-review` agent beside it when the work came from a ticket or spec.
-
-Keep the project's verification skill as the first choice. When it lacks a way to drive the app, use `control-ui` for browser or Electron behavior and `control-cli` for terminal behavior, then record the proven commands in the project verification skill when that edit is authorized. Native mobile keeps its project simulator workflow.
 
 Use an existing project harness when it proves the same behavior. Do not invent a successful check or assume a browser tool is installed. Resolve every bundled playbook and script from this skill's base directory (shown when the skill loads), not from the target repository. Prefix that folder to `playbooks/...` and `scripts/...` paths in Bash. In a playbook, a path that starts with `../` is relative to the playbook's own folder. `${CLAUDE_PLUGIN_ROOT}` does not expand in playbooks or Bash.
 
