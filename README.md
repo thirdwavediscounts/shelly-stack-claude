@@ -281,6 +281,8 @@ the plugin registers these hooks in [`hooks/hooks.json`](./hooks/hooks.json):
 
 - `no-new-md` blocks writing a new `.md` or `.mdx` file. editing an existing file is fine. it allows `CLAUDE.md`, `AGENTS.md`, their `.local.md` copies, and files under `skills/`, `agents/`, `evals/`, `.claude/rules/`, and `~/.claude/`.
 - `destructive-sql` stops destructive SQL, such as `DROP TABLE`, until you approve it.
+- `status-line` makes a reply that used a tool end with a line that starts `Done:`, `Running:`, or `Waiting on you:`. it also blocks a reply that ends by offering to do the work, such as "want me to", instead of doing it, unless that last line starts `Waiting on you:`.
+- `compact-prompts` runs after the chat is compacted. it adds up to your last 40 typed prompts back, so Claude keeps the decisions in them.
 
 ## license
 
