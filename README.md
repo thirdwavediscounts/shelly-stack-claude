@@ -25,7 +25,7 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 ## cleanup, verification, CI, and PR workflows
 
-shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest are user-only. Type them by name, for example `/shelly-stack:maintain-verification-skill`. Existing project verification skills remain the first choice.
+shelly-stack includes the team-kit workflows, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). The agent can invoke the cleanup, evidence, CI, and conflict skills on its own when they apply. These are `deslop`, `verify-this`, `control-ui`, `control-cli`, `run-smoke-tests`, `check-compiler-errors`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, and `typescript-conventions`. The rest run when shelly-mode or a playbook calls for them, or when you type them by name, for example `/shelly-stack:maintain-verification-skill`. Existing project verification skills remain the first choice.
 
 | Work | Skills |
 |---|---|
@@ -153,6 +153,9 @@ For long work, use `/loop`.
 | [`/show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
 | [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
 | [`/maintain-verification-skill`](./skills/maintain-verification-skill/SKILL.md) | your verify skill's feature map has drifted from the app. source wave + one live pass, at most one PR of proven corrections. |
+| [`/create-formal-verification-skill`](./skills/create-formal-verification-skill/SKILL.md) | a race, retry, or state machine needs more than tests. picks the riskiest promise, checks it with a model checker or verifier, and writes a project-local skill to rerun it. |
+| [`/maintain-formal-verification-skill`](./skills/maintain-formal-verification-skill/SKILL.md) | verified code changed without a recheck. updates the model from the code, reruns, and says whether each failure is drift or a real bug. |
+| [`/statechart`](./skills/statechart/SKILL.md) | you want a flow checked and drawn. runs a TLA+ model through TLC and draws a Mermaid statechart with the shortest path to each broken rule. |
 | [`/unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |

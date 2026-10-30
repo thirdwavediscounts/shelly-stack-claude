@@ -47,6 +47,8 @@ class HooksTest(unittest.TestCase):
             ("Bash", {"command": "mkdir -p docs && cd docs && printf hello > notes.md"}),
             ("Bash", {"command": "D=docs; printf hello > $D/notes.md"}),
             ("Bash", {"command": "cp -r existing.txt docs/notes.md"}),
+            ("Bash", {"command": f"cd {self.cwd}/repo && python3 -c \"open('docs/new.md', 'w').write('x')\""}),
+            ("Bash", {"command": f"python3 - <<'EOF'\nR = '{self.cwd}/repo/'\nopen(R + 'new.md', 'w').write('x')\nEOF"}),
         ]
         for tool, data in cases:
             with self.subTest(tool=tool, data=data):
@@ -54,6 +56,9 @@ class HooksTest(unittest.TestCase):
 
     def test_reads_existing_files_and_exceptions_are_allowed(self):
         (self.cwd / "existing.md").write_text("existing")
+        (self.cwd / "repo/docs").mkdir(parents=True)
+        (self.cwd / "repo/docs/guide.md").write_text("guide")
+        (self.cwd / "repo/README.md").write_text("readme")
         cases = [
             ("Write", {"file_path": name})
             for name in ["existing.md", "AGENTS.md", "CLAUDE.local.md", "skills/demo/SKILL.md", "agents/demo.md", "evals/demo/prompt.md", "notes.txt"]
@@ -71,6 +76,9 @@ class HooksTest(unittest.TestCase):
             ("Bash", {"command": f"E={self.cwd}/evals; printf hi > $E/demo/prompt.md && cp $E/demo/prompt.md $E/other/prompt.md"}),
             ("Bash", {"command": "cp notes.md /tmp/out.txt"}),
             ("Bash", {"command": "printf hi > $UNSET_TWD_DIR/notes.md"}),
+            ("Bash", {"command": f"cd {self.cwd}/repo && python3 - <<'EOF'\nfrom pathlib import Path\nPath('docs/guide.md').write_text('new')\nEOF"}),
+            ("Bash", {"command": f"python3 - <<'EOF'\nR = '{self.cwd}/repo/'\nopen(R + 'README.md', 'w').write('new')\nEOF"}),
+            ("Bash", {"command": f"cd {self.cwd}/repo && python3 - <<'EOF'\nimport glob\nfor f in glob.glob('*/*.md'):\n    open(f, 'a').write('x')\nEOF"}),
             ("apply_patch", {"command": "*** Begin Patch\n*** Update File: existing.md\n@@\n-existing\n+new\n*** End Patch"}),
         ]
         for tool, data in cases:

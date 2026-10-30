@@ -18,7 +18,6 @@ jobs:
         with:
           bun-version: "1.4.0"
       - run: python3 skills/ticket/scripts/test_lint_linear_text.py
-      - run: python3 skills/create-skill/scripts/check_invoke_targets.py
       - run: python3 skills/shelly-mode/scripts/check_routing.py
       - run: python3 hooks/test_hooks.py
       - name: wizard template
@@ -40,3 +39,8 @@ jobs:
           bash -n cloud/install.sh
           bash -n cloud/hooks/git-staleness-check.sh
           node --test cloud/prod-db-guard.test.mjs
+      - uses: jdx/mise-action@v5
+        with:
+          install: false
+      - name: statechart
+        run: skills/statechart/ci/check.sh

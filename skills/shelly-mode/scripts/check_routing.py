@@ -8,7 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 MODE = ROOT / "skills/shelly-mode"
 FRONTMATTER = re.compile(r"\A---\n(.*?)\n---\n", re.S)
-DISABLED = re.compile(r"^disable-model-invocation:\s*true\s*$", re.M)
+DISABLED = re.compile(r"^disable-model-invocation:", re.M)
+HIDDEN = re.compile(r"^user-invocable:\s*false\s*$", re.M)
 SKILL_REF = re.compile(r"\bshelly-stack:([a-z0-9-]*[a-z0-9])(?![a-z0-9<{-])")
 PLAYBOOK_REF = re.compile(r"\bplaybooks/([a-z0-9-]+)\.md\b")
 PRINCIPLE_REF = re.compile(r"\bprinciple-([a-z0-9-]+)/SKILL\.md\b")
@@ -18,9 +19,9 @@ def text(path: Path) -> str:
     return path.read_text(errors="ignore")
 
 
-def disabled(body: str) -> bool:
-    frontmatter = FRONTMATTER.match(body)
-    return bool(frontmatter and DISABLED.search(frontmatter.group(1)))
+def frontmatter(body: str) -> str:
+    match = FRONTMATTER.match(body)
+    return match.group(1) if match else ""
 
 
 def main() -> int:
@@ -35,7 +36,11 @@ def main() -> int:
     problems = []
 
     for name, body in skills.items():
-        if name.startswith("principle-") or disabled(body):
+        if DISABLED.search(frontmatter(body)):
+            problems.append(f"skills/{name}: sets disable-model-invocation, which makes the Skill tool refuse it")
+        if name.startswith("principle-") != bool(HIDDEN.search(frontmatter(body))):
+            problems.append(f"skills/{name}: only principle-* skills set user-invocable: false, and every one of them does")
+        if name.startswith("principle-"):
             continue
         if not re.search(rf"(shelly-stack:|\*\*|`/?|(?<![\w/-])/){re.escape(name)}\b(?!-)", routes):
             problems.append(f"skills/{name}: no trigger in shelly-mode or a playbook")

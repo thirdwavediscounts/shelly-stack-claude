@@ -39,7 +39,7 @@ Each entry: page, the skills in the order the guide presents them, when each ear
 
 **Clean.** Same page. Before every PR, the Opening a PR playbook calls `deslop`, `unslop`, and `no-comments` through the Skill tool, in that order. The user does not run them by hand. For work not going through a PR yet, `/unslop the diff` cleans prose and comments, and `/no-comments the diff` hands comments to Comment Sicko, an agent that didn't write them. Pitfall: treating cleanup as optional polish.
 
-**Verify.** `06-verify-and-ship.md`. Put the finish condition in the first prompt; match the check to the change (CLI → run the command; UI → walk the flow in the running app; parser/migration → replay saved input; perf → before/after profiles; storage → read the value back). `/blast-radius` for a small diff you don't trust. `/compress-the-clock` when the check would mean waiting hours or days. `/create-verification-skill` once, `/maintain-verification-skill` when the feature map rots. Pitfall: accepting "it compiles" or a green build as evidence.
+**Verify.** `06-verify-and-ship.md`. Put the finish condition in the first prompt; match the check to the change (CLI → run the command; UI → walk the flow in the running app; parser/migration → replay saved input; perf → before/after profiles; storage → read the value back). `/blast-radius` for a small diff you don't trust. `/compress-the-clock` when the check would mean waiting hours or days. `/create-verification-skill` once, `/maintain-verification-skill` when the feature map rots. `/create-formal-verification-skill` for a race, retry, or state machine tests can't reach; `/statechart` to check and draw a TLA+ model; `/maintain-formal-verification-skill` when verified code changed without a recheck. Pitfall: accepting "it compiles" or a green build as evidence.
 
 **Ship.** Same page. `/shelly-mode open the pr` (deslop, unslop, and no-comments, then small ordered commits and evidence in the description). `/shelly-mode babysit this pr, get it green` (conflicts, then review threads, then CI; reports a conflict instead of resolving it; stops at merge-ready, never merges). `/shelly-mode land the stack` (independent per-PR verification, then gh merge-when-ready).
 
@@ -59,7 +59,7 @@ Short. In this order:
 4. **Then.** The next stage and its page, one line.
 5. **Pitfall.** The one from the page, one line.
 
-End by offering to run the first prompt now. If they say yes, invoke that skill with the prompt you wrote. Some skills are user-only (`disable-model-invocation: true`), so the Skill tool refuses them. These are `shelly-mode`, `maintain-verification-skill`, and `reflect`. For a `/shelly-mode` prompt, spawn a `shelly-stack:shelly-agent` subagent with it, because that agent loads the shelly-mode rules on its own. For the other user-only skills, give the user the slash command to type. If the task is bigger than a stage, say so and spawn a `shelly-stack:shelly-agent` subagent with it, because the playbooks already sequence these stages.
+End by offering to run the first prompt now. If they say yes, invoke that skill with the prompt you wrote. For a `/shelly-mode` prompt, spawn a `shelly-stack:shelly-agent` subagent with it, because that agent loads the shelly-mode rules on its own. If the task is bigger than a stage, say so and spawn a `shelly-stack:shelly-agent` subagent with it, because the playbooks already sequence these stages.
 
 ## Don'ts
 

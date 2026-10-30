@@ -69,7 +69,12 @@ def paths(event: dict, cwd: str) -> list[str]:
             args.append(token)
     found = [p for p in found if UNKNOWN not in p]
     if re.search(r"\bopen\s*\([^\n]*[\"'](?:w|a|x)[+bt]*[\"']|\.write(?:_text|_bytes)?\s*\(", command):
-        found += re.findall(r"[\"']([^\"'\n]+\.mdx?)[\"']", command, re.I)
+        dirs = [base] + [d for d in re.findall(r"[\"'](/[^\"'\n]*)[\"']", command) if os.path.isdir(d)]
+        for name in re.findall(r"[\"']([^\"'\n]+\.mdx?)[\"']", command, re.I):
+            if re.search(r"[*?\[]", name):
+                continue
+            homes = [os.path.join(d, name) for d in dirs]
+            found.append(next((p for p in homes if os.path.exists(p)), homes[0]))
     return found
 
 
