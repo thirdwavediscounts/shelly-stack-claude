@@ -257,6 +257,8 @@ class HooksTest(unittest.TestCase):
                 self.assertIn("offering", blocked["reason"])
         self.assertIsNone(self.stop(user("pay him"), tool, tool_result(),
                                     last_assistant_message="Done: paid Marshall in full."))
+        self.assertIsNone(self.stop(user("ship it"), tool, tool_result(),
+                                    last_assistant_message="Waiting on you: let me know if PR 12 can merge."))
 
     def test_stop_hook_allows_on_bad_input(self):
         self.assertEqual(self.run_hook("status-line.py", "not json"), "")

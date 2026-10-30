@@ -5,6 +5,7 @@ import sys
 from transcript import entries, typed_prompt
 
 STATUS = re.compile(r"^[\s>*_#+-]*(?:done|running|waiting on you)[*_]*:", re.I)
+WAITING = re.compile(r"^[\s>*_#+-]*waiting on you[*_]*:", re.I)
 OFFER = re.compile(r"\b(?:want me to|would you like me to|shall i|should i go ahead|check back later|let me know if)\b", re.I)
 
 
@@ -32,7 +33,7 @@ def problem(event: dict) -> str | None:
     lines = [line for line in text.splitlines() if line.strip()]
     last = lines[-1] if lines else ""
     paragraph = text.strip().rsplit("\n\n", 1)[-1]
-    if OFFER.search(paragraph):
+    if OFFER.search(paragraph) and not WAITING.match(last):
         return (
             "Your reply ends by offering instead of doing. Do the reversible work now, "
             "then end with one status line: Done:, Running:, or Waiting on you:."
