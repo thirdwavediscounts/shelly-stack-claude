@@ -38,9 +38,7 @@ if [ -z "$base" ]; then
 	echo "warn: no -b given; MERGED checks against $base" >&2
 fi
 
-# The base drives the merge check. The fetch is best-effort (stale is fine for
-# a first pass) and runs before the check, since -b may name a branch not
-# fetched yet. The explicit refspec creates it even in a single-branch clone.
+# The explicit refspec creates the remote-tracking ref even in a single-branch clone.
 case "$base" in
 origin/*) git fetch origin "+refs/heads/${base#origin/}:refs/remotes/$base" --quiet 2>/dev/null \
 	|| echo "warn: could not fetch $base; merged column may be stale" >&2 ;;
@@ -55,8 +53,6 @@ else
 	stat_fmt=(-f '%m %N'); fmt_day() { date -r "$1" '+%Y-%m-%d'; }
 fi
 
-# PR state by branch, fetched once as [{number, state, head}] with a lowercase
-# state. Unavailable when gh or jq is missing or gh cannot read this repo.
 prs=$(mktemp)
 pr_lookup=available
 if command -v jq >/dev/null && raw=$(gh pr list --author "@me" --state all --limit 1000 \
@@ -133,8 +129,6 @@ git worktree list --porcelain | sed -n 's/^worktree //p' | while IFS= read -r wt
 		[ -z "$pr" ] && pr="-"
 	fi
 
-	# Most recent chat whose transcript operated in this worktree. Match path
-	# followed by "/" or a quote so glint-482 does not match glint-482-r37.
 	last="-"; last_ts=0
 	f=$({ main_transcripts_naming_exact_path "$wt"; transcripts_started_in "$wt"; } \
 		| tr '\n' '\0' | xargs -0 stat "${stat_fmt[@]}" 2>/dev/null | sort -rn | head -1)

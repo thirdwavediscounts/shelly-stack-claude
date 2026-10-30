@@ -370,7 +370,6 @@ describe("context and stack discovery", () => {
   });
 
   it("terminates when an unrelated fork opens main against main", () => {
-    // Bound the subprocess so this regression reports a failure instead of hanging the suite.
     const program = `import { orderStack } from ${JSON.stringify(import.meta.dir + "/github.ts")};
       console.log(JSON.stringify(orderStack(${JSON.stringify(context)}, [
         { number: 41, headRefName: "main", baseRefName: "main", isCrossRepository: true },

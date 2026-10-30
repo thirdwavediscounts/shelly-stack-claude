@@ -247,9 +247,6 @@ export function parseFastCheck(value: unknown): T.Check {
     return { ...details, kind: "skipped", reportedState: state };
   return { ...details, kind: "failed", reportedState: state };
 }
-// Every read path classifies the owner-approval gate here, so the rule has one
-// home. A gate that is pending or waits on an owner approval must not count as
-// pending or failed, or the watcher waits on a human.
 function gateOr(
   kind: "pending" | "failed",
   details: {
@@ -633,8 +630,6 @@ export function orderStack(
   open: readonly T.OpenPullRequest[]
 ): T.NonEmpty<T.PrContext> {
   const byNumber = new Map(open.map((pr) => [pr.number, pr]));
-  // A base ref belongs to this repository. A fork head with the same name
-  // cannot be its parent, even when that name is the default branch.
   const byHead = new Map(
     open.filter((pr) => !pr.isCrossRepository).map((pr) => [pr.headRefName, pr])
   );
