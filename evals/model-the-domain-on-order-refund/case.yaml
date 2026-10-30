@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: model-the-domain-on-order-refund
+context:
+  scaffold_script: scaffold.sh
