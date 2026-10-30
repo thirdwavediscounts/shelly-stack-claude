@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: compress-the-clock-on-token-expiry
+context:
+  scaffold_script: scaffold.sh

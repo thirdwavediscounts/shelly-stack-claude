@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: maintain-verification-skill-on-renamed-command
+context:
+  scaffold_script: scaffold.sh

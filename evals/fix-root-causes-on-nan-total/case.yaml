@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: fix-root-causes-on-nan-total
+context:
+  scaffold_script: scaffold.sh

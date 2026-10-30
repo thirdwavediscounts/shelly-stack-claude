@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: laziness-protocol-on-dry-run
+context:
+  scaffold_script: scaffold.sh
