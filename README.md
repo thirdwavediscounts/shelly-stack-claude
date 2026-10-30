@@ -279,7 +279,7 @@ models are configurable too. run [`/setup-shelly-stack`](./skills/setup-shelly-s
 
 the plugin registers these hooks in [`hooks/hooks.json`](./hooks/hooks.json):
 
-- `no-new-md` blocks writing a new `.md` or `.mdx` file. editing an existing file is fine. it allows `CLAUDE.md`, `AGENTS.md`, their `.local.md` copies, `GLOSSARY.md`, and files under `skills/`, `agents/`, `evals/`, `.claude/rules/`, and `~/.claude/`.
+- `no-new-md` blocks writing a new `.md` or `.mdx` file. editing an existing file is fine. it allows `CLAUDE.md`, `AGENTS.md`, their `.local.md` copies, and files under `skills/`, `agents/`, `evals/`, `.claude/rules/`, and `~/.claude/`.
 - `destructive-sql` stops destructive SQL, such as `DROP TABLE`, until you approve it.
 
 ## license

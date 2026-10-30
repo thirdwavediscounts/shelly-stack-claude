@@ -4,7 +4,7 @@ import re
 import shlex
 import sys
 
-ALLOWED_NAMES = {"claude.md", "agents.md", "claude.local.md", "agents.local.md", "glossary.md"}
+ALLOWED_NAMES = {"claude.md", "agents.md", "claude.local.md", "agents.local.md"}
 ALLOWED_DIRS = ("/skills/", "/agents/", "/evals/", "/.claude/rules/")
 CAN_WRITE = re.compile(r"(?:>|\b(?:touch|tee|cp|mv|install)\b|\bopen\s*\(|\.write(?:_text|_bytes)?\s*\()")
 UNKNOWN = "\0"
