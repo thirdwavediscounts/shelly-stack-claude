@@ -124,9 +124,8 @@ In the apps monorepo, ask the Vercel ignore script which apps the branch rebuild
 
 ```bash
 files=$(git diff --name-only origin/main...HEAD)
-for f in apps/*/vercel.json; do
-  app=$(grep -o 'vercel-ignore-build.sh [^"]*' "$f" | cut -d' ' -f2)
-  [ -n "$app" ] && { VERCEL_IGNORE_FILES="$files" bash tools/vercel-ignore-build.sh "$app" >/dev/null 2>&1 || echo "$app"; }
+grep -ho 'vercel-ignore-build.sh [^"]*' apps/*/vercel.json | cut -d' ' -f2 | while read -r app; do
+  VERCEL_IGNORE_FILES="$files" bash tools/vercel-ignore-build.sh "$app" >/dev/null 2>&1 || echo "$app"
 done
 ```
 
