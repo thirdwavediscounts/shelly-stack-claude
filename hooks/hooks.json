@@ -2,15 +2,6 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Bash|apply_patch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/no-new-md.py\""
-          }
-        ]
-      },
-      {
         "matcher": "Bash|mcp__.*_(execute_sql|apply_migration)",
         "hooks": [
           {

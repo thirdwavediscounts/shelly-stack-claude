@@ -121,7 +121,7 @@ For a migration, state the bar in the prompt:
 /shelly-mode plan the migration of our ui library to the new styling system. small verifiable PRs, each with visual regression checks. the result must match the original exactly, bugs included.
 ```
 
-"bugs included" keeps the migration from quietly fixing things on the way, which would make the old and new output impossible to compare. The playbook writes the plan file in the agent store, not the repo, because the plugin's `no-new-md` hook blocks new `.md` files in a repository.
+"bugs included" keeps the migration from quietly fixing things on the way, which would make the old and new output impossible to compare. The playbook writes the plan file in the agent store, not the repo.
 
 ## How much design work does a task deserve?
 

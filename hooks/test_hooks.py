@@ -26,62 +26,6 @@ class HooksTest(unittest.TestCase):
             return stdout.strip()
         return json.loads(stdout)["hookSpecificOutput"] if stdout else None
 
-    def test_new_markdown_writes_are_blocked(self):
-        cases = [
-            ("Write", {"file_path": "notes.md"}),
-            ("apply_patch", {"command": "*** Begin Patch\n*** Add File: notes.md\n+hello\n*** End Patch"}),
-            ("Bash", {"command": "apply_patch <<'PATCH'\n*** Begin Patch\n*** Add File: notes.md\n+hello\n*** End Patch\nPATCH"}),
-            ("Bash", {"command": "printf hello >notes.md"}),
-            ("Bash", {"command": ">notes.md printf hello"}),
-            ("Bash", {"command": "echo hello\ntouch notes.md"}),
-            ("Bash", {"command": "cat <<'EOF' > notes.md\nhello\nEOF"}),
-            ("Bash", {"command": "touch 'meeting notes.md'"}),
-            ("Bash", {"command": "printf hello | tee NOTES.MDX"}),
-            ("Bash", {"command": "cp existing.txt notes.md"}),
-            ("Bash", {"command": "python3 -c \"from pathlib import Path; Path('notes.md').write_text('hello')\""}),
-            ("Bash", {"command": "python3 -c \"open('notes.md', 'w').write('hello')\""}),
-            ("Bash", {"command": "mkdir -p docs && cd docs && printf hello > notes.md"}),
-            ("Bash", {"command": "D=docs; printf hello > $D/notes.md"}),
-            ("Bash", {"command": "cp -r existing.txt docs/notes.md"}),
-            ("Bash", {"command": f"cd {self.cwd}/repo && python3 -c \"open('docs/new.md', 'w').write('x')\""}),
-            ("Bash", {"command": f"python3 - <<'EOF'\nR = '{self.cwd}/repo/'\nopen(R + 'new.md', 'w').write('x')\nEOF"}),
-        ]
-        for tool, data in cases:
-            with self.subTest(tool=tool, data=data):
-                self.assertEqual(self.hook("no-new-md.py", tool, data)["permissionDecision"], "deny")
-
-    def test_reads_existing_files_and_exceptions_are_allowed(self):
-        (self.cwd / "existing.md").write_text("existing")
-        (self.cwd / "repo/docs").mkdir(parents=True)
-        (self.cwd / "repo/docs/guide.md").write_text("guide")
-        (self.cwd / "repo/README.md").write_text("readme")
-        cases = [
-            ("Write", {"file_path": name})
-            for name in ["existing.md", "AGENTS.md", "CLAUDE.local.md", "skills/demo/SKILL.md", "agents/demo.md", "evals/demo/prompt.md", "notes.txt",
-                         ".claude/rules/demo.md"]
-        ] + [
-            ("Bash", {"command": "cat notes.md"}),
-            ("Bash", {"command": "python3 -c \"print(open('notes.md').read()); print('world')\""}),
-            ("Bash", {"command": "rg notes.md ."}),
-            ("Bash", {"command": "echo touch notes.md"}),
-            ("Bash", {"command": "touch output.txt\necho notes.md"}),
-            ("Bash", {"command": "rg touch notes.md"}),
-            ("Bash", {"command": "cat notes.md > notes.txt"}),
-            ("Bash", {"command": "echo hello >> existing.md"}),
-            ("Bash", {"command": "python3 -c \"print(open('notes.md').read())\""}),
-            ("Bash", {"command": f"cd {self.cwd}/evals/demo && printf hi > graders/check.md"}),
-            ("Bash", {"command": f"E={self.cwd}/evals; printf hi > $E/demo/prompt.md && cp $E/demo/prompt.md $E/other/prompt.md"}),
-            ("Bash", {"command": "cp notes.md /tmp/out.txt"}),
-            ("Bash", {"command": "printf hi > $UNSET_TWD_DIR/notes.md"}),
-            ("Bash", {"command": f"cd {self.cwd}/repo && python3 - <<'EOF'\nfrom pathlib import Path\nPath('docs/guide.md').write_text('new')\nEOF"}),
-            ("Bash", {"command": f"python3 - <<'EOF'\nR = '{self.cwd}/repo/'\nopen(R + 'README.md', 'w').write('new')\nEOF"}),
-            ("Bash", {"command": f"cd {self.cwd}/repo && python3 - <<'EOF'\nimport glob\nfor f in glob.glob('*/*.md'):\n    open(f, 'a').write('x')\nEOF"}),
-            ("apply_patch", {"command": "*** Begin Patch\n*** Update File: existing.md\n@@\n-existing\n+new\n*** End Patch"}),
-        ]
-        for tool, data in cases:
-            with self.subTest(tool=tool, data=data):
-                self.assertIsNone(self.hook("no-new-md.py", tool, data))
-
     def test_sql_uses_supported_decision_for_each_client(self):
         for tool, data in [
             ("Bash", {"command": 'psql "$DB" -c "DROP TABLE old_sales"'}),
@@ -199,7 +143,7 @@ class HooksTest(unittest.TestCase):
             self.assertIsNone(self.hook("destructive-sql.py", tool, data, True, turn_id="approved-turn"))
             self.assertEqual(self.hook("destructive-sql.py", tool, data, True,
                                       turn_id="approved-turn")["permissionDecision"], "deny")
-            matcher = json.loads((ROOT / "hooks/hooks.json").read_text())["hooks"]["PreToolUse"][1]["matcher"]
+            matcher = json.loads((ROOT / "hooks/hooks.json").read_text())["hooks"]["PreToolUse"][0]["matcher"]
             self.assertIsNotNone(re.search(matcher, tool))
 
     def test_ordinary_prompts_do_not_create_approval_files(self):
