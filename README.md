@@ -27,6 +27,8 @@ For a local checkout, run `/plugin marketplace add /absolute/path/to/shelly-stac
 
 shelly-stack includes `thermo-nuclear-code-quality-review`, adapted from Third Wave Discounts' MIT-licensed Team Kit fork (see [LICENSE.team-kit](LICENSE.team-kit)). Opening a PR spawns the `thermo-nuclear-code-quality-review` agent, which reviews with that skill's rubric.
 
+`untangle-codebase` is adapted from Caldo's MIT-licensed [skills](https://github.com/caldoai/skills) (see [LICENSE.caldo-skills](LICENSE.caldo-skills)).
+
 ## get started
 
 two steps:
@@ -147,6 +149,7 @@ For long work, use `/loop`.
 | [`/benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression. vets the number (limiter, tuning, errors, repeat runs, end-to-end relevance) before you report or act on it. |
 | [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments from a diff. spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. opening a pr runs it on every PR, so run it yourself only on work not yet going through a PR. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
+| [`/untangle-codebase`](./skills/untangle-codebase/SKILL.md) | you want one app or package refactored until a typical change lands in one place. lists every hidden link, needless link, surplus piece, and special case, redesigns, fixes all of it against a behavior pin, and repeats until a round finds nothing worth fixing. one PR per unit. runs only when you type `/untangle-codebase`. |
 | [`/figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
 | [`/show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
 | [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
