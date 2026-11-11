@@ -24,4 +24,4 @@ Current-turn polling uses bounded commands and waits no longer than 60 seconds. 
 
 ## History
 
-Use the current conversation first. For requested earlier history, read only the active workspace's `~/.claude/projects/<slug>/` directory, where the absolute workspace path has each slash replaced with a hyphen. Never scan unrelated projects. If the workspace cannot be resolved, use a user-provided transcript or a narrow digest. Draft status updates locally unless the user asks to send them.
+Use the current conversation first. For requested earlier history, read only the active workspace's `~/.claude/projects/<slug>/` directory, where every character of the absolute workspace path that is not a letter, digit, or `-` becomes `-`. Never scan unrelated projects. If the workspace cannot be resolved, use a user-provided transcript or a narrow digest. Draft status updates locally unless the user asks to send them.
