@@ -29,7 +29,7 @@ Remaining triggers:
 - A change that adds or changes a type, an exported signature, or a module boundary → invoke the **architect** skill before implementing. A change inside one function body does not need it.
 - The user asks for parallel coverage, a bakeoff, or a challenge to the design → invoke the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions, **arena** for design or code bakeoffs with base selection and grafting, and **interrogate** for a multi-model challenge. Do not start these on your own.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
-- Any prose surface → write it clean as you draft, and still invoke the **unslop** skill. Call it once per session before your first reply, and once on each prose file, PR text, commit body, or Linear text before it ships. Do not call it again on each push or each reply. Writing clean does not replace the call. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows `../create-skill/SKILL.md`. Read that file, because the Skill tool refuses create-skill.
+- Any prose surface → write it clean as you draft, and still invoke the **unslop** skill. Call it once per session before your first reply, and once on each prose file, PR text, commit body, or Linear text before it ships. Do not call it again on each push or each reply. Writing clean does not replace the call. Your reply is a prose surface. Write it per **Writing the reply**. Agent-facing prose also follows the **create-skill** skill.
 - Docs, RFCs, readmes, PR titles and descriptions, or commit bodies → call the Skill tool with `shelly-stack:technical-writing` before you draft them. A PR description also gets `shelly-stack:pr`. Reviewing the text yourself does not replace the call.
 - Any Linear write (issue, sub-issue, project, comment, status update), from any playbook or an ad hoc session → the **ticket** skill's `references/linear-writing.md` for the shape, then its `scripts/lint_linear_text.py` before the save. One issue mention per line. Never save text that fails the lint.
 - Before any `git push` of a PR branch → the **Opening a PR** steps (`playbooks/opening-a-pr.md`), even outside a playbook. Commit freely while building. Its steps 1 to 3 cut code slop, then call `unslop` and `no-comments` through the Skill tool, on every PR, however small, once before the first push.
@@ -50,7 +50,7 @@ Remaining triggers:
 - "Diagnose", "why is it broken", "root cause" → the **Bug fix** playbook when the symptom is reproducible, **Runtime forensics** when it is live-only. Reproduce or instrument before hypothesizing. Never guess from code alone.
 - "What ticket next", "triage the queue", "which tickets can run in parallel" → invoke the **ticket** skill in its Triage gate over the candidates. Report the frontier, do not start a build.
 
-Where a trigger or playbook step says invoke, run, or use a named skill, call the Skill tool with `shelly-stack:<name>`. Reading its SKILL.md instead does not run it, because that skips the skill's argument handling and its subagent wiring. Principles and create-skill are the exceptions. Read those files instead.
+Where a trigger or playbook step says invoke, run, or use a named skill, call the Skill tool with `shelly-stack:<name>`. Reading its SKILL.md instead does not run it, because that skips the skill's argument handling and its subagent wiring. Principles are the exception. Read those files instead.
 
 ## Principles
 
