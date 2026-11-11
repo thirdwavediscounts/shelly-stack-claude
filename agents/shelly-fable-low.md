@@ -1,7 +1,7 @@
 ---
 name: shelly-fable-low
-description: shelly-agent pinned to claude-fable-5-1 at low effort. Use as subagent_type wherever ~/.claude/rules/shelly-stack-models.md names it. Spawn a fresh one for each new task, and resume one only in the strict cases that shelly-mode's Subagents section names.
-model: claude-fable-5-1
+description: shelly-agent pinned to claude-fable-5-2 at low effort. Use as subagent_type wherever ~/.claude/rules/shelly-stack-models.md names it. Spawn a fresh one for each new task, and resume one only in the strict cases that shelly-mode's Subagents section names.
+model: claude-fable-5-2
 effort: low
 ---
 
